@@ -1,0 +1,87 @@
+---
+import type { Work } from '../data/works';
+export interface Props { work: Work; }
+const { work } = Astro.props;
+const img = work.image ?? work.layers?.[work.layers.length - 1]?.src ?? '/works/placeholder/portrait.svg';
+const alt = work.imageAlt ?? `${work.title} (${work.year})`;
+// Transient Labs (artist contract) is the primary "collect" home.
+// TODO: set Coldie's Transient Labs profile/contract URL as the fallback collect link.
+const TRANSIENT_LABS = 'https://transient.xyz/';
+const collectHref = work.collectUrl || TRANSIENT_LABS;
+const collectReady = Boolean(work.collectUrl);
+const mkt = work.marketplace;
+const mktReady = Boolean(mkt?.url);
+// Physical works are inquire-only; digital works collect / link to a marketplace.
+const isPhysical = work.ownership === 'physical';
+---
+<article class="ccard">
+  <a class="ccard__frame" href={`/work/${work.slug}`} aria-label={`${work.title} (${work.year}) — details`}>
+    <img src={img} alt={alt} loading="lazy" decoding="async" />
+    {work.badge && <span class="ccard__badge">{work.badge}</span>}
+  </a>
+  <div class="ccard__meta">
+    <h3 class="ccard__title"><a href={`/work/${work.slug}`}>{work.title}</a></h3>
+    <p class="ccard__sub muted small">
+      {work.year}{work.edition ? ` · ${work.edition}` : ''}
+    </p>
+    <div class="ccard__actions">
+      {isPhysical ? (
+        <>
+          <a class="btn btn--solid" href={`/work/${work.slug}#inquire`} aria-label={`Inquire about ${work.title}`}>Inquire</a>
+          <a class="link-arrow" href={`/work/${work.slug}`}>View this work</a>
+        </>
+      ) : (
+        <>
+          <a
+            class="btn btn--solid ccard__collect"
+            href={collectHref}
+            target="_blank"
+            rel="noopener"
+            aria-label={`Collect ${work.title} on Transient Labs`}
+            data-todo={collectReady ? undefined : 'collect-url'}
+          >Collect</a>
+          {mkt && (
+            <a
+              class="link-arrow"
+              href={mkt.url || '#'}
+              target="_blank"
+              rel="noopener"
+              aria-label={`View ${work.title} on ${mkt.name}`}
+              data-todo={mktReady ? undefined : 'marketplace-url'}
+            >View on {mkt.name}</a>
+          )}
+        </>
+      )}
+    </div>
+  </div>
+</article>
+
+<style>
+  .ccard { display: flex; flex-direction: column; }
+  .ccard__frame {
+    position: relative; display: block; overflow: hidden;
+    border-radius: var(--radius); background: var(--bg-raise);
+    border: 1px solid var(--line-soft);
+  }
+  .ccard__frame img {
+    width: 100%; aspect-ratio: 4/5; object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.22,0.61,0.36,1);
+  }
+  .ccard:hover .ccard__frame img { transform: scale(1.03); }
+  .ccard__badge {
+    position: absolute; top: 0.7rem; left: 0.7rem;
+    font-family: var(--type); font-size: 0.66rem; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink); background: color-mix(in srgb, var(--bg) 72%, transparent);
+    border: 1px solid var(--line); padding: 0.3em 0.6em; border-radius: 999px;
+    backdrop-filter: blur(3px);
+  }
+  .ccard__meta { margin-top: 0.9em; }
+  .ccard__title { font-family: var(--serif); font-size: 1.15rem; margin: 0; line-height: 1.15; }
+  .ccard__title a { text-decoration: none; }
+  .ccard__title a:hover { color: var(--red); }
+  .ccard__sub { display: block; margin: 0.2em 0 0; }
+  .ccard__actions { display: flex; align-items: center; gap: 1.1rem; margin-top: 1em; flex-wrap: wrap; }
+  /* placeholder links read as not-yet-live, but stay visible & inspectable */
+  [data-todo] { opacity: 0.55; }
+  @media (prefers-reduced-motion: reduce) { .ccard__frame img { transition: none; } }
+</style>

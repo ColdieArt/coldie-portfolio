@@ -1,0 +1,77 @@
+---
+// Living wall text: a pull-quote (the clip's actual spoken line) beside a short,
+// captioned, muted clip. The still gets a whisper of depth; the video stays flat.
+export interface Props {
+  quote: string;
+  attribution?: string;
+  /** clip source; if absent, a labeled placeholder is shown */
+  src?: string;
+  poster?: string;
+  captions?: string; // .vtt track
+  /** related work slug for a "read more" link */
+  workSlug?: string;
+  workLabel?: string;
+  /** flip layout so quote sits on the right */
+  flip?: boolean;
+}
+const { quote, attribution = 'Coldie', src, poster, captions, workSlug, workLabel, flip = false } = Astro.props;
+---
+<div class={`clip ${flip ? 'clip--flip' : ''}`}>
+  <blockquote class="clip__quote">
+    <p class="quote">“{quote}”</p>
+    <cite class="clip__cite muted small">— {attribution}</cite>
+    {workSlug && <a class="link-arrow clip__link" href={`/work/${workSlug}`}>{workLabel ?? 'See the work'}</a>}
+  </blockquote>
+  <figure class="clip__media">
+    {src ? (
+      <video
+        class="clip__video"
+        controls
+        muted
+        playsinline
+        preload="none"
+        poster={poster}
+      >
+        <source src={src} type="video/mp4" />
+        {captions && <track kind="captions" src={captions} srclang="en" label="English" default />}
+      </video>
+    ) : (
+      <div class="clip__placeholder" role="img" aria-label="Interview clip placeholder">
+        <span class="clip__play" aria-hidden="true">▶</span>
+        <span class="clip__phtext muted small">Interview clip — 30–90s, captioned</span>
+      </div>
+    )}
+  </figure>
+</div>
+
+<style>
+  .clip {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: center;
+    padding-block: clamp(2rem, 5vw, 3.5rem);
+  }
+  .clip--flip .clip__quote { order: 2; }
+  .clip__quote { margin: 0; }
+  .clip__cite { display: block; margin-top: 1.2em; }
+  .clip__link { display: inline-block; margin-top: 1em; }
+
+  .clip__media { margin: 0; }
+  .clip__video, .clip__placeholder {
+    width: 100%; aspect-ratio: 16/9; border-radius: var(--radius);
+    background: var(--bg-raise); border: 1px solid var(--line-soft);
+  }
+  .clip__placeholder {
+    display: grid; place-content: center; gap: 0.8rem; justify-items: center;
+  }
+  .clip__play {
+    width: 56px; height: 56px; border-radius: 50%;
+    display: grid; place-items: center; color: var(--accent);
+    border: 1px solid var(--line); font-size: 1.1rem;
+  }
+  @media (max-width: 760px) {
+    .clip { grid-template-columns: 1fr; }
+    .clip--flip .clip__quote { order: 0; }
+  }
+</style>

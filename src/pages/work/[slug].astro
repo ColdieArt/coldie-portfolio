@@ -1,0 +1,201 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DepthParallax from '../../components/DepthParallax.astro';
+import CollageBuilder from '../../components/CollageBuilder.astro';
+import RotatingBillboard from '../../components/RotatingBillboard.astro';
+import VerticalVideo from '../../components/VerticalVideo.astro';
+import AudioPlayer from '../../components/AudioPlayer.astro';
+import InquireForm from '../../components/InquireForm.astro';
+import { works, type Work } from '../../data/works';
+import { pillars } from '../../data/site';
+import { artworkLd, breadcrumbLd, personLd } from '../../data/jsonld';
+
+export function getStaticPaths() {
+  return works.map((w) => ({ params: { slug: w.slug }, props: { work: w } }));
+}
+
+interface Props { work: Work; }
+const { work } = Astro.props;
+const pillar = pillars[work.pillar];
+const heroImg = work.image ?? work.layers?.[work.layers.length - 1]?.src;
+
+const ld = [
+  artworkLd(work),
+  personLd(),
+  breadcrumbLd([
+    { name: 'Home', path: '/' },
+    { name: pillar.title, path: `/${pillar.slug}` },
+    { name: work.title, path: `/work/${work.slug}` },
+  ]),
+];
+// First sentence of the caption = the answer-first description / OG text.
+const desc = work.caption.split('. ')[0] + '.';
+---
+<BaseLayout
+  title={work.title}
+  description={desc}
+  path={`/work/${work.slug}`}
+  ogType="article"
+  ogImage={heroImg}
+  jsonld={ld}
+>
+  <article class="work">
+    <div class="wrap">
+      <nav class="work__crumb small muted" aria-label="Breadcrumb">
+        <a href="/">Home</a> ·
+        <a href={`/${pillar.slug}`}>{pillar.title}</a> ·
+        <span>{work.title}</span>
+      </nav>
+    </div>
+
+    <div class="wrap work__grid">
+      <div class="work__stage">
+        {work.interaction === 'anaglyph' && work.anaglyphImage && (
+          <figure class="work__anaglyph">
+            <img src={work.anaglyphImage} alt={work.anaglyphAlt ?? work.imageAlt ?? work.title} width="2000" height="1605" decoding="async" />
+            <figcaption class="work__glasses">
+              <span class="work__glasses-icon" aria-hidden="true"></span>
+              Grab your red/blue 3D glasses
+            </figcaption>
+          </figure>
+        )}
+        {work.interaction === 'parallax' && work.layers && (
+          <DepthParallax layers={work.layers} ratio="4/5" amplitude={22} />
+        )}
+        {work.gallery && work.gallery.length > 0 && (
+          <RotatingBillboard images={work.gallery} ratio="3/4" fit="contain" />
+        )}
+        {work.interaction === 'drag' && !work.gallery && heroImg && (
+          <img class="work__img" src={heroImg} alt={work.imageAlt ?? work.title} />
+        )}
+        {work.interaction === 'collage' && <CollageBuilder ratio="4/5" />}
+        {work.video && (
+          <video
+            class="work__video"
+            controls
+            playsinline
+            preload="metadata"
+            poster={work.video.poster ?? undefined}
+            aria-label={`${work.title} — video artwork`}
+          >
+            <source src={work.video.src} type="video/mp4" />
+          </video>
+        )}
+        {(!work.interaction || work.interaction === 'none') && !work.video && heroImg && (
+          <img class="work__img" src={heroImg} alt={work.imageAlt ?? work.title} />
+        )}
+      </div>
+
+      <div class="work__info">
+        <p class="eyebrow">{pillar.title}</p>
+        <h1 class="work__title">{work.title}</h1>
+        <p class="work__year muted">{work.year} · {work.artform}</p>
+
+        <p class="work__caption">{work.caption}</p>
+
+        <dl class="work__specs">
+          <div><dt>Medium</dt><dd>{work.medium}</dd></div>
+          {work.dimensions && <div><dt>Dimensions</dt><dd>{work.dimensions}</dd></div>}
+          {work.edition && <div><dt>Edition</dt><dd>{work.edition}</dd></div>}
+          {work.onchain && (
+            <div>
+              <dt>On-chain</dt>
+              <dd>
+                Minted <time datetime="2018-05-07">{work.onchain.minted}</time> · {work.onchain.platform} · {work.onchain.chain}
+                {work.onchain.url && <> · <a href={work.onchain.url}>view on-chain</a></>}
+              </dd>
+            </div>
+          )}
+          {work.provenance && work.provenance.length > 0 && (
+            <div>
+              <dt>Provenance</dt>
+              <dd>
+                <ul class="work__prov">
+                  {work.provenance.map((p) => (
+                    <li>
+                      {p.href ? (
+                        <a
+                          href={p.href}
+                          aria-label={p.ariaLabel ?? p.label}
+                          title={p.ariaLabel ?? p.label}
+                          {...(p.href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}
+                        >{p.label}{p.href.startsWith('http') ? ' ↗' : ''}</a>
+                      ) : (
+                        p.label
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          )}
+        </dl>
+
+        <div class="work__cta">
+          {work.ownership !== 'edition' && <a href="#inquire" class="btn btn--solid">Inquire</a>}
+          {work.ownership !== 'physical' && (
+            <a href={work.marketplaceUrl || '/collection'} class="btn">View edition</a>
+          )}
+        </div>
+      </div>
+    </div>
+
+    {work.verticalVideo && (
+      <section class="wrap work__vv" aria-label="In the gallery">
+        <h2 class="work__vv-h">In the gallery</h2>
+        <VerticalVideo src={work.verticalVideo.src} poster={work.verticalVideo.poster} caption={work.verticalVideo.caption} />
+      </section>
+    )}
+
+    {work.audio && (
+      <section class="wrap work__audio" aria-label="The story behind this work">
+        <AudioPlayer src={work.audio.src} title={work.audio.title} caption={work.audio.caption} />
+      </section>
+    )}
+
+    <section id="inquire" class="wrap work__inquire">
+      <h2>Inquire about this work</h2>
+      <p class="muted">Goes to the artist.</p>
+      <InquireForm preselect={work.title} includeGallery={false} />
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .work { padding-block: clamp(2rem, 5vw, 4rem) var(--section-y); }
+  .work__vv { margin-top: clamp(2.5rem, 6vw, 4rem); }
+  .work__vv-h { margin: 0 0 1rem; }
+  .work__audio { margin-top: clamp(2.5rem, 6vw, 4rem); max-width: 720px; }
+  .work__crumb { margin-bottom: 2rem; }
+  .work__crumb a { text-decoration: none; }
+  .work__grid {
+    display: grid; grid-template-columns: 1.2fr 1fr;
+    gap: clamp(2rem, 6vw, 5rem); align-items: start;
+  }
+  .work__img { width: 100%; border-radius: var(--radius); }
+  .work__video { width: 100%; border-radius: var(--radius); background: #000; display: block; aspect-ratio: 16/10; }
+  .work__anaglyph { margin: 0; }
+  .work__anaglyph img { width: 100%; border-radius: var(--radius); background: #05070a; display: block; }
+  .work__glasses {
+    display: flex; align-items: center; gap: 0.55em; margin-top: 0.9em;
+    font-family: var(--type, var(--sans)); font-size: 0.82rem;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft);
+  }
+  .work__glasses-icon { width: 26px; height: 13px; border-radius: 2px; flex: none; background: linear-gradient(90deg, #e23b2e 0 50%, #45c7d0 50% 100%); }
+  .work__title { font-size: clamp(2rem, 4vw, 3.2rem); margin: 0 0 0.2em; }
+  .work__year { margin: 0 0 1.4em; letter-spacing: 0.04em; }
+  .work__caption { color: var(--ink-soft); font-size: 1.05rem; }
+  .work__specs { margin: 2rem 0; display: grid; gap: 1rem; }
+  .work__specs > div { display: grid; grid-template-columns: 8rem 1fr; gap: 1rem; border-top: 1px solid var(--line-soft); padding-top: 1rem; }
+  .work__specs dt { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin: 0; }
+  .work__specs dd { margin: 0; color: var(--ink-soft); }
+  .work__prov { margin: 0; padding-left: 1.1em; }
+  .work__prov a { color: var(--ink); }
+  .work__cta { display: flex; gap: 0.9rem; margin-top: 1.5rem; }
+  .work__inquire { margin-top: clamp(3rem, 8vw, 6rem); padding-top: clamp(2rem, 5vw, 4rem); border-top: 1px solid var(--line-soft); }
+  .work__inquire h2 { margin: 0 0 0.3em; }
+  @media (max-width: 860px) {
+    .work__grid { grid-template-columns: 1fr; }
+    .work__specs > div { grid-template-columns: 7rem 1fr; }
+  }
+</style>

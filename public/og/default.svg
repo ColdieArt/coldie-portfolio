@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Default Open Graph card (1200×630). Replace with a museum-grade PNG export
+     for best social compatibility (some platforms don't render SVG OG images). -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#11161f"/><stop offset="100%" stop-color="#0a0d11"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="980" cy="180" r="90" fill="#1d2733"/>
+  <rect x="90" y="430" width="44" height="13" rx="2" fill="none" stroke="#5ad1d8" stroke-width="2"/>
+  <rect x="98" y="438" width="44" height="13" rx="2" fill="none" stroke="#e0464b" stroke-width="2"/>
+  <text x="90" y="300" font-family="Georgia, 'Times New Roman', serif" font-size="96" fill="#ece9e1">Art with depth.</text>
+  <text x="92" y="360" font-family="Helvetica, Arial, sans-serif" font-size="30" fill="#b7b2a6">Stereoscopic and kinetic portraits, minted on-chain for the first time.</text>
+  <text x="92" y="540" font-family="Helvetica, Arial, sans-serif" font-size="26" fill="#d8b25a" letter-spacing="2">COLDIE · RYAN COLDITZ</text>
+</svg>

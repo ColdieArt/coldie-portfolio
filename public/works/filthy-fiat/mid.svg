@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PLACEHOLDER Filthy Fiat mid layer: a single buried dollar bill.
+     Replace with a real transparent PNG export. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 1600" width="640" height="1600" role="img" aria-label="Placeholder mid layer: a mold-stained dollar bill">
+  <g transform="rotate(-6 320 800)">
+    <rect x="90" y="520" width="460" height="560" rx="10" fill="#cdd8c4"/>
+    <rect x="118" y="548" width="404" height="504" rx="6" fill="none" stroke="#6b7a5e" stroke-width="3"/>
+    <circle cx="320" cy="800" r="120" fill="#aebaa2"/>
+    <circle cx="320" cy="800" r="120" fill="none" stroke="#6b7a5e" stroke-width="3"/>
+    <text x="150" y="600" font-family="Georgia, serif" font-size="40" fill="#6b7a5e">1</text>
+    <text x="470" y="1030" font-family="Georgia, serif" font-size="40" fill="#6b7a5e" text-anchor="end">1</text>
+  </g>
+</svg>

@@ -1,0 +1,192 @@
+---
+// Front Row 3D — accessible "billboard" slider for the Coachella 2010 photos.
+// Crossfade carousel: prev/next + dots, keyboard arrows, swipe, slow autoplay
+// (pause on hover/focus), honors prefers-reduced-motion. Aspect ratio reserved.
+export interface Slide { src: string; alt: string; caption: string }
+export interface Props {
+  slides: Slide[];
+  ratio?: string;
+  interval?: number;
+  label?: string;
+}
+const { slides, ratio = '3/4', interval = 5000, label = 'Coachella 2010 3D concert photography' } = Astro.props;
+---
+<div
+  class="fr3"
+  data-fr3
+  data-interval={interval}
+  role="group"
+  aria-roledescription="carousel"
+  aria-label={label}
+  tabindex="0"
+  style={`--ratio:${ratio}`}
+>
+  <div class="fr3__stage">
+    {slides.map((s, i) => (
+      <figure class="fr3__slide" data-slide data-i={i} aria-hidden={i === 0 ? 'false' : 'true'}>
+        <img src={s.src} alt={s.alt} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" draggable="false" />
+      </figure>
+    ))}
+
+    <button type="button" class="fr3__arrow fr3__arrow--prev" data-prev aria-label="Previous photo">‹</button>
+    <button type="button" class="fr3__arrow fr3__arrow--next" data-next aria-label="Next photo">›</button>
+    <button type="button" class="fr3__toggle" data-toggle aria-label="Pause slideshow" aria-pressed="false">
+      <span data-pause>❚❚</span><span data-play hidden>▶</span>
+    </button>
+  </div>
+
+  <p class="fr3__caption" data-caption aria-live="polite">
+    <span data-caption-act>{slides[0]?.caption}</span>
+    <span class="fr3__sub muted small">Coachella 2010 · shot in 3D by Coldie</span>
+  </p>
+
+  <div class="fr3__dots" role="tablist" aria-label="Choose photo">
+    {slides.map((s, i) => (
+      <button
+        type="button"
+        class="fr3__dot"
+        data-dot
+        data-i={i}
+        role="tab"
+        aria-label={`${s.caption} (photo ${i + 1} of ${slides.length})`}
+        aria-selected={i === 0 ? 'true' : 'false'}
+      ></button>
+    ))}
+  </div>
+</div>
+
+<style>
+  .fr3 { --maxw: 560px; }
+  .fr3:focus-visible { outline: 2px solid var(--cyan); outline-offset: 6px; }
+  .fr3__stage {
+    position: relative;
+    aspect-ratio: var(--ratio);
+    width: 100%;
+    max-width: var(--maxw);
+    margin-inline: auto;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: #05070a;
+    border: 1px solid var(--line-soft);
+    touch-action: pan-y;
+  }
+  .fr3__slide {
+    position: absolute; inset: 0; margin: 0;
+    opacity: 0; transition: opacity 0.7s ease;
+  }
+  .fr3__slide[aria-hidden='false'] { opacity: 1; }
+  .fr3__slide img { width: 100%; height: 100%; object-fit: contain; }
+
+  .fr3__arrow {
+    position: absolute; top: 50%; transform: translateY(-50%); z-index: 3;
+    width: 42px; height: 42px; display: grid; place-items: center;
+    font-size: 1.4rem; line-height: 1; color: #fff;
+    background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 50%; cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .fr3__arrow:hover { background: rgba(0,0,0,0.65); border-color: #fff; }
+  .fr3__arrow--prev { left: 0.6rem; }
+  .fr3__arrow--next { right: 0.6rem; }
+  .fr3__toggle {
+    position: absolute; right: 0.6rem; bottom: 0.6rem; z-index: 3;
+    width: 32px; height: 30px; display: grid; place-items: center;
+    color: #fff; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.35);
+    border-radius: var(--radius); cursor: pointer; font-size: 0.8rem;
+  }
+  .fr3__toggle:hover { background: rgba(0,0,0,0.65); }
+
+  .fr3__caption { text-align: center; margin: 1em auto 0.8em; max-width: var(--maxw); }
+  .fr3__caption [data-caption-act] { font-family: var(--serif); font-size: 1.15rem; }
+  .fr3__sub { display: block; margin-top: 0.15em; }
+
+  .fr3__dots { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
+  .fr3__dot {
+    width: 9px; height: 9px; padding: 0; border-radius: 50%;
+    background: transparent; border: 1px solid var(--ink-mute); cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .fr3__dot[aria-selected='true'] { background: var(--red); border-color: var(--red); }
+  .fr3__dot:hover { border-color: var(--ink); }
+
+  @media (prefers-reduced-motion: reduce) { .fr3__slide { transition: none; } }
+</style>
+
+<script>
+  function init(root: HTMLElement) {
+    const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-slide]'));
+    const dots = Array.from(root.querySelectorAll<HTMLElement>('[data-dot]'));
+    const captionAct = root.querySelector<HTMLElement>('[data-caption-act]')!;
+    const toggle = root.querySelector<HTMLButtonElement>('[data-toggle]')!;
+    const pauseIcon = root.querySelector<HTMLElement>('[data-pause]')!;
+    const playIcon = root.querySelector<HTMLElement>('[data-play]')!;
+    const interval = parseInt(root.dataset.interval || '5000', 10);
+    const n = slides.length;
+    if (!n) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let i = 0, timer: number | null = null, paused = reduce;
+    const captions = slides.map((s) => s.querySelector('img')?.getAttribute('alt') || '');
+    // use the human caption from the dot aria where possible
+    const acts = dots.map((d) => d.getAttribute('aria-label')?.split(' (photo')[0] || '');
+
+    const show = (next: number) => {
+      i = (next + n) % n;
+      slides.forEach((s, k) => s.setAttribute('aria-hidden', k === i ? 'false' : 'true'));
+      dots.forEach((d, k) => d.setAttribute('aria-selected', k === i ? 'true' : 'false'));
+      captionAct.textContent = acts[i] || captions[i];
+    };
+    const stop = () => { if (timer) { clearInterval(timer); timer = null; } };
+    const play = () => { stop(); if (!paused) timer = window.setInterval(() => show(i + 1), interval); };
+    const setPaused = (p: boolean) => {
+      paused = p; pauseIcon.hidden = p; playIcon.hidden = !p;
+      toggle.setAttribute('aria-pressed', String(p));
+      toggle.setAttribute('aria-label', p ? 'Play slideshow' : 'Pause slideshow');
+      p ? stop() : play();
+    };
+
+    root.querySelector('[data-prev]')!.addEventListener('click', () => { show(i - 1); if (!paused) play(); });
+    root.querySelector('[data-next]')!.addEventListener('click', () => { show(i + 1); if (!paused) play(); });
+    toggle.addEventListener('click', () => setPaused(!paused));
+    dots.forEach((d, k) => d.addEventListener('click', () => { show(k); if (!paused) play(); }));
+
+    // keyboard
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') { show(i - 1); if (!paused) play(); e.preventDefault(); }
+      else if (e.key === 'ArrowRight') { show(i + 1); if (!paused) play(); e.preventDefault(); }
+    });
+
+    // pause on hover/focus
+    root.addEventListener('pointerenter', stop);
+    root.addEventListener('pointerleave', () => { if (!paused) play(); });
+    root.addEventListener('focusin', stop);
+    root.addEventListener('focusout', () => { if (!paused) play(); });
+
+    // swipe
+    let sx = 0, sw = false;
+    const stage = root.querySelector<HTMLElement>('.fr3__stage')!;
+    stage.addEventListener('pointerdown', (e) => { sx = e.clientX; sw = true; });
+    stage.addEventListener('pointerup', (e) => {
+      if (!sw) return; sw = false;
+      const dx = e.clientX - sx;
+      if (Math.abs(dx) > 40) { show(dx < 0 ? i + 1 : i - 1); if (!paused) play(); }
+    });
+
+    // run only while visible
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        for (const e of entries) { if (e.isIntersecting && !paused) play(); else stop(); }
+      }, { threshold: 0.2 }).observe(root);
+    } else if (!paused) play();
+
+    show(0);
+    if (reduce) setPaused(true);
+  }
+
+  const start = () =>
+    document.querySelectorAll<HTMLElement>('[data-fr3]').forEach((el) => {
+      if (!el.dataset.init) { el.dataset.init = '1'; init(el); }
+    });
+  if (document.readyState !== 'loading') start();
+  else document.addEventListener('DOMContentLoaded', start);
+</script>

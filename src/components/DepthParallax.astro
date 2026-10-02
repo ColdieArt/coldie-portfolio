@@ -1,0 +1,185 @@
+---
+import type { DepthLayer } from '../data/works';
+
+export interface Props {
+  layers: DepthLayer[];
+  /** Overall aspect ratio of the frame, e.g. "16/10" or "4/5". */
+  ratio?: string;
+  /** Max travel in px for the nearest layer (depth=1). Subtle by default. */
+  amplitude?: number;
+  /** Respond to page scroll in addition to pointer/tilt. */
+  scroll?: boolean;
+  /** Track the pointer across the whole window, not just over the frame. */
+  global?: boolean;
+  class?: string;
+}
+
+const {
+  layers,
+  ratio = '16/10',
+  amplitude = 26,
+  scroll = true,
+  global = false,
+  class: className = '',
+} = Astro.props;
+---
+
+<div
+  class={`parallax ${className}`}
+  data-depth-parallax
+  data-amplitude={amplitude}
+  data-scroll={scroll ? 'true' : 'false'}
+  data-global={global ? 'true' : 'false'}
+  style={`--ratio:${ratio}`}
+>
+  {layers.map((layer, i) => (
+    <img
+      class="parallax__layer"
+      src={layer.src}
+      alt={i === layers.length - 1 ? layer.alt : ''}
+      aria-hidden={i === layers.length - 1 ? undefined : 'true'}
+      data-depth={layer.depth}
+      loading="lazy"
+      decoding="async"
+      draggable="false"
+    />
+  ))}
+</div>
+
+<style>
+  .parallax {
+    position: relative;
+    aspect-ratio: var(--ratio);
+    width: 100%;
+    overflow: hidden;
+    border-radius: var(--radius);
+    /* perspective gives the layers a touch of dimensional separation */
+    perspective: 1200px;
+    transform-style: preserve-3d;
+    background: var(--bg-raise);
+  }
+  .parallax__layer {
+    position: absolute;
+    inset: -6% ; /* bleed so travel never reveals an edge */
+    width: 112%;
+    height: 112%;
+    object-fit: cover;
+    will-change: transform;
+    transition: transform 0.18s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  /* The artwork stays sharp; effect frames, never competes. */
+
+  @media (prefers-reduced-motion: reduce) {
+    .parallax__layer { transition: none; transform: none !important; }
+  }
+</style>
+
+<script>
+  type El = HTMLElement;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function initParallax(root: El) {
+    const amplitude = parseFloat(root.dataset.amplitude || '26');
+    const useScroll = root.dataset.scroll === 'true';
+    const layers = Array.from(
+      root.querySelectorAll<HTMLElement>('.parallax__layer')
+    ).map((el) => ({ el, depth: parseFloat(el.dataset.depth || '0') }));
+
+    // Targets and eased current values.
+    let tx = 0,
+      ty = 0,
+      sy = 0; // scroll-driven vertical
+    let cx = 0,
+      cy = 0,
+      csy = 0;
+    let raf = 0;
+
+    const render = () => {
+      // ease toward target
+      cx += (tx - cx) * 0.08;
+      cy += (ty - cy) * 0.08;
+      csy += (sy - csy) * 0.08;
+      for (const { el, depth } of layers) {
+        const ax = cx * amplitude * depth;
+        const ay = (cy * amplitude + csy) * depth;
+        el.style.transform = `translate3d(${ax.toFixed(2)}px, ${ay.toFixed(2)}px, 0)`;
+      }
+      if (
+        Math.abs(tx - cx) > 0.001 ||
+        Math.abs(ty - cy) > 0.001 ||
+        Math.abs(sy - csy) > 0.01
+      ) {
+        raf = requestAnimationFrame(render);
+      } else {
+        raf = 0;
+      }
+    };
+    const kick = () => {
+      if (!raf) raf = requestAnimationFrame(render);
+    };
+
+    const useGlobal = root.dataset.global === 'true';
+    if (useGlobal) {
+      // Track the pointer anywhere on the page, normalized to the viewport.
+      window.addEventListener(
+        'pointermove',
+        (e) => {
+          tx = e.clientX / (window.innerWidth || 1) - 0.5;
+          ty = e.clientY / (window.innerHeight || 1) - 0.5;
+          kick();
+        },
+        { passive: true }
+      );
+    } else {
+      // Pointer (desktop) — normalized -0.5..0.5 relative to frame center.
+      root.addEventListener('pointermove', (e) => {
+        const r = root.getBoundingClientRect();
+        tx = (e.clientX - r.left) / r.width - 0.5;
+        ty = (e.clientY - r.top) / r.height - 0.5;
+        kick();
+      });
+      root.addEventListener('pointerleave', () => {
+        tx = 0;
+        ty = 0;
+        kick();
+      });
+    }
+
+    // Scroll — gentle vertical drift while the frame is in view.
+    if (useScroll) {
+      const onScroll = () => {
+        const r = root.getBoundingClientRect();
+        const vh = window.innerHeight || 1;
+        // -0.5..0.5 across the viewport pass
+        const progress = (r.top + r.height / 2) / vh - 0.5;
+        sy = progress * -amplitude * 0.9;
+        kick();
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    }
+
+    // Device tilt (mobile). iOS needs a permission gesture; we attach opportunistically.
+    const onTilt = (e: DeviceOrientationEvent) => {
+      if (e.gamma == null || e.beta == null) return;
+      tx = Math.max(-0.5, Math.min(0.5, e.gamma / 45));
+      ty = Math.max(-0.5, Math.min(0.5, (e.beta - 45) / 45));
+      kick();
+    };
+    window.addEventListener('deviceorientation', onTilt);
+  }
+
+  if (!reduce) {
+    const init = () =>
+      document
+        .querySelectorAll<HTMLElement>('[data-depth-parallax]')
+        .forEach((el) => {
+          if (!el.dataset.init) {
+            el.dataset.init = '1';
+            initParallax(el);
+          }
+        });
+    if (document.readyState !== 'loading') init();
+    else document.addEventListener('DOMContentLoaded', init);
+  }
+</script>

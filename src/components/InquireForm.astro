@@ -1,0 +1,107 @@
+---
+import { site } from '../data/site';
+import { works } from '../data/works';
+export interface Props { preselect?: string; includeGallery?: boolean; }
+const { preselect, includeGallery = true } = Astro.props;
+const options = works.map((w) => ({ value: w.title, label: `${w.title} (${w.year})` }));
+---
+<form
+  class="inq"
+  method="POST"
+  action="https://formspree.io/f/your-form-id"
+  data-inquire-form
+  aria-label="Inquiry form"
+>
+  {/* Routing: replace the action with the real endpoint (Formspree/Basin/etc).
+      Inquiries should reach the artist and Eterno Gallery, Lisbon. */}
+  <input type="hidden" name="_subject" value="coldie3d.com — new inquiry" />
+  <input type="text" name="_gotcha" class="inq__hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+  <div class="inq__row">
+    <label class="inq__field">
+      <span>Name</span>
+      <input type="text" name="name" required autocomplete="name" />
+    </label>
+    <label class="inq__field">
+      <span>Email</span>
+      <input type="email" name="email" required autocomplete="email" />
+    </label>
+  </div>
+
+  <label class="inq__field">
+    <span>Work of interest</span>
+    <select name="work">
+      <option value="">General inquiry</option>
+      {options.map((o) => (
+        <option value={o.value} selected={preselect === o.value}>{o.label}</option>
+      ))}
+    </select>
+  </label>
+
+  <label class="inq__field">
+    <span>Message</span>
+    <textarea name="message" rows="4" placeholder="Tell us a little about your interest."></textarea>
+  </label>
+
+  <div class="inq__foot">
+    <button type="submit" class="btn btn--solid">Send inquiry</button>
+    <p class="muted small inq__note">
+      Goes to the artist{includeGallery ? ' and Eterno Gallery, Lisbon' : ''}. Prefer email?
+      <a href={`mailto:${site.inquiryEmail}`}>{site.inquiryEmail}</a>
+    </p>
+  </div>
+  <p class="inq__status" data-status role="status" aria-live="polite" hidden></p>
+</form>
+
+<style>
+  .inq { display: grid; gap: 1.1rem; max-width: 640px; }
+  .inq__row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+  .inq__field { display: grid; gap: 0.4em; }
+  .inq__field > span { font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); }
+  .inq input, .inq select, .inq textarea {
+    width: 100%; padding: 0.7em 0.85em;
+    background: var(--bg); color: var(--ink);
+    border: 1px solid var(--line); border-radius: var(--radius);
+    font: inherit;
+  }
+  .inq input:focus, .inq select:focus, .inq textarea:focus { border-color: var(--accent); outline: none; }
+  .inq__hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .inq__foot { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; }
+  .inq__note { margin: 0; }
+  .inq__status { margin: 0; font-size: 0.9rem; }
+  .inq__status[data-ok] { color: var(--accent-cyan); }
+  .inq__status[data-err] { color: #e0746b; }
+  @media (max-width: 520px) { .inq__row { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  // Progressive enhancement: AJAX submit so the page doesn't navigate away.
+  // Falls back to a normal POST if fetch fails.
+  const form = document.querySelector<HTMLFormElement>('[data-inquire-form]');
+  const status = form?.querySelector<HTMLElement>('[data-status]');
+  form?.addEventListener('submit', async (e) => {
+    if (!form.action || form.action.includes('your-form-id')) return; // not configured → normal POST
+    e.preventDefault();
+    if (!status) return;
+    status.hidden = false;
+    status.removeAttribute('data-err');
+    status.textContent = 'Sending…';
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      });
+      if (res.ok) {
+        form.reset();
+        status.setAttribute('data-ok', '');
+        status.textContent = 'Thank you — your inquiry is on its way.';
+      } else {
+        throw new Error('bad status');
+      }
+    } catch {
+      status.setAttribute('data-err', '');
+      status.textContent = 'Something went wrong. Please email us directly.';
+    }
+  });
+</script>

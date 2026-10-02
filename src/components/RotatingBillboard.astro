@@ -1,0 +1,162 @@
+---
+// Rotating billboard — auto-cycling crossfade gallery (e.g. the 42 Eterno prints).
+// The image links to the series page; prev/next/pause controls sit below.
+// Autoplay pauses on hover/focus and off-screen; honors prefers-reduced-motion.
+export interface Props {
+  images: { src: string; alt: string }[];
+  /** where the billboard (and each frame) links to */
+  href?: string;
+  external?: boolean;
+  ratio?: string;
+  /** how slides fill the frame: 'cover' (crop) or 'contain' (full image) */
+  fit?: 'cover' | 'contain';
+  /** ms between frames */
+  interval?: number;
+}
+const { images, href, external = false, ratio = '3/2', fit = 'cover', interval = 4000 } = Astro.props;
+const linkAttrs = href ? (external ? { href, target: '_blank', rel: 'noopener' } : { href }) : null;
+---
+<figure class="bb" data-billboard data-interval={interval} style={`--ratio:${ratio}; --fit:${fit}`}>
+  <div class="bb__stage">
+    {images.map((img, i) => {
+      const inner = (
+        <img
+          src={img.src}
+          alt={img.alt}
+          class="bb__slide"
+          data-slide
+          data-i={i}
+          loading={i === 0 ? 'eager' : 'lazy'}
+          decoding="async"
+          draggable="false"
+        />
+      );
+      return linkAttrs ? (
+        <a class="bb__link" {...linkAttrs} data-slide-link data-i={i} aria-hidden={i === 0 ? undefined : 'true'} tabindex={i === 0 ? 0 : -1}>{inner}</a>
+      ) : inner;
+    })}
+  </div>
+
+  <div class="bb__bar">
+    <div class="bb__controls">
+      <button type="button" class="bb__btn" data-prev aria-label="Previous image">‹</button>
+      <button type="button" class="bb__btn" data-toggle aria-label="Pause slideshow" aria-pressed="false">
+        <span data-pause>❚❚</span><span data-play hidden>▶</span>
+      </button>
+      <button type="button" class="bb__btn" data-next aria-label="Next image">›</button>
+    </div>
+    <p class="bb__count small muted"><span data-cur>1</span> / {images.length}</p>
+  </div>
+</figure>
+
+<style>
+  /* the figure is exactly the square stage; controls overlay the image so the
+     billboard's height matches sibling image previews */
+  .bb { margin: 0; position: relative; }
+  .bb__stage {
+    position: relative; aspect-ratio: var(--ratio); width: 100%;
+    overflow: hidden; border-radius: var(--radius);
+    background: var(--bg); border: 1px solid var(--line-soft);
+  }
+  .bb__link, .bb__slide { position: absolute; inset: 0; display: block; }
+  .bb__slide { width: 100%; height: 100%; object-fit: var(--fit, cover); opacity: 0; transition: opacity 0.7s ease; }
+  /* active slide */
+  .bb__slide[data-active], .bb__link[data-active] .bb__slide { opacity: 1; }
+  .bb__link { opacity: 0; pointer-events: none; transition: opacity 0.7s ease; }
+  .bb__link[data-active] { opacity: 1; pointer-events: auto; }
+
+  .bb__bar {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    padding: 0.5rem; margin: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+    border-radius: 0 0 var(--radius) var(--radius);
+  }
+  .bb__controls { display: flex; gap: 0.35rem; }
+  .bb__btn {
+    width: 30px; height: 28px; display: grid; place-items: center;
+    background: rgba(0, 0, 0, 0.35); color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: var(--radius); cursor: pointer; font-size: 0.9rem; line-height: 1;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .bb__btn:hover { border-color: #fff; background: rgba(0, 0, 0, 0.55); }
+  .bb__count { margin: 0; font-family: var(--type); font-size: 0.72rem; letter-spacing: 0.06em; color: #fff; }
+
+  @media (prefers-reduced-motion: reduce) { .bb__slide, .bb__link { transition: none; } }
+</style>
+
+<script>
+  function init(root: HTMLElement) {
+    const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-slide]'));
+    const links = Array.from(root.querySelectorAll<HTMLElement>('[data-slide-link]'));
+    const cur = root.querySelector<HTMLElement>('[data-cur]')!;
+    const toggle = root.querySelector<HTMLButtonElement>('[data-toggle]')!;
+    const pauseIcon = root.querySelector<HTMLElement>('[data-pause]')!;
+    const playIcon = root.querySelector<HTMLElement>('[data-play]')!;
+    const interval = parseInt(root.dataset.interval || '4000', 10);
+    const n = slides.length;
+    if (!n) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let i = 0;
+    let timer: number | null = null;
+    let paused = reduce; // reduced-motion → no autoplay
+
+    const show = (next: number) => {
+      i = (next + n) % n;
+      slides.forEach((s, k) => {
+        s.toggleAttribute('data-active', k === i);
+        const link = links[k];
+        if (link) {
+          link.toggleAttribute('data-active', k === i);
+          link.setAttribute('aria-hidden', k === i ? 'false' : 'true');
+          link.tabIndex = k === i ? 0 : -1;
+        }
+      });
+      cur.textContent = String(i + 1);
+    };
+    const stop = () => { if (timer) { clearInterval(timer); timer = null; } };
+    const play = () => { stop(); if (!paused) timer = window.setInterval(() => show(i + 1), interval); };
+
+    const setPaused = (p: boolean) => {
+      paused = p;
+      pauseIcon.hidden = p; playIcon.hidden = !p;
+      toggle.setAttribute('aria-pressed', String(p));
+      toggle.setAttribute('aria-label', p ? 'Play slideshow' : 'Pause slideshow');
+      if (p) stop(); else play();
+    };
+
+    show(0);
+    root.querySelector('[data-prev]')!.addEventListener('click', () => { show(i - 1); if (!paused) play(); });
+    root.querySelector('[data-next]')!.addEventListener('click', () => { show(i + 1); if (!paused) play(); });
+    toggle.addEventListener('click', () => setPaused(!paused));
+
+    // pause on hover/focus
+    root.addEventListener('pointerenter', stop);
+    root.addEventListener('pointerleave', () => { if (!paused) play(); });
+    root.addEventListener('focusin', stop);
+    root.addEventListener('focusout', () => { if (!paused) play(); });
+
+    // only run while on screen
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting && !paused) play();
+          else stop();
+        }
+      }, { threshold: 0.2 }).observe(root);
+    } else {
+      play();
+    }
+
+    if (reduce) setPaused(true);
+  }
+
+  const start = () =>
+    document.querySelectorAll<HTMLElement>('[data-billboard]').forEach((el) => {
+      if (!el.dataset.init) { el.dataset.init = '1'; init(el); }
+    });
+  if (document.readyState !== 'loading') start();
+  else document.addEventListener('DOMContentLoaded', start);
+</script>

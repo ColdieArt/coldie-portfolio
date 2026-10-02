@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CollectionCard from '../components/CollectionCard.astro';
+import { collectionRows, collectionFor, collectionWorks } from '../data/works';
+import { personLd, breadcrumbLd, collectionPageLd } from '../data/jsonld';
+
+// Filthy Fiat project site (canonical).
+const FILTHY_FIAT_URL = 'https://filthyfiat.money';
+
+const desc =
+  'The Collection — a curated hub of Coldie’s physical and digital works, from early anaglyph 3D paintings on canvas (2010–2018) through landmark auction pieces, the Decentral Eyes portraits, Filthy Fiat, collaborations, and stereoscopic 3D landscapes.';
+---
+<BaseLayout
+  title="Collection"
+  description={desc}
+  path="/collection"
+  jsonld={[
+    personLd(),
+    collectionPageLd(collectionWorks),
+    breadcrumbLd([
+      { name: 'Home', path: '/' },
+      { name: 'Collection', path: '/collection' },
+    ]),
+  ]}
+>
+  <section class="col">
+    <div class="wrap">
+      <nav class="small muted col__crumb" aria-label="Breadcrumb"><a href="/">Home</a> · <span>Collection</span></nav>
+      <header class="col__head">
+        <p class="eyebrow">Physical & digital</p>
+        <h1>Collection</h1>
+        <!-- Answer-first: a citable summary sentence. -->
+        <p class="lede">
+          A curated hub of Coldie’s work, physical and digital — beginning with early anaglyph 3D
+          landscapes on canvas (2010–2018) and moving through the landmark auction pieces, the Decentral
+          Eyes portraits, Filthy Fiat, collaborations, and stereoscopic 3D landscapes. Physical works are
+          inquire-only; digital editions are collected on-chain with permanent, public provenance.
+        </p>
+        <p class="col__db"><a class="link-arrow" href="/releases">Search the full releases database</a></p>
+      </header>
+
+      {collectionRows.map((row) => {
+        const items = collectionFor(row.key);
+        if (!items.length && row.key !== 'filthy-fiat') return null;
+        return (
+          <section class="col__row" aria-labelledby={`row-${row.key}`}>
+            <div class="col__row-head">
+              <h2 id={`row-${row.key}`}>{row.title}</h2>
+              <p class="muted col__blurb">{row.blurb}</p>
+              {row.key === 'filthy-fiat' && (
+                <a class="link-arrow" href="/filthy-fiat">The Filthy Fiat project</a>
+              )}
+            </div>
+            <div class="col__grid">
+              {items.map((w) => <CollectionCard work={w} />)}
+            </div>
+            {row.key === 'filthy-fiat' && (
+              <p class="col__ff-out small">
+                <a href={FILTHY_FIAT_URL} target="_blank" rel="noopener" aria-label="Explore the Filthy Fiat project">
+                  Explore the Filthy Fiat project ↗
+                </a>
+              </p>
+            )}
+          </section>
+        );
+      })}
+
+      <p class="col__note muted small">
+        Physical works are offered by inquiry, shipped worldwide with a certificate of authenticity.
+        Digital editions are minted on Coldie’s own contract via Transient Labs — an artist-owned contract
+        is itself a mark of provenance; marketplace links point to secondary listings.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .col { padding-block: clamp(2.5rem, 6vw, 4.5rem) var(--section-y); }
+  .col__crumb { margin-bottom: 2rem; }
+  .col__crumb a { text-decoration: none; }
+  .col__head { max-width: 64ch; margin-bottom: clamp(3rem, 7vw, 5rem); }
+  .col__head h1 { margin: 0.2em 0; }
+  .col__db { margin: 1.2em 0 0; }
+
+  .col__row { margin-bottom: clamp(3.5rem, 8vw, 6rem); }
+  .col__row-head {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1.5rem;
+    border-top: 1px solid var(--line-soft); padding-top: 1.4rem; margin-bottom: 2rem;
+  }
+  .col__row-head h2 { margin: 0; }
+  .col__blurb { margin: 0; flex: 1 1 22ch; }
+
+  .col__grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.5rem, 3.5vw, 3rem);
+  }
+  .col__ff-out { margin-top: 1.5rem; }
+  .col__note {
+    margin-top: clamp(2rem, 5vw, 3.5rem); padding-top: 1.5rem;
+    border-top: 1px solid var(--line-soft); max-width: 70ch;
+  }
+  @media (max-width: 860px) { .col__grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .col__grid { grid-template-columns: 1fr; } }
+</style>

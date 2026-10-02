@@ -1,0 +1,136 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import WorkCard from '../components/WorkCard.astro';
+import { filthyFiatWorks, bySlug } from '../data/works';
+import { personLd, breadcrumbLd, filthyFiatLd } from '../data/jsonld';
+
+// Filthy Fiat project site (canonical).
+const FILTHY_FIAT_URL = 'https://filthyfiat.money';
+const buffett = bySlug('warren-buffett-filthy-fiat');
+const others = filthyFiatWorks.filter((w) => w.slug !== 'warren-buffett-filthy-fiat');
+const desc =
+  'Filthy Fiat is an art project by Coldie that transforms U.S. dollar bills he buried — and that were destroyed by mold — into a commentary on the fragility of fiat currency.';
+---
+<BaseLayout
+  title="Filthy Fiat"
+  description={desc}
+  path="/filthy-fiat"
+  ogImage={buffett?.image}
+  jsonld={[
+    personLd(),
+    filthyFiatLd(filthyFiatWorks.map((w) => w.slug)),
+    breadcrumbLd([
+      { name: 'Home', path: '/' },
+      { name: 'Filthy Fiat', path: '/filthy-fiat' },
+    ]),
+  ]}
+>
+  <article class="ffp">
+    <div class="wrap">
+      <nav class="small muted ffp__crumb" aria-label="Breadcrumb"><a href="/">Home</a> · <span>Filthy Fiat</span></nav>
+
+      <header class="ffp__head">
+        <p class="eyebrow">Project</p>
+        <h1>Filthy Fiat</h1>
+        <!-- Answer-first opening sentence an engine can lift whole. -->
+        <p class="lede">{desc}</p>
+      </header>
+
+      <figure class="ffp__video">
+        <div class="ffp__video-frame">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/Eti8Lp3nVGQ?rel=0"
+            title="Filthy Fiat — the story (video)"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </figure>
+
+      <div class="ffp__body">
+        <section aria-labelledby="ffp-story">
+          <h2 id="ffp-story">The buried box</h2>
+          <p>
+            In 2020, living in a wildfire-prone mountain town, Coldie buried a box that held two hundred
+            one-dollar bills. Two years later he exhumed it to find the cash had become a solid brick of
+            mold — unspendable.
+          </p>
+          <p>
+            He turned the mold-ruined bills into <em>Filthy Fiat</em>: each one a unique artifact created
+            by mold, moisture, and time, used as a visual motif for the fragility and debasement of fiat
+            currency. Those same buried bills became the facial features of the Christie’s piece
+            <a href="/work/warren-buffett-filthy-fiat"><em>Warren Buffett — Filthy Fiat</em></a> — a
+            duality of values between durable steel and magnetism and fragile money.
+          </p>
+
+          <h2>The currency as medium</h2>
+          <p>
+            Filthy Fiat reframes decay as material. The dollar — the most familiar symbol of stored value —
+            is rendered worthless by the ground itself, then made permanent as art. What money loses, the
+            work keeps.
+          </p>
+
+          <p class="ffp__cta">
+            <a class="btn btn--solid" href={FILTHY_FIAT_URL} target="_blank" rel="noopener" aria-label="Explore the Filthy Fiat project">
+              Explore the Filthy Fiat project ↗
+            </a>
+          </p>
+        </section>
+
+        {buffett && (
+          <figure class="ffp__feature">
+            <img
+              class="ffp__feature-img"
+              src="/works/filthy-fiat/raw-bills.webp"
+              alt="Extracted buried bills — mold-ruined US dollar bills"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption class="muted small">Extracted buried bills.</figcaption>
+          </figure>
+        )}
+      </div>
+
+      <h2 class="ffp__works-h">Works in the project</h2>
+      <div class="ffp__grid">
+        {filthyFiatWorks.map((w) => <WorkCard work={w} />)}
+      </div>
+
+      <p class="ffp__back"><a class="link-arrow" href="/#work">Back to all work</a></p>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .ffp { padding-block: clamp(2.5rem, 6vw, 4.5rem) var(--section-y); }
+  .ffp__crumb { margin-bottom: 2rem; }
+  .ffp__crumb a { text-decoration: none; }
+  .ffp__head { max-width: 70ch; margin-bottom: clamp(1.5rem, 4vw, 2.5rem); }
+  .ffp__head h1 { margin: 0.2em 0; }
+  .ffp__video { margin: 0 0 clamp(2.5rem, 6vw, 4rem); }
+  .ffp__video-frame {
+    position: relative; aspect-ratio: 16/9; width: 100%;
+    border-radius: var(--radius); overflow: hidden;
+    border: 1px solid var(--line); background: #000;
+  }
+  .ffp__video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .ffp__body {
+    display: grid; grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(2rem, 6vw, 5rem); align-items: start;
+    margin-bottom: clamp(3rem, 7vw, 5rem);
+  }
+  .ffp__body h2 { margin-top: 0; }
+  .ffp__body h2 + h2, .ffp__body p + h2 { margin-top: 2em; }
+  .ffp__cta { margin-top: 1.8em; }
+  .ffp__feature { margin: 0; max-width: 480px; }
+  .ffp__feature-img { width: 100%; height: auto; display: block; } /* transparent cutout — floats on the page */
+  .ffp__feature figcaption { margin-top: 1em; }
+  .ffp__works-h { margin-bottom: 1.5rem; }
+  .ffp__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.5rem, 3.5vw, 3rem); }
+  .ffp__back { margin-top: clamp(2.5rem, 6vw, 4rem); }
+  @media (max-width: 860px) { .ffp__body { grid-template-columns: 1fr; } .ffp__feature { max-width: 460px; margin-inline: auto; } }
+  @media (max-width: 760px) { .ffp__grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 460px) { .ffp__grid { grid-template-columns: 1fr; } }
+</style>

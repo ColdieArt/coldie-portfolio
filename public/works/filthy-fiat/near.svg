@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PLACEHOLDER Filthy Fiat near layer: mold blooms + stamp.
+     Replace with a real transparent PNG export. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 1600" width="640" height="1600" role="img" aria-label="Placeholder near layer: mold blooms across the currency">
+  <g fill="#5e7140" opacity="0.78">
+    <circle cx="180" cy="430" r="58"/><circle cx="230" cy="470" r="34"/>
+    <circle cx="470" cy="700" r="70"/><circle cx="420" cy="660" r="40"/>
+    <circle cx="250" cy="980" r="64"/><circle cx="300" cy="1020" r="38"/>
+    <circle cx="450" cy="1240" r="72"/><circle cx="400" cy="1200" r="40"/>
+  </g>
+  <g fill="#2c3a1e" opacity="0.6">
+    <circle cx="195" cy="445" r="22"/><circle cx="455" cy="690" r="26"/>
+    <circle cx="265" cy="995" r="24"/><circle cx="465" cy="1255" r="28"/>
+  </g>
+  <g transform="rotate(-14 320 820)">
+    <rect x="150" y="780" width="340" height="80" rx="4" fill="none" stroke="#e6362a" stroke-width="5" opacity="0.85"/>
+    <text x="320" y="838" text-anchor="middle" font-family="Georgia, serif" font-size="44" fill="#e6362a" opacity="0.9" letter-spacing="3">FILTHY FIAT</text>
+  </g>
+</svg>

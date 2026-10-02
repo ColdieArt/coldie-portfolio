@@ -1,0 +1,199 @@
+---
+// Featured project block — Filthy Fiat. A backstory-style parallax backdrop
+// (echoing filthyfiat.money): the moldy buried-bills image drifts on scroll +
+// mouse beneath a dark overlay, with the story over it. Then the works grid.
+import { filthyFiatWorks } from '../data/works';
+import WorkCard from './WorkCard.astro';
+
+// Filthy Fiat project site (canonical).
+const FILTHY_FIAT_URL = 'https://filthyfiat.money';
+// Available now from the official store.
+const STORE_PRODUCT = {
+  title: 'Filthy Fiat Flag — BTC 2025',
+  meta: 'Print · $500',
+  image: '/works/filthy-fiat/flag-01.jpg',
+  alt: 'Filthy Fiat Flag — a Bitcoin flag built from mold-ruined US dollar bills, print by Coldie',
+  href: 'https://coldie3d.myshopify.com/products/filthy-fiat-flag-01',
+};
+
+const seriesGrid = filthyFiatWorks.filter((w) => w.slug !== 'warren-buffett-filthy-fiat');
+---
+<section id="filthy-fiat" class="ff section--flat" aria-labelledby="ff-h">
+  <div class="ff__backstory" data-ffbg>
+    <img
+      class="ff__bg"
+      src="/works/filthy-fiat/mold-bills.jpg"
+      alt=""
+      aria-hidden="true"
+      data-ffbg-img
+      decoding="async"
+    />
+    <div class="ff__scrim" aria-hidden="true"></div>
+    <div class="wrap ff__backstory-inner">
+      <header class="ff__head">
+        <p class="eyebrow">Current series</p>
+        <h2 id="ff-h">Filthy Fiat</h2>
+        <!-- Answer-first sentence: written to be lifted whole by an answer engine. -->
+        <p class="lede ff__lede">
+          Filthy Fiat is an art project by Coldie that transforms U.S. dollar bills he buried — and that
+          were destroyed by mold — into a commentary on the fragility and debasement of fiat currency.
+        </p>
+        <p class="ff__story">
+          In 2020, living in a wildfire-prone mountain town, Coldie buried a box that held two hundred
+          one-dollar bills. Two years later he exhumed it to find the cash had fused into a solid brick of
+          mold — unspendable. Those same buried bills form the facial features of the Christie’s piece
+          <a href="/work/warren-buffett-filthy-fiat"><em>Warren Buffett — Filthy Fiat</em></a>.
+        </p>
+        <p class="ff__cta">
+          <a class="btn btn--solid" href={FILTHY_FIAT_URL} target="_blank" rel="noopener" aria-label="Explore the Filthy Fiat project">
+            Explore the Filthy Fiat project ↗
+          </a>
+          <a class="link-arrow ff__more" href="/filthy-fiat">Read the full story</a>
+        </p>
+      </header>
+    </div>
+  </div>
+
+  <div class="wrap ff__store">
+    <a class="ff__store-card" href={STORE_PRODUCT.href} target="_blank" rel="noopener" aria-label={`${STORE_PRODUCT.title} — shop on the official store`}>
+      <img src={STORE_PRODUCT.image} alt={STORE_PRODUCT.alt} loading="lazy" decoding="async" />
+      <span class="ff__store-text">
+        <span class="eyebrow">Available now · Store</span>
+        <span class="ff__store-title">{STORE_PRODUCT.title}</span>
+        <span class="muted small">{STORE_PRODUCT.meta}</span>
+        <span class="link-arrow ff__store-link">Shop on the official store ↗</span>
+      </span>
+    </a>
+  </div>
+
+  {seriesGrid.length > 0 && (
+    <div class="wrap ff__works">
+      <div class="ff__grid">
+        {seriesGrid.map((w) => <WorkCard work={w} />)}
+      </div>
+    </div>
+  )}
+</section>
+
+<style>
+  .ff { border-top: 1px solid var(--line-soft); }
+
+  /* Backstory parallax band — image drifts on scroll + mouse under a dark overlay */
+  .ff__backstory {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    min-height: clamp(28rem, 60vh, 40rem);
+    padding-block: clamp(3.5rem, 9vw, 7rem);
+    isolation: isolate;
+  }
+  .ff__bg {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 116%;
+    height: 132%; /* bleed so scroll/mouse travel never reveals an edge */
+    object-fit: cover;
+    transform: translate3d(-50%, -50%, 0);
+    will-change: transform;
+    z-index: -2;
+  }
+  .ff__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    /* warm dark overlay (echoes the filthyfiat.money backstory), fading to the page */
+    background:
+      linear-gradient(to right, var(--bg-flat) 6%, rgba(10, 10, 10, 0.72) 55%, rgba(10, 10, 10, 0.5) 100%),
+      linear-gradient(to top, var(--bg-flat), transparent 55%);
+  }
+  .ff__backstory-inner { width: 100%; }
+  .ff__head { max-width: 56ch; }
+  .ff__lede { margin: 0 0 1.2em; }
+  .ff__story { color: var(--ink-soft); max-width: 52ch; }
+  .ff__cta { display: flex; gap: 1.2rem; align-items: center; flex-wrap: wrap; margin-top: 1.6em; }
+
+  /* Warren Buffett — Filthy Fiat featured area (Christie's billboard + wall text) */
+  /* Store item — Filthy Fiat Flag, links to the official store */
+  .ff__store { padding-block: clamp(3rem, 7vw, 5rem) clamp(2.5rem, 6vw, 4rem); }
+  .ff__store-card {
+    display: grid; grid-template-columns: minmax(0, 360px) 1fr;
+    gap: clamp(1.5rem, 4vw, 3rem); align-items: center;
+    text-decoration: none;
+    border: 1px solid var(--line); border-radius: var(--radius);
+    padding: clamp(1rem, 2.5vw, 1.5rem); background: var(--bg-raise);
+    transition: border-color 0.2s;
+  }
+  .ff__store-card:hover { border-color: var(--red); }
+  .ff__store-card > img {
+    width: 100%; aspect-ratio: 3/2; object-fit: cover;
+    border-radius: var(--radius); display: block;
+  }
+  .ff__store-text { display: flex; flex-direction: column; gap: 0.25em; min-width: 0; }
+  .ff__store-title { font-family: var(--serif); font-size: 1.4rem; color: var(--ink); }
+  .ff__store-link { margin-top: 0.6em; }
+  @media (max-width: 620px) { .ff__store-card { grid-template-columns: 1fr; } }
+
+  .ff__works { padding-block: clamp(0rem, 2vw, 1rem) clamp(2.5rem, 6vw, 4rem); }
+  .ff__grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.5rem, 3.5vw, 3rem);
+  }
+  @media (max-width: 760px) { .ff__grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 460px) { .ff__grid { grid-template-columns: 1fr; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ff__bg { transform: translate3d(-50%, -50%, 0) !important; }
+  }
+</style>
+
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function init(band: HTMLElement) {
+    const img = band.querySelector<HTMLElement>('[data-ffbg-img]');
+    if (!img) return;
+
+    let mx = 0, my = 0; // eased mouse drift (-0.5..0.5)
+    let tmx = 0, tmy = 0;
+    let scrollPct = 0; // -0.5..0.5 as the band crosses the viewport
+    let raf = 0;
+
+    const render = () => {
+      mx += (tmx - mx) * 0.08;
+      my += (tmy - my) * 0.08;
+      // scroll drives the larger vertical drift; mouse adds a subtle parallax
+      const x = mx * 26;
+      const y = scrollPct * 60 + my * 18;
+      img.style.transform = `translate3d(calc(-50% + ${x.toFixed(1)}px), calc(-50% + ${y.toFixed(1)}px), 0)`;
+      if (Math.abs(tmx - mx) > 0.001 || Math.abs(tmy - my) > 0.001) raf = requestAnimationFrame(render);
+      else raf = 0;
+    };
+    const kick = () => { if (!raf) raf = requestAnimationFrame(render); };
+
+    const onScroll = () => {
+      const r = band.getBoundingClientRect();
+      const vh = window.innerHeight || 1;
+      scrollPct = (r.top + r.height / 2) / vh - 0.5; // ~ -0.5..0.5
+      kick();
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    window.addEventListener('pointermove', (e) => {
+      tmx = e.clientX / (window.innerWidth || 1) - 0.5;
+      tmy = e.clientY / (window.innerHeight || 1) - 0.5;
+      kick();
+    }, { passive: true });
+  }
+
+  if (!reduce) {
+    const start = () =>
+      document.querySelectorAll<HTMLElement>('[data-ffbg]').forEach((el) => {
+        if (!el.dataset.init) { el.dataset.init = '1'; init(el); }
+      });
+    if (document.readyState !== 'loading') start();
+    else document.addEventListener('DOMContentLoaded', start);
+  }
+</script>

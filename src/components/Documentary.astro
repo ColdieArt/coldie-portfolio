@@ -1,0 +1,96 @@
+---
+// Front Row 3D — the section carries the concert-photography work (§8): a large
+// "billboard" slider of the Coachella 2010 3D photos, the 10-minute documentary
+// intermission, and prominent links to the archived Coachella galleries.
+import { site } from '../data/site';
+import FrontRow3DSlider from './FrontRow3DSlider.astro';
+
+const DIR = '/images/front-row-3d/coachella-2010';
+const slides = [
+  { act: 'Them Crooked Vultures', file: 'them-crooked-vultures' },
+  { act: 'Julian Casablancas', file: 'julian-casablancas' },
+  { act: 'MGMT', file: 'mgmt' },
+  { act: 'She & Him', file: 'she-and-him' },
+  { act: 'Perry Farrell', file: 'perry-farrell' },
+  { act: 'Edward Sharpe and the Magnetic Zeros', file: 'edward-sharpe' },
+  { act: 'Hot Chip', file: 'hot-chip' },
+  { act: 'Coachella crowd', file: 'crowd-01' },
+  { act: 'Coachella crowd', file: 'crowd-02' },
+].map((s) => ({
+  src: `${DIR}/coachella-2010-${s.file}.jpg`,
+  caption: s.act,
+  alt: `${s.act} at Coachella 2010, shot in stereoscopic 3D by Coldie.`,
+}));
+
+const GALLERY_2009 = 'https://web.archive.org/web/20091012095134/http://www.coachella.com/gallery/20093d';
+const GALLERY_2010 = 'https://web.archive.org/web/20100914213515/http://coachella.com/gallery/20103d';
+
+// ImageObject list — hands engines the act names + location in machine-readable form.
+const imagesLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Coachella 2010 3D Concert Photography by Coldie',
+  itemListElement: slides.map((s, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': 'ImageObject',
+      contentUrl: new URL(s.src, site.url).href,
+      caption: s.caption,
+      creator: { '@id': `${site.url}/#person` },
+      contentLocation: { '@type': 'Place', name: 'Coachella Valley Music and Arts Festival, 2010' },
+    },
+  })),
+};
+---
+<section class="doc section--flat" aria-labelledby="doc-h">
+  <div class="wrap doc__head">
+    <p class="eyebrow">Front Row 3D — 2009–2018</p>
+    <h2 id="doc-h" class="doc__title">A decade shooting live music in stereoscopic 3D.</h2>
+    <p class="lede doc__lede">
+      Coldie photographed rock and hip-hop in real depth with a camera he built himself, serving as the
+      official 3D photographer of Coachella in 2009 and 2010 — believing a technology that didn’t yet
+      exist would one day render the images in full dimensional color. In 2021, viewing the archive in VR
+      for the first time, that conviction was confirmed.
+    </p>
+  </div>
+
+  <div class="wrap doc__slider">
+    <h3 class="doc__sub-h">Coachella 2010 3D Concert Photography</h3>
+    <FrontRow3DSlider slides={slides} />
+  </div>
+
+  <div class="wrap">
+    <div class="doc__galleries">
+      <p class="doc__galleries-h muted small">Featured on coachella.com, 2009–2010</p>
+      <div class="doc__galleries-btns">
+        <a class="btn" href={GALLERY_2009} target="_blank" rel="noopener">View the archived 2009 Coachella 3D gallery ↗</a>
+        <a class="btn" href={GALLERY_2010} target="_blank" rel="noopener">View the archived 2010 Coachella 3D gallery ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <script type="application/ld+json" set:html={JSON.stringify(imagesLd)} />
+</section>
+
+<style>
+  .doc { padding-block: clamp(4rem, 9vw, 8rem); border-block: 1px solid var(--line-soft); }
+  /* centered section intro */
+  .doc__head { max-width: 70ch; margin: 0 auto clamp(2rem, 5vw, 3.5rem); text-align: center; }
+  .doc__title { margin: 0 0 0.5em; }
+  .doc__lede { margin: 0 auto; }
+
+  .doc__slider { margin-bottom: clamp(3rem, 7vw, 5rem); }
+  /* match the site's section-heading typeface (display, uppercase) */
+  .doc__sub-h {
+    font-family: var(--display);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    text-align: center;
+    margin: 0 0 1.4em;
+  }
+
+  .doc__galleries { text-align: center; }
+  .doc__galleries-h { margin: 0 0 1em; }
+  .doc__galleries-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+</style>

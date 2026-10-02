@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TechEpochalypse from '../components/TechEpochalypse.astro';
+import CurrentSeries from '../components/CurrentSeries.astro';
+import ProvenanceStrip from '../components/ProvenanceStrip.astro';
+import Pillar from '../components/Pillar.astro';
+import Story from '../components/Story.astro';
+import Documentary from '../components/Documentary.astro';
+import Pioneer from '../components/Pioneer.astro';
+import FilthyFiat from '../components/FilthyFiat.astro';
+import Acquire from '../components/Acquire.astro';
+import { site } from '../data/site';
+import { personLd, websiteLd } from '../data/jsonld';
+---
+<BaseLayout
+  title={site.name}
+  description={site.oneLineBio}
+  path="/"
+  jsonld={[websiteLd(), personLd()]}
+>
+  <h1 class="sr-only">Coldie — stereoscopic-3D and kinetic artist.</h1>
+
+  <!-- Tech Epochalypse — top of page -->
+  <TechEpochalypse />
+
+  <!-- Current Exhibition -->
+  <CurrentSeries />
+
+  <FilthyFiat />
+
+  <ProvenanceStrip />
+
+  <!-- 3. The work — three pillars -->
+  <div id="work">
+    <div class="wrap work__intro">
+      <p class="eyebrow">The Thesis</p>
+      <h2 class="work__h">Fooling the eye, then rewarding it.</h2>
+      <p class="lede work__lede">
+        My work begins in experience. When something profound happens to me, my response is to create. I
+        have found the key is staying open to the feeling in those moments, capturing the essence of that
+        magic and holding it inside the work. From there it becomes a puzzle to decode, one that unfolds
+        into an experience you can step inside.
+      </p>
+    </div>
+    <Pillar pillar="kinetic" index={1} />
+  </div>
+
+  <!-- Pioneer, on-chain — below Touch the Art -->
+  <Pioneer />
+
+  <!-- Front Row 3D — below the pioneer section -->
+  <Documentary />
+
+  <!-- Story -->
+  <Story />
+
+  <!-- Acquire / inquire -->
+  <Acquire />
+</BaseLayout>
+
+<style>
+  .work__intro { padding-top: clamp(3.5rem, 8vw, 6rem); max-width: 66ch; }
+  .work__h { margin: 0 0 0.4em; }
+  .work__lede { margin: 0 0 1em; }
+  .work__lede2 { margin: 0; color: var(--ink-soft); }
+</style>

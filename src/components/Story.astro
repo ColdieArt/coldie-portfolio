@@ -1,0 +1,115 @@
+---
+// "In his own words" — Coldie's first interview featured, then interviews across
+// his career in a spacious two-column index. Facade embeds (YouTubeLite) keep it
+// clean and gallery-grade. Titles/descriptions pulled from the YouTube pages.
+import YouTubeLite from './YouTubeLite.astro';
+
+const FEATURED_ID = 'kMIMr8Ro9So';
+
+const interviews = [
+  {
+    id: 'Q8cO3HhYGr4',
+    title: 'Digital Art’s Next Frontier',
+    source: 'Raoul Pal · The Journey Man',
+    desc: 'A deep dive into the evolution of digital art: from early stereoscopic experiments and the birth of on-chain art to work blending AI, physical installations, touchscreens, and blockchain-native ownership.',
+  },
+  {
+    id: 'WRO4jSxHdOA',
+    title: 'Coldie and the NFT Gold Rush',
+    source: 'Studio visit · Northern California',
+    desc: 'Coldie minted his first work on-chain via SuperRare in 2018 and became one of the most prolific digital artists in the space, with mixed-media portraits of figures including Edward Snowden, Vitalik Buterin, and John McAfee.',
+  },
+  {
+    id: 'q0f95uetlxw',
+    start: 674,
+    title: 'Origin Stories #59',
+    source: 'NFT Origin Stories',
+    desc: 'Coldie traces his obsession with depth: his first stereoscopic gel transfer, early on-chain experiments, the Genesis piece, and the light-painting and portrait series that followed.',
+  },
+  {
+    id: 'yVyx-bMoBJQ',
+    title: 'Tech Epochalypse',
+    source: 'NFT Drop Spotlight',
+    desc: 'A close look at Coldie’s Tech Epochalypse collection and the ideas behind it.',
+  },
+];
+---
+<section id="story" class="story" aria-labelledby="story-h">
+  <div class="wrap">
+    <header class="story__head">
+      <p class="eyebrow">In his own words</p>
+      <h2 id="story-h">A life spent capturing depth, and trusting the technology would catch up.</h2>
+    </header>
+
+    <figure class="story__feature">
+      <YouTubeLite id={FEATURED_ID} title="Coldie — first interview" />
+      <figcaption class="story__feature-cap">
+        <span class="story__kicker">The first interview</span>
+        <p class="muted">
+          Featuring stereoscopic 3D artwork including <em>Front Row 3D: Photography from the Coachella
+          Music Festival</em>, and works that would later be tokenized as digital works.
+        </p>
+      </figcaption>
+    </figure>
+
+    <ol class="story__index" aria-label="More interviews">
+      {interviews.map((iv, i) => (
+        <li class="iv">
+          <YouTubeLite id={iv.id} title={`${iv.title} — ${iv.source}`} start={iv.start} />
+          <div class="iv__meta">
+            <p class="iv__line">
+              <span class="iv__num">{String(i + 1).padStart(2, '0')}</span>
+              <span class="iv__source">{iv.source}</span>
+            </p>
+            <h3 class="iv__title">{iv.title}</h3>
+            <p class="iv__desc">{iv.desc}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .story { padding-block: clamp(4.5rem, 10vw, 9rem); border-top: 1px solid var(--line-soft); }
+  .story__head { max-width: 30ch; margin-bottom: clamp(2.5rem, 6vw, 4.5rem); }
+  .story__head h2 { margin: 0; }
+
+  /* featured interview */
+  .story__feature { margin: 0 0 clamp(4rem, 9vw, 7rem); }
+  .story__feature-cap {
+    display: grid; grid-template-columns: auto 1fr; gap: clamp(1rem, 3vw, 3rem);
+    align-items: start; margin-top: 1.4em;
+  }
+  .story__kicker {
+    font-family: var(--type); font-size: 0.72rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--red); white-space: nowrap; padding-top: 0.2em;
+  }
+  .story__feature-cap p { margin: 0; max-width: 60ch; }
+
+  /* two-column interview index */
+  .story__index {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    column-gap: clamp(2.5rem, 5vw, 5.5rem);
+    row-gap: clamp(3.5rem, 7vw, 6rem);
+  }
+  .iv { margin: 0; }
+  .iv__meta { margin-top: 1.4em; }
+  .iv__line {
+    display: flex; align-items: baseline; gap: 0.9em; margin: 0 0 0.5em;
+    border-top: 1px solid var(--line-soft); padding-top: 0.9em;
+  }
+  .iv__num { font-family: var(--type); font-size: 0.8rem; letter-spacing: 0.08em; color: var(--red); }
+  .iv__source {
+    font-family: var(--type); font-size: 0.72rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink-mute);
+  }
+  .iv__title { font-family: var(--serif); font-size: clamp(1.35rem, 2vw, 1.75rem); line-height: 1.15; margin: 0 0 0.5em; }
+  .iv__desc { margin: 0; color: var(--ink-soft); max-width: 48ch; }
+
+  @media (max-width: 760px) {
+    .story__index { grid-template-columns: 1fr; }
+    .story__feature-cap { grid-template-columns: 1fr; gap: 0.4rem; }
+  }
+</style>

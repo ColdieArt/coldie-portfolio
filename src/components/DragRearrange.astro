@@ -1,0 +1,188 @@
+---
+export interface Piece {
+  label: string;
+  /** start position as % of board */
+  x: number;
+  y: number;
+  /** width as % of board */
+  w: number;
+  src?: string; // optional piece image; falls back to a labeled chip
+}
+
+export interface Props {
+  /** The dignified still shown by default (background of the board). */
+  image: string;
+  imageAlt: string;
+  ratio?: string;
+  pieces?: Piece[];
+  class?: string;
+}
+
+const {
+  image,
+  imageAlt,
+  ratio = '4/5',
+  class: className = '',
+  pieces = [
+    { label: 'left eye', x: 30, y: 34, w: 16 },
+    { label: 'right eye', x: 56, y: 34, w: 16 },
+    { label: 'nose', x: 44, y: 50, w: 13 },
+    { label: 'mouth', x: 38, y: 66, w: 26 },
+  ],
+} = Astro.props;
+---
+
+<figure class={`drag ${className}`} data-drag style={`--ratio:${ratio}`}>
+  <div class="drag__board" data-board>
+    <img class="drag__still" src={image} alt={imageAlt} loading="lazy" decoding="async" draggable="false" />
+    <div class="drag__pieces" data-pieces hidden>
+      {pieces.map((p) => (
+        <button
+          type="button"
+          class="drag__piece"
+          data-piece
+          style={`left:${p.x}%; top:${p.y}%; width:${p.w}%;`}
+          aria-label={`Move ${p.label}`}
+        >
+          {p.src ? <img src={p.src} alt="" draggable="false" /> : <span>{p.label}</span>}
+        </button>
+      ))}
+    </div>
+  </div>
+  <figcaption class="drag__bar">
+    <button type="button" class="btn" data-drag-toggle aria-pressed="false">
+      <span data-label>Try it — rearrange the pieces</span>
+    </button>
+    <button type="button" class="btn btn--ghost" data-drag-reset hidden>Reset</button>
+  </figcaption>
+</figure>
+
+<style>
+  .drag { margin: 0; }
+  .drag__board {
+    position: relative;
+    aspect-ratio: var(--ratio);
+    width: 100%;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--bg-raise);
+    touch-action: none; /* let us own pointer dragging */
+  }
+  .drag__still { width: 100%; height: 100%; object-fit: cover; }
+  .drag__pieces { position: absolute; inset: 0; }
+
+  .drag__piece {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    aspect-ratio: 1;
+    display: grid; place-items: center;
+    border: 1px solid color-mix(in srgb, var(--accent) 60%, transparent);
+    background: color-mix(in srgb, var(--bg) 55%, transparent);
+    color: var(--ink);
+    font-size: 0.7rem; letter-spacing: 0.04em;
+    border-radius: 50%;
+    cursor: grab;
+    backdrop-filter: blur(2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+    transition: box-shadow 0.2s;
+    user-select: none;
+  }
+  .drag__piece img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
+  .drag__piece[data-grabbing] { cursor: grabbing; box-shadow: 0 12px 30px rgba(0,0,0,0.55); z-index: 3; }
+
+  .drag[data-on] .drag__still { filter: brightness(0.5) saturate(0.7); }
+
+  .drag__bar { display: flex; gap: 0.75rem; align-items: center; justify-content: center; margin-top: 1rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .drag__piece { transition: none; }
+  }
+</style>
+
+<script>
+  function init(root: HTMLElement) {
+    const board = root.querySelector<HTMLElement>('[data-board]')!;
+    const piecesWrap = root.querySelector<HTMLElement>('[data-pieces]')!;
+    const toggle = root.querySelector<HTMLButtonElement>('[data-drag-toggle]')!;
+    const label = toggle.querySelector<HTMLElement>('[data-label]')!;
+    const reset = root.querySelector<HTMLButtonElement>('[data-drag-reset]')!;
+    const pieces = Array.from(root.querySelectorAll<HTMLElement>('[data-piece]'));
+
+    // Remember home positions so Reset is honest.
+    const home = pieces.map((p) => ({ left: p.style.left, top: p.style.top }));
+
+    toggle.addEventListener('click', () => {
+      const on = root.toggleAttribute('data-on');
+      toggle.setAttribute('aria-pressed', String(on));
+      label.textContent = on ? 'Done' : 'Try it — rearrange the pieces';
+      piecesWrap.hidden = !on;
+      reset.hidden = !on;
+    });
+
+    reset.addEventListener('click', () => {
+      pieces.forEach((p, i) => {
+        p.style.left = home[i].left;
+        p.style.top = home[i].top;
+      });
+    });
+
+    // Pointer drag — works for mouse and touch alike.
+    let active: HTMLElement | null = null;
+    let dx = 0, dy = 0;
+
+    const onDown = (e: PointerEvent) => {
+      const t = (e.target as HTMLElement).closest<HTMLElement>('[data-piece]');
+      if (!t) return;
+      active = t;
+      t.setAttribute('data-grabbing', '');
+      t.setPointerCapture(e.pointerId);
+      const r = t.getBoundingClientRect();
+      dx = e.clientX - (r.left + r.width / 2);
+      dy = e.clientY - (r.top + r.height / 2);
+      e.preventDefault();
+    };
+    const onMove = (e: PointerEvent) => {
+      if (!active) return;
+      const b = board.getBoundingClientRect();
+      let nx = ((e.clientX - dx - b.left) / b.width) * 100;
+      let ny = ((e.clientY - dy - b.top) / b.height) * 100;
+      nx = Math.max(0, Math.min(100, nx));
+      ny = Math.max(0, Math.min(100, ny));
+      active.style.left = nx + '%';
+      active.style.top = ny + '%';
+    };
+    const onUp = () => {
+      if (!active) return;
+      active.removeAttribute('data-grabbing');
+      active = null;
+    };
+
+    board.addEventListener('pointerdown', onDown);
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+
+    // Keyboard nudge for accessibility.
+    pieces.forEach((p) => {
+      p.addEventListener('keydown', (e) => {
+        const step = 3;
+        const cur = { l: parseFloat(p.style.left), t: parseFloat(p.style.top) };
+        const k = (e as KeyboardEvent).key;
+        if (k === 'ArrowLeft') cur.l -= step;
+        else if (k === 'ArrowRight') cur.l += step;
+        else if (k === 'ArrowUp') cur.t -= step;
+        else if (k === 'ArrowDown') cur.t += step;
+        else return;
+        e.preventDefault();
+        p.style.left = Math.max(0, Math.min(100, cur.l)) + '%';
+        p.style.top = Math.max(0, Math.min(100, cur.t)) + '%';
+      });
+    });
+  }
+
+  const start = () =>
+    document.querySelectorAll<HTMLElement>('[data-drag]').forEach((el) => {
+      if (!el.dataset.init) { el.dataset.init = '1'; init(el); }
+    });
+  if (document.readyState !== 'loading') start();
+  else document.addEventListener('DOMContentLoaded', start);
+</script>

@@ -1,0 +1,130 @@
+---
+// Current Series — featured band at the top of the homepage. Renders each active
+// series as a block (in order), pulling work cards via `seriesKey` or showing
+// explicit images. Data-driven via `currentSeriesList` in site.ts.
+import { currentSeriesList } from '../data/site';
+import { bySeries } from '../data/works';
+import WorkCard from './WorkCard.astro';
+import RotatingBillboard from './RotatingBillboard.astro';
+
+const blocks = currentSeriesList.map((s) => ({
+  ...s,
+  works: s.seriesKey ? bySeries(s.seriesKey).slice(0, 3) : [],
+}));
+---
+<section id="current-series" class="cs" aria-labelledby="cs-h">
+  <div class="wrap">
+    <p class="eyebrow" id="cs-h">Current Exhibition</p>
+
+    {blocks.map((b) => (
+      <div class="cs__block">
+        <div class="cs__intro">
+          <h2>{b.name}</h2>
+          <p class="lede cs__blurb">{b.blurb}</p>
+          {(b.primary || b.secondary) && (
+            <p class="cs__cta">
+              {b.primary && (
+                <a
+                  class="btn btn--solid"
+                  href={b.primary.href}
+                  {...(b.primary.external ? { target: '_blank', rel: 'noopener' } : {})}
+                >{b.primary.label}{b.primary.external ? ' ↗' : ''}</a>
+              )}
+              {b.secondary && <a class="link-arrow" href={b.secondary.href}>{b.secondary.label}</a>}
+            </p>
+          )}
+        </div>
+
+        {b.eternoItems ? (
+          <div class="cs__items">
+            {b.eternoItems.map((item) => (
+              <article class="eitem">
+                <div class="eitem__preview">
+                  {item.prints ? (
+                    <RotatingBillboard images={item.prints} href={item.href} external={true} ratio="1/1" fit="contain" />
+                  ) : (
+                    <a class="eitem__imglink" href={item.href} target="_blank" rel="noopener">
+                      <img src={item.image} alt={item.alt} loading="lazy" decoding="async" />
+                    </a>
+                  )}
+                </div>
+                <div class="eitem__text">
+                  <p class="eitem__tag">At Eterno Gallery</p>
+                  <h3 class="eitem__title">
+                    <a href={item.href} target="_blank" rel="noopener">{item.title}</a>
+                  </h3>
+                  <p class="eitem__desc muted">{item.desc}</p>
+                  <a class="link-arrow" href={item.href} target="_blank" rel="noopener">View on Eterno</a>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div class="cs__grid">
+            {b.works.length > 0
+              ? b.works.map((w) => <WorkCard work={w} />)
+              : (b.images ?? []).map((img) => (
+                  <a class="cs__img" href={b.primary?.href ?? '#'}>
+                    <img src={img.src} alt={img.alt} loading="lazy" decoding="async" />
+                  </a>
+                ))}
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .cs { padding-block: clamp(3rem, 7vw, 6rem); border-bottom: 1px solid var(--line-soft); }
+  .cs > .wrap > .eyebrow { margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .cs__block + .cs__block {
+    margin-top: clamp(3rem, 7vw, 5.5rem);
+    padding-top: clamp(3rem, 7vw, 5.5rem);
+    border-top: 1px solid var(--line-soft);
+  }
+  .cs__intro { max-width: 64ch; margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+  .cs__intro h2 { margin: 0 0 0.3em; }
+  .cs__blurb { margin: 0 0 1.4em; }
+  .cs__cta { display: flex; gap: 1.2rem; align-items: center; flex-wrap: wrap; margin: 0; }
+  .cs__grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.5rem, 3.5vw, 3rem);
+  }
+  .cs__img {
+    display: block; overflow: hidden; border-radius: var(--radius);
+    background: var(--bg-raise); border: 1px solid var(--line-soft);
+  }
+  .cs__img img {
+    width: 100%; aspect-ratio: 4/5; object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.22,0.61,0.36,1);
+  }
+  .cs__img:hover img { transform: scale(1.03); }
+
+  /* Eterno items — three columns, each a card: square preview, then its text */
+  .cs__items {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.75rem, 4vw, 3.25rem);
+    align-items: start;
+  }
+  .eitem { display: flex; flex-direction: column; min-width: 0; }
+  .eitem__preview { width: 100%; }
+  .eitem__imglink { display: block; overflow: hidden; border-radius: var(--radius); border: 1px solid var(--line-soft); background: var(--bg-raise); }
+  .eitem__imglink img {
+    width: 100%; aspect-ratio: 1; object-fit: contain; display: block;
+    transition: transform 0.6s cubic-bezier(0.22,0.61,0.36,1);
+  }
+  .eitem__imglink:hover img { transform: scale(1.03); }
+  .eitem__text { min-width: 0; margin-top: 1.1em; }
+  .eitem__tag { font-family: var(--type); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin: 0 0 0.4em; }
+  .eitem__title { font-family: var(--serif); font-size: clamp(1.2rem, 1.8vw, 1.45rem); line-height: 1.2; margin: 0 0 0.4em; }
+  .eitem__title a { text-decoration: none; }
+  .eitem__title a:hover { color: var(--red); }
+  .eitem__desc { margin: 0 0 0.9em; }
+
+  @media (max-width: 860px) { .cs__items { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 760px) { .cs__grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .cs__items { grid-template-columns: 1fr; } }
+  @media (max-width: 460px) { .cs__grid { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .cs__img img, .eitem__imglink img { transition: none; } }
+</style>

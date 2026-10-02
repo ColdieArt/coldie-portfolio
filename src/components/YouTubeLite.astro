@@ -1,0 +1,71 @@
+---
+// Lightweight YouTube facade — shows the poster with a minimal play button and
+// loads the iframe only on click. Cleaner (no YouTube chrome at rest) and faster
+// than embedding every video. 16:9, lazy poster, keyboard accessible.
+export interface Props { id: string; title: string; start?: number; class?: string; }
+const { id, title, start, class: className = '' } = Astro.props;
+const poster = `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+const src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0${start ? `&start=${start}` : ''}`;
+---
+<div class={`ytl ${className}`} data-ytl data-src={src} data-title={title}>
+  <button type="button" class="ytl__btn" aria-label={`Play video: ${title}`}>
+    <img
+      class="ytl__poster"
+      src={poster}
+      alt=""
+      loading="lazy"
+      decoding="async"
+      width="1280"
+      height="720"
+      data-fallback={`https://i.ytimg.com/vi/${id}/mqdefault.jpg`}
+    />
+    <span class="ytl__play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="26" height="26"><path d="M8 5v14l11-7z" fill="currentColor" /></svg>
+    </span>
+  </button>
+</div>
+
+<style>
+  .ytl {
+    position: relative; aspect-ratio: 16/9; width: 100%;
+    border-radius: var(--radius); overflow: hidden;
+    background: #000; border: 1px solid var(--line-soft);
+  }
+  .ytl__btn { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: none; cursor: pointer; display: block; }
+  .ytl__poster { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.7s cubic-bezier(0.22,0.61,0.36,1); }
+  .ytl:hover .ytl__poster { transform: scale(1.025); }
+  .ytl__play {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 68px; height: 68px; border-radius: 50%;
+    display: grid; place-items: center; color: #fff;
+    background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(2px); padding-left: 3px;
+    transition: background 0.25s, border-color 0.25s, transform 0.25s;
+  }
+  .ytl:hover .ytl__play { background: var(--red); border-color: var(--red); transform: translate(-50%, -50%) scale(1.06); }
+  .ytl iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  @media (prefers-reduced-motion: reduce) { .ytl__poster, .ytl__play { transition: none; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ytl]').forEach((el) => {
+    if (el.dataset.init) return;
+    el.dataset.init = '1';
+    const img = el.querySelector<HTMLImageElement>('.ytl__poster');
+    // maxresdefault isn't guaranteed; fall back to the always-present 16:9 mqdefault
+    img?.addEventListener('error', () => {
+      const fb = img.dataset.fallback;
+      if (fb && img.src !== fb) img.src = fb;
+    });
+    el.querySelector('.ytl__btn')?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = el.dataset.src || '';
+      iframe.title = el.dataset.title || 'Video';
+      iframe.allow =
+        'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.allowFullscreen = true;
+      el.replaceChildren(iframe);
+    });
+  });
+</script>

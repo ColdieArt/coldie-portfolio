@@ -1,0 +1,76 @@
+---
+// Tech Epochalypse — interactive kinetic 3D portraits of the "overlords" shaping
+// the age of AI. Images + links pulled from knowyouroverlord.art (the full site).
+const SITE = 'https://www.knowyouroverlord.art/';
+const overlords = [
+  { name: 'Elon Musk', img: '/works/tech-epochalypse/elon-musk.webp' },
+  { name: 'Mark Zuckerberg', img: '/works/tech-epochalypse/mark-zuckerberg.webp' },
+  { name: 'Sam Altman', img: '/works/tech-epochalypse/sam-altman.webp' },
+  { name: 'Jeff Bezos', img: '/works/tech-epochalypse/jeff-bezos.webp' },
+  { name: 'Jensen Huang', img: '/works/tech-epochalypse/jensen-huang.webp' },
+];
+---
+<section id="tech-epochalypse" class="te" aria-labelledby="te-h">
+  <div class="wrap">
+    <header class="te__head">
+      <p class="eyebrow">AGI has arrived</p>
+      <h2 id="te-h">Tech Epochalypse</h2>
+      <p class="lede te__lede">
+        Interactive kinetic 3D portraits of the figures shaping the age of AI — five overlords, one
+        network. Drag, rotate, and layer the living portraits to compose your own iteration, each captured
+        on-chain.
+      </p>
+      <p class="te__cta">
+        <a class="btn btn--solid" href={SITE} target="_blank" rel="noopener">Enter the Tech Epochalypse ↗</a>
+        <a class="link-arrow" href="https://www.knowyouroverlord.art/overlords" target="_blank" rel="noopener">Meet the overlords</a>
+      </p>
+    </header>
+
+    <ul class="te__grid" aria-label="The overlords">
+      {overlords.map((o) => (
+        <li class="te__card">
+          <a href={SITE} target="_blank" rel="noopener" aria-label={`${o.name} — Tech Epochalypse by Coldie`}>
+            <span class="te__frame">
+              <img src={o.img} alt={`${o.name} — kinetic 3D portrait by Coldie`} loading="lazy" decoding="async" />
+            </span>
+            <span class="te__name">{o.name}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .te { padding-block: clamp(3rem, 7vw, 6rem); border-bottom: 1px solid var(--line-soft); }
+  .te__head { max-width: 62ch; margin-bottom: clamp(2.5rem, 6vw, 4rem); }
+  .te__head h2 { margin: 0 0 0.4em; }
+  .te__lede { margin: 0 0 1.5em; }
+  .te__cta { display: flex; gap: 1.4rem; align-items: center; flex-wrap: wrap; margin: 0; }
+
+  .te__grid {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: clamp(1rem, 2.5vw, 2rem);
+  }
+  .te__card a { text-decoration: none; display: block; }
+  .te__frame {
+    display: block; overflow: hidden; border-radius: var(--radius);
+    border: 1px solid var(--line-soft); background: var(--bg-raise);
+  }
+  .te__frame img {
+    width: 100%; aspect-ratio: 1; object-fit: cover; display: block;
+    transition: transform 0.6s cubic-bezier(0.22,0.61,0.36,1);
+  }
+  .te__card a:hover .te__frame img { transform: scale(1.04); }
+  .te__name {
+    display: block; margin-top: 0.75em;
+    font-family: var(--type); font-size: 0.72rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink-soft);
+  }
+  .te__card a:hover .te__name { color: var(--red); }
+
+  @media (max-width: 860px) { .te__grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 520px) { .te__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (prefers-reduced-motion: reduce) { .te__frame img { transition: none; } }
+</style>

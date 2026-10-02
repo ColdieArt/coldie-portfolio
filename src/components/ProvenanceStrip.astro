@@ -1,0 +1,46 @@
+---
+import { provenance } from '../data/site';
+---
+<section id="provenance" class="prov section--flat" aria-labelledby="prov-h">
+  <div class="wrap">
+    <h2 id="prov-h" class="eyebrow prov__h">Provenance</h2>
+    <ul class="prov__row">
+      {provenance.map((p) => {
+        const external = p.href.startsWith('http');
+        return (
+          <li class="prov__item">
+            <a
+              class="prov__main"
+              href={p.href}
+              aria-label={p.aria}
+              title={p.aria}
+              {...(external ? { target: '_blank', rel: 'noopener' } : {})}
+            >
+              <span class="prov__label">{p.label}{external && <span class="prov__ext" aria-hidden="true"> ↗</span>}</span>
+              {p.note && <span class="prov__note">{p.note}</span>}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</section>
+
+<style>
+  /* Flat, no motion. Stillness is the point. Type, not logos. */
+  .prov { padding-block: clamp(2.5rem, 5vw, 4rem); border-block: 1px solid var(--line-soft); }
+  .prov__h { margin: 0 0 1.6em; }
+  .prov__row {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-wrap: wrap;
+    column-gap: clamp(1.5rem, 4vw, 3.5rem); row-gap: 1.4rem;
+    align-items: baseline;
+  }
+  .prov__item { display: inline-flex; flex-direction: column; gap: 0.15em; }
+  .prov__main { text-decoration: none; display: inline-flex; flex-direction: column; gap: 0.15em; }
+  .prov__label { font-family: var(--serif); font-size: clamp(1.05rem, 1.6vw, 1.35rem); color: var(--ink); }
+  .prov__main:hover .prov__label { color: var(--accent); }
+  .prov__note { font-size: 0.75rem; color: var(--ink-mute); letter-spacing: 0.02em; }
+  .prov__ext { font-size: 0.7em; color: var(--ink-mute); }
+  .prov__main:hover .prov__ext { color: var(--accent); }
+</style>

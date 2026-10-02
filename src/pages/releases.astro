@@ -1,0 +1,243 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+import { personLd, breadcrumbLd } from '../data/jsonld';
+import { releases, releaseSeries, releaseChains, releaseStatuses } from '../data/releases';
+
+const desc =
+  'A searchable database of Coldie’s on-chain releases — available pieces, edition sizes, and floor prices across series and marketplaces.';
+
+const datasetLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: 'Coldie — releases database',
+  description: desc,
+  url: `${site.url}/releases`,
+  creator: { '@id': `${site.url}/#person` },
+  variableMeasured: ['availability', 'edition size', 'floor price'],
+};
+
+const fmtFloor = (r: (typeof releases)[number]) =>
+  r.floor == null ? '—' : `${r.floor} ${r.currency}`;
+---
+<BaseLayout
+  title="Releases"
+  description={desc}
+  path="/releases"
+  jsonld={[personLd(), datasetLd, breadcrumbLd([
+    { name: 'Home', path: '/' },
+    { name: 'Releases', path: '/releases' },
+  ])]}
+>
+  <section class="rel">
+    <div class="wrap">
+      <nav class="small muted rel__crumb" aria-label="Breadcrumb"><a href="/">Home</a> · <span>Releases</span></nav>
+      <header class="rel__head">
+        <p class="eyebrow">Database</p>
+        <h1>Releases</h1>
+        <p class="lede">
+          A searchable index of Coldie’s on-chain releases — what’s available, edition sizes, and floor
+          prices. Search, filter, and sort.
+        </p>
+      </header>
+
+      <div class="rel__controls" role="search">
+        <label class="rel__search">
+          <span class="sr-only">Search releases</span>
+          <input type="search" id="rel-q" placeholder="Search title, series, marketplace…" autocomplete="off" />
+        </label>
+        <label class="rel__filter">
+          <span>Series</span>
+          <select id="rel-series">
+            <option value="">All</option>
+            {releaseSeries.map((s) => <option value={s}>{s}</option>)}
+          </select>
+        </label>
+        <label class="rel__filter">
+          <span>Status</span>
+          <select id="rel-status">
+            <option value="">All</option>
+            {releaseStatuses.map((s) => <option value={s}>{s}</option>)}
+          </select>
+        </label>
+        <label class="rel__filter">
+          <span>Chain</span>
+          <select id="rel-chain">
+            <option value="">All</option>
+            {releaseChains.map((c) => <option value={c}>{c}</option>)}
+          </select>
+        </label>
+        <label class="rel__filter rel__check">
+          <input type="checkbox" id="rel-avail" />
+          <span>Available only</span>
+        </label>
+      </div>
+
+      <div class="rel__tablewrap">
+        <table class="rel__table" id="rel-table">
+          <thead>
+            <tr>
+              <th><button type="button" data-sort="title" aria-label="Sort by title">Release</button></th>
+              <th><button type="button" data-sort="series">Series</button></th>
+              <th class="num"><button type="button" data-sort="year">Year</button></th>
+              <th class="num"><button type="button" data-sort="available">Available</button></th>
+              <th><button type="button" data-sort="status">Status</button></th>
+              <th class="num"><button type="button" data-sort="floor">Floor</button></th>
+              <th>Chain</th>
+              <th>Where</th>
+            </tr>
+          </thead>
+          <tbody>
+            {releases.map((r) => (
+              <tr
+                data-title={r.title.toLowerCase()}
+                data-series={r.series}
+                data-status={r.status}
+                data-chain={r.chain}
+                data-year={r.year ?? 0}
+                data-available={r.available ?? -1}
+                data-floor={r.floor ?? -1}
+                data-platform={r.platform.toLowerCase()}
+              >
+                <th scope="row">
+                  {r.slug ? <a href={`/work/${r.slug}`}>{r.title}</a> : r.title}
+                  {r.badge && <span class="rel__badge">{r.badge}</span>}
+                </th>
+                <td>{r.series}</td>
+                <td class="num">{r.year ?? '—'}</td>
+                <td class="num">{
+                  r.editionSize == null
+                    ? '—'
+                    : r.editionSize === 1
+                      ? '1/1'
+                      : `${r.available ?? '?'}/${r.editionSize}`
+                }</td>
+                <td><span class={`rel__status rel__status--${r.status.replace(/\s+/g, '-')}`}>{r.status}</span></td>
+                <td class="num">{fmtFloor(r)}</td>
+                <td>{r.chain}</td>
+                <td>
+                  {r.url
+                    ? <a href={r.url} target="_blank" rel="noopener" aria-label={`${r.title} on ${r.platform}`}>{r.platform} ↗</a>
+                    : <span class="muted">{r.platform}</span>}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p class="rel__empty muted" id="rel-empty" hidden>No releases match your search.</p>
+      </div>
+
+      <p class="rel__count small muted"><span id="rel-shown">{releases.length}</span> of {releases.length} releases</p>
+      <p class="rel__note small muted">
+        Floor prices and availability are maintained from the studio’s release sheet. Figures shown are
+        placeholders until the live sheet is imported.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .rel { padding-block: clamp(2.5rem, 6vw, 4.5rem) var(--section-y); }
+  .rel__crumb { margin-bottom: 2rem; }
+  .rel__crumb a { text-decoration: none; }
+  .rel__head { max-width: 60ch; margin-bottom: clamp(2rem, 5vw, 3rem); }
+  .rel__head h1 { margin: 0.2em 0; }
+
+  .rel__controls {
+    display: flex; flex-wrap: wrap; gap: 1rem 1.25rem; align-items: end;
+    margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--line-soft);
+  }
+  .rel__search { flex: 1 1 280px; }
+  .rel__search input {
+    width: 100%; padding: 0.7em 0.9em; background: var(--bg); color: var(--ink);
+    border: 1px solid var(--line); border-radius: var(--radius); font: inherit;
+  }
+  .rel__filter { display: flex; flex-direction: column; gap: 0.35em; }
+  .rel__filter > span { font-family: var(--type); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); }
+  .rel__filter select { padding: 0.55em 0.7em; background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: var(--radius); font: inherit; }
+  .rel__check { flex-direction: row; align-items: center; gap: 0.5em; }
+  .rel__check span { font-family: var(--type); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
+  input:focus, select:focus { outline: none; border-color: var(--red); }
+
+  .rel__tablewrap { overflow-x: auto; }
+  .rel__table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+  .rel__table th, .rel__table td { text-align: left; padding: 0.85em 1em; border-bottom: 1px solid var(--line-soft); white-space: nowrap; }
+  .rel__table .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .rel__table thead th { border-bottom: 2px solid var(--line); }
+  .rel__table thead button {
+    font-family: var(--type); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-mute); background: none; border: 0; cursor: pointer; padding: 0;
+  }
+  .rel__table thead button:hover, .rel__table thead button[data-active] { color: var(--red); }
+  .rel__table tbody th { font-weight: 400; font-family: var(--serif); font-size: 1.02rem; }
+  .rel__table tbody th a { text-decoration: none; }
+  .rel__table tbody th a:hover { color: var(--red); }
+  .rel__badge { display: block; font-family: var(--type); font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-mute); margin-top: 0.2em; }
+
+  .rel__status { font-family: var(--type); font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; }
+  .rel__status--available { color: var(--cyan); }
+  .rel__status--reserved { color: var(--gold); }
+  .rel__status--sold-out, .rel__status--secondary-only { color: var(--ink-mute); }
+  .rel__status--tbc { color: var(--ink-mute); font-style: italic; }
+
+  .rel__empty { padding: 2rem 0; }
+  .rel__count { margin-top: 1.2rem; }
+  .rel__note { margin-top: 0.4rem; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>
+
+<script>
+  const q = document.getElementById('rel-q') as HTMLInputElement;
+  const fSeries = document.getElementById('rel-series') as HTMLSelectElement;
+  const fStatus = document.getElementById('rel-status') as HTMLSelectElement;
+  const fChain = document.getElementById('rel-chain') as HTMLSelectElement;
+  const fAvail = document.getElementById('rel-avail') as HTMLInputElement;
+  const tbody = document.querySelector('#rel-table tbody') as HTMLTableSectionElement;
+  const empty = document.getElementById('rel-empty') as HTMLElement;
+  const shown = document.getElementById('rel-shown') as HTMLElement;
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+
+  function apply() {
+    const term = q.value.trim().toLowerCase();
+    const s = fSeries.value, st = fStatus.value, ch = fChain.value, av = fAvail.checked;
+    let count = 0;
+    for (const row of rows) {
+      const d = row.dataset;
+      const hay = `${d.title} ${d.series} ${d.platform}`.toLowerCase();
+      const ok =
+        (!term || hay.includes(term)) &&
+        (!s || d.series === s) &&
+        (!st || d.status === st) &&
+        (!ch || d.chain === ch) &&
+        (!av || Number(d.available) > 0);
+      row.hidden = !ok;
+      if (ok) count++;
+    }
+    shown.textContent = String(count);
+    empty.hidden = count > 0;
+  }
+
+  [q, fSeries, fStatus, fChain, fAvail].forEach((el) =>
+    el.addEventListener('input', apply)
+  );
+
+  // Column sort
+  let sortKey = '', dir = 1;
+  document.querySelectorAll<HTMLButtonElement>('thead [data-sort]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.sort!;
+      dir = sortKey === key ? -dir : 1;
+      sortKey = key;
+      document.querySelectorAll('thead [data-sort]').forEach((b) => b.removeAttribute('data-active'));
+      btn.setAttribute('data-active', '');
+      const numeric = ['year', 'available', 'floor'].includes(key);
+      const sorted = rows.slice().sort((a, b) => {
+        let av: string | number = a.dataset[key] ?? '';
+        let bv: string | number = b.dataset[key] ?? '';
+        if (numeric) { av = Number(av); bv = Number(bv); }
+        return av < bv ? -dir : av > bv ? dir : 0;
+      });
+      sorted.forEach((r) => tbody.appendChild(r));
+    });
+  });
+</script>

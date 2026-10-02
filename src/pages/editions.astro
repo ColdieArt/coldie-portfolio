@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import WorkCard from '../components/WorkCard.astro';
+import { works } from '../data/works';
+import { personLd, breadcrumbLd } from '../data/jsonld';
+const editions = works.filter((w) => w.ownership === 'edition' || w.ownership === 'both');
+---
+<BaseLayout
+  title="On-chain editions"
+  description="Digital editions by Coldie with transparent on-chain pricing and permanent, public provenance."
+  path="/editions"
+  jsonld={[personLd(), breadcrumbLd([{ name: 'Home', path: '/' }, { name: 'Editions', path: '/editions' }])]}
+>
+  <section class="gal">
+    <div class="wrap">
+      <nav class="small muted gal__crumb" aria-label="Breadcrumb"><a href="/">Home</a> · <span>Editions</span></nav>
+      <header class="gal__head">
+        <p class="eyebrow">Collect on-chain</p>
+        <h1>On-chain editions</h1>
+        <p class="lede">
+          Digital editions with transparent on-chain pricing and permanent, public provenance. Each links to
+          its marketplace record.
+        </p>
+      </header>
+      <div class="gal__grid">
+        {editions.map((w) => <WorkCard work={w} />)}
+      </div>
+      <p class="muted small gal__note">Marketplace links are added per work as editions go live.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .gal { padding-block: clamp(2.5rem, 6vw, 4.5rem) var(--section-y); }
+  .gal__crumb { margin-bottom: 2rem; }
+  .gal__crumb a { text-decoration: none; }
+  .gal__head { max-width: 60ch; margin-bottom: clamp(2.5rem, 6vw, 4rem); }
+  .gal__head h1 { margin: 0.2em 0; }
+  .gal__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.5rem, 3.5vw, 3rem); }
+  .gal__note { margin-top: 2rem; }
+  @media (max-width: 760px) { .gal__grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 460px) { .gal__grid { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PLACEHOLDER far layer: recombined source-image field. Replace with real transparent PNG export. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1500" width="1200" height="1500" role="img" aria-label="Placeholder far layer: tiled source-image field">
+  <defs>
+    <linearGradient id="dg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1b2a3a"/><stop offset="100%" stop-color="#10171f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="1500" fill="url(#dg)"/>
+  <g opacity="0.25">
+    <g fill="#2c4055">
+      <rect x="40" y="40" width="180" height="180"/><rect x="260" y="120" width="160" height="160"/>
+      <rect x="900" y="60" width="200" height="200"/><rect x="80" y="1180" width="220" height="220"/>
+      <rect x="880" y="1200" width="240" height="240"/><rect x="520" y="20" width="120" height="120"/>
+    </g>
+  </g>
+</svg>

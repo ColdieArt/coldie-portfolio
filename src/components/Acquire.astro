@@ -1,0 +1,70 @@
+---
+import InquireForm from './InquireForm.astro';
+export interface Props { preselect?: string; }
+const { preselect } = Astro.props;
+---
+<section id="acquire" class="acq section--flat" aria-labelledby="acq-h">
+  <div class="wrap">
+    <header class="acq__head">
+      <p class="eyebrow">Acquire / inquire</p>
+      <h2 id="acq-h">Two ways to own the work.</h2>
+      <p class="lede acq__lede">
+        Blockchain here is a provenance feature — verifiable authenticity and permanent, public record —
+        not a gimmick.
+      </p>
+    </header>
+
+    <div class="acq__cards">
+      <article class="acq__card">
+        <h3>Own the physical work</h3>
+        <p class="muted">Lenticular prints and kinetic sculptures.</p>
+        <p class="acq__price">Price on request</p>
+        <ul class="acq__list">
+          <li>Inquiries route to the artist and Eterno Gallery, Lisbon</li>
+          <li>Ships worldwide</li>
+          <li>On-chain provenance + certificate of authenticity</li>
+        </ul>
+        <a href="#inquire-form" class="btn btn--solid">Inquire</a>
+      </article>
+
+      <article class="acq__card">
+        <h3>Collect on-chain</h3>
+        <p class="muted">Digital editions.</p>
+        <p class="acq__price">Transparent on-chain pricing</p>
+        <ul class="acq__list">
+          <li>Permanent, public provenance</li>
+          <li>Open, verifiable ownership history</li>
+          <li>Editions across the body of work</li>
+        </ul>
+        <a href="#inquire-form" class="btn">Inquire about editions</a>
+      </article>
+    </div>
+
+    <div class="acq__form" id="inquire-form">
+      <h3 class="acq__form-h">Inquiry</h3>
+      <InquireForm preselect={preselect} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .acq { padding-block: clamp(4rem, 9vw, 8rem); border-top: 1px solid var(--line-soft); }
+  .acq__head { max-width: 60ch; margin-bottom: clamp(2.5rem, 6vw, 4rem); }
+  .acq__lede { margin: 0; }
+  .acq__cards {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: clamp(1.25rem, 3vw, 2.5rem); margin-bottom: clamp(3rem, 7vw, 5rem);
+  }
+  .acq__card {
+    border: 1px solid var(--line); border-radius: var(--radius);
+    padding: clamp(1.5rem, 3vw, 2.5rem); background: var(--bg);
+    display: flex; flex-direction: column; gap: 0.6rem;
+  }
+  .acq__card h3 { margin: 0; }
+  .acq__price { font-family: var(--serif); font-size: 1.25rem; color: var(--accent); margin: 0.3em 0; }
+  .acq__list { margin: 0.4em 0 1.4em; padding-left: 1.1em; color: var(--ink-soft); }
+  .acq__list li { margin-bottom: 0.4em; }
+  .acq__card .btn { align-self: flex-start; margin-top: auto; }
+  .acq__form-h { margin: 0 0 1.4em; }
+  @media (max-width: 720px) { .acq__cards { grid-template-columns: 1fr; } }
+</style>

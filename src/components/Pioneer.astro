@@ -1,0 +1,86 @@
+---
+import { heroWork } from '../data/works';
+const oc = heroWork.onchain!;
+---
+<section id="pioneer" class="pioneer" aria-labelledby="pioneer-h">
+  <div class="wrap pioneer__grid">
+    <div class="pioneer__art">
+      <figure class="pioneer__anaglyph">
+        <img
+          src={heroWork.anaglyphImage}
+          alt={heroWork.anaglyphAlt}
+          width="2000"
+          height="1605"
+          loading="lazy"
+          decoding="async"
+        />
+        <figcaption class="pioneer__glasses">
+          <span class="pioneer__glasses-icon" aria-hidden="true"></span>
+          Grab your red/blue 3D glasses
+        </figcaption>
+      </figure>
+      <p class="pioneer__receipt small">
+        <span class="pioneer__dot" aria-hidden="true"></span>
+        Minted <time datetime="2018-05-07">{oc.minted}</time> · {oc.platform} · {oc.chain} ·
+        {oc.url ? <a href={oc.url}>view on-chain</a> : <span class="muted">on-chain record [link to add]</span>}
+      </p>
+    </div>
+
+    <div class="pioneer__copy">
+      <p class="eyebrow">Pioneer, on-chain</p>
+      <h2 id="pioneer-h">The first stereoscopic artwork on a blockchain.</h2>
+      <p>
+        On May 7, 2018, Coldie minted <em>{heroWork.title}</em> — the first stereoscopic artwork
+        recorded on a blockchain. There was no collector market for it yet; that was the point. He made it
+        to prove that peer-to-peer ownership of digital art was real, and that it pointed to the future of
+        the digital economy.
+      </p>
+      <p>
+        Tokenized on Ethereum through R.A.R.E. Art Labs, it was a bet that if artists tested the technology
+        early, names like Shepard Fairey and Banksy would eventually follow. <strong>Fairey has.</strong>
+      </p>
+      <p class="muted small">
+        The work you see at the top of this page is this one, in motion. Here it is explained: true 3D,
+        the receipt, and the story. The astronaut ascends toward the moon beneath a HODL billboard — hold
+        on for dear life — over the artist’s own photographs of Los Angeles and San Francisco, the two
+        cities that shaped his twenties and thirties.
+      </p>
+      <a class="link-arrow" href={`/work/${heroWork.slug}`}>Full wall text & provenance</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pioneer { padding-block: clamp(4rem, 10vw, 9rem); border-top: 1px solid var(--line-soft); }
+  .pioneer__anaglyph { margin: 0; }
+  .pioneer__anaglyph img {
+    width: 100%; height: auto; /* natural ratio — show the entire artwork, no crop */
+    border-radius: var(--radius); background: #05070a;
+    display: block;
+  }
+  .pioneer__glasses {
+    display: flex; align-items: center; gap: 0.55em;
+    margin-top: 0.9em;
+    font-family: var(--type, var(--sans));
+    font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .pioneer__glasses-icon {
+    width: 26px; height: 13px; border-radius: 2px; flex: none;
+    background: linear-gradient(90deg, #e23b2e 0 50%, #45c7d0 50% 100%);
+  }
+  .pioneer__grid {
+    display: grid; grid-template-columns: 1.2fr 1fr;
+    gap: clamp(2rem, 6vw, 5rem); align-items: center;
+  }
+  .pioneer__receipt {
+    display: flex; align-items: center; gap: 0.5em; flex-wrap: wrap;
+    margin-top: 1.2em; color: var(--ink-soft);
+    font-family: var(--sans); letter-spacing: 0.02em;
+  }
+  .pioneer__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-cyan); }
+  .pioneer__copy h2 { margin: 0 0 0.6em; }
+  @media (max-width: 880px) {
+    .pioneer__grid { grid-template-columns: 1fr; }
+  }
+</style>

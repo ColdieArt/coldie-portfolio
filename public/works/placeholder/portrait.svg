@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GENERIC PLACEHOLDER (portrait). Swap for a museum-grade image. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1250" width="1000" height="1250" role="img" aria-label="Artwork image placeholder">
+  <defs>
+    <linearGradient id="p" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#202a36"/><stop offset="100%" stop-color="#0e141b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1000" height="1250" fill="url(#p)"/>
+  <ellipse cx="500" cy="540" rx="220" ry="280" fill="#2c3a4a"/>
+  <circle cx="430" cy="500" r="34" fill="#52657a"/><circle cx="570" cy="500" r="34" fill="#52657a"/>
+  <text x="500" y="1160" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#5b6b7d" letter-spacing="2">image placeholder</text>
+</svg>

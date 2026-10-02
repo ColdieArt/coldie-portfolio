@@ -1,0 +1,206 @@
+---
+// Web echo of the physical Elon collage machine at Eterno: assemble/swap parts
+// to customize a portrait. Placeholder parts are abstract; swap in real cut-outs
+// by passing `features` with image options.
+export interface FeatureOption {
+  label: string;
+  src?: string; // optional cut-out image
+  /** placeholder fill when no src */
+  fill?: string;
+  shape?: 'circle' | 'square' | 'wide';
+}
+export interface Feature {
+  key: string;
+  label: string;
+  /** layer order, higher = on top */
+  z: number;
+  /** position % */
+  x: number;
+  y: number;
+  size: number; // % of stage width
+  options: FeatureOption[];
+}
+
+export interface Props {
+  ratio?: string;
+  features?: Feature[];
+  class?: string;
+}
+
+const defaults: Feature[] = [
+  {
+    key: 'bg', label: 'Backdrop', z: 0, x: 50, y: 50, size: 100,
+    options: [
+      { label: 'Slate', fill: '#1b2a3a', shape: 'square' },
+      { label: 'Brass', fill: '#3a2f1a', shape: 'square' },
+      { label: 'Teal', fill: '#15302f', shape: 'square' },
+    ],
+  },
+  {
+    key: 'face', label: 'Face', z: 1, x: 50, y: 52, size: 62,
+    options: [
+      { label: 'Warm', fill: '#c9a878', shape: 'circle' },
+      { label: 'Cool', fill: '#9aa6b2', shape: 'circle' },
+      { label: 'Bronze', fill: '#b07d4f', shape: 'circle' },
+    ],
+  },
+  {
+    key: 'eyes', label: 'Eyes', z: 3, x: 50, y: 44, size: 46,
+    options: [
+      { label: 'Wide', fill: '#0c1118', shape: 'wide' },
+      { label: 'Gold', fill: '#d8b25a', shape: 'wide' },
+      { label: 'Cyan', fill: '#5ad1d8', shape: 'wide' },
+    ],
+  },
+  {
+    key: 'mouth', label: 'Mouth', z: 3, x: 50, y: 66, size: 26,
+    options: [
+      { label: 'Line', fill: '#3a3020', shape: 'wide' },
+      { label: 'Bold', fill: '#7a2d2d', shape: 'wide' },
+    ],
+  },
+  {
+    key: 'accent', label: 'Accent', z: 4, x: 68, y: 30, size: 18,
+    options: [
+      { label: 'None', fill: 'transparent', shape: 'circle' },
+      { label: 'Spark', fill: '#d8b25a', shape: 'circle' },
+      { label: 'Halo', fill: '#5ad1d8', shape: 'circle' },
+    ],
+  },
+];
+
+const { ratio = '4/5', class: className = '', features = defaults } = Astro.props;
+const data = JSON.stringify(features);
+---
+
+<figure class={`collage ${className}`} data-collage data-features={data} style={`--ratio:${ratio}`}>
+  <div class="collage__stage" data-stage aria-label="Customizable portrait">
+    {features.map((f) => (
+      <div
+        class="collage__feature"
+        data-feature={f.key}
+        style={`z-index:${f.z}; left:${f.x}%; top:${f.y}%; width:${f.size}%;`}
+      ></div>
+    ))}
+  </div>
+
+  <div class="collage__controls" role="group" aria-label="Build your portrait">
+    {features.map((f) => (
+      <div class="collage__ctrl">
+        <span class="collage__lbl">{f.label}</span>
+        <div class="collage__btns">
+          <button type="button" class="btn btn--ghost" data-prev={f.key} aria-label={`Previous ${f.label}`}>‹</button>
+          <span class="collage__val" data-val={f.key}></span>
+          <button type="button" class="btn btn--ghost" data-next={f.key} aria-label={`Next ${f.label}`}>›</button>
+        </div>
+      </div>
+    ))}
+    <button type="button" class="btn" data-collage-shuffle>Surprise me</button>
+  </div>
+</figure>
+
+<style>
+  .collage { margin: 0; }
+  .collage__stage {
+    position: relative;
+    aspect-ratio: var(--ratio);
+    width: 100%;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: #05070a;
+  }
+  .collage__feature {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    aspect-ratio: 1;
+    transition: background 0.25s, clip-path 0.25s, transform 0.25s;
+  }
+  .collage__feature img { width: 100%; height: 100%; object-fit: contain; }
+  .shape-circle { border-radius: 50%; }
+  .shape-square { border-radius: var(--radius); }
+  .shape-wide { border-radius: 999px; height: 34%; aspect-ratio: auto; }
+  /* The backdrop (first layer) always fills the stage, whatever its shape option. */
+  .collage__feature[data-feature='bg'] {
+    width: 100% !important; height: 100%; aspect-ratio: auto;
+    border-radius: 0 !important; left: 50% !important; top: 50% !important;
+  }
+
+  .collage__controls {
+    display: flex; flex-wrap: wrap; gap: 0.6rem 1.4rem;
+    align-items: center; justify-content: center;
+    margin-top: 1.1rem;
+  }
+  .collage__ctrl { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; }
+  .collage__lbl { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); }
+  .collage__btns { display: flex; align-items: center; gap: 0.4rem; }
+  .collage__val { font-size: 0.82rem; min-width: 4.5ch; text-align: center; color: var(--ink-soft); }
+  .collage__btns .btn { padding: 0.2em 0.5em; font-size: 1.1rem; line-height: 1; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .collage__feature { transition: none; }
+  }
+</style>
+
+<script>
+  type FeatureOption = { label: string; src?: string; fill?: string; shape?: string };
+  type Feature = { key: string; options: FeatureOption[] };
+
+  function paint(el: HTMLElement, opt: FeatureOption) {
+    el.className = 'collage__feature ' + (opt.shape ? `shape-${opt.shape}` : 'shape-square');
+    el.innerHTML = '';
+    if (opt.src) {
+      const img = document.createElement('img');
+      img.src = opt.src;
+      img.alt = '';
+      img.draggable = false;
+      el.appendChild(img);
+    } else {
+      el.style.background = opt.fill || 'transparent';
+    }
+  }
+
+  function init(root: HTMLElement) {
+    const features: Feature[] = JSON.parse(root.dataset.features || '[]');
+    const state: Record<string, number> = {};
+
+    const apply = (key: string) => {
+      const f = features.find((x) => x.key === key)!;
+      const idx = state[key];
+      const opt = f.options[idx];
+      const el = root.querySelector<HTMLElement>(`[data-feature="${key}"]`)!;
+      // preserve geometry from the markup
+      const left = el.style.left, top = el.style.top, w = el.style.width, z = el.style.zIndex;
+      paint(el, opt);
+      el.style.left = left; el.style.top = top; el.style.width = w; el.style.zIndex = z;
+      const val = root.querySelector<HTMLElement>(`[data-val="${key}"]`);
+      if (val) val.textContent = opt.label;
+    };
+
+    features.forEach((f) => {
+      state[f.key] = 0;
+      apply(f.key);
+      root.querySelector(`[data-next="${f.key}"]`)?.addEventListener('click', () => {
+        state[f.key] = (state[f.key] + 1) % f.options.length;
+        apply(f.key);
+      });
+      root.querySelector(`[data-prev="${f.key}"]`)?.addEventListener('click', () => {
+        state[f.key] = (state[f.key] - 1 + f.options.length) % f.options.length;
+        apply(f.key);
+      });
+    });
+
+    root.querySelector('[data-collage-shuffle]')?.addEventListener('click', () => {
+      features.forEach((f) => {
+        state[f.key] = Math.floor(Math.random() * f.options.length);
+        apply(f.key);
+      });
+    });
+  }
+
+  const start = () =>
+    document.querySelectorAll<HTMLElement>('[data-collage]').forEach((el) => {
+      if (!el.dataset.init) { el.dataset.init = '1'; init(el); }
+    });
+  if (document.readyState !== 'loading') start();
+  else document.addEventListener('DOMContentLoaded', start);
+</script>

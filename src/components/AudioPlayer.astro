@@ -1,0 +1,131 @@
+---
+// Artist audio — "the story behind this piece." Custom, accessible controls over
+// a native <audio> element. If `src` is empty, renders a calm "coming soon" state.
+export interface Props {
+  src?: string;
+  title?: string;
+  caption?: string;
+}
+const { src = '', title = 'The story behind this piece', caption } = Astro.props;
+const ready = Boolean(src);
+---
+<figure class={`aud ${ready ? '' : 'aud--soon'}`} data-audio>
+  <div class="aud__bar">
+    <button type="button" class="aud__play" data-play aria-label="Play the story" disabled={!ready}>
+      <span class="aud__icon aud__icon--play" aria-hidden="true">▶</span>
+      <span class="aud__icon aud__icon--pause" aria-hidden="true">❚❚</span>
+    </button>
+    <div class="aud__body">
+      <p class="aud__title">{title}</p>
+      {caption && <p class="aud__caption muted small">{caption}</p>}
+      <div class="aud__track" data-track role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex={ready ? 0 : -1}>
+        <div class="aud__fill" data-fill></div>
+      </div>
+      <p class="aud__time small muted">
+        {ready
+          ? <><span data-cur>0:00</span> · <span data-dur>0:00</span></>
+          : <span>Audio coming soon</span>}
+      </p>
+    </div>
+  </div>
+  {ready && (
+    <audio data-el preload="metadata">
+      <source src={src} />
+    </audio>
+  )}
+</figure>
+
+<style>
+  .aud {
+    margin: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-raise);
+    padding: clamp(1rem, 2.5vw, 1.4rem);
+  }
+  .aud__bar { display: flex; gap: 1rem; align-items: center; }
+  .aud__play {
+    flex: none; width: 54px; height: 54px; border-radius: 50%;
+    border: 1.5px solid var(--ink); background: var(--accent); color: #15110a;
+    cursor: pointer; display: grid; place-items: center;
+    transition: transform 0.12s, box-shadow 0.12s, background 0.2s;
+  }
+  .aud__play:hover:not(:disabled) { transform: translate(-2px,-2px); box-shadow: 4px 4px 0 var(--red); }
+  .aud__play:disabled { background: var(--line); color: var(--ink-mute); cursor: not-allowed; border-color: var(--line); }
+  .aud__icon { font-size: 0.95rem; line-height: 1; }
+  .aud__icon--pause { display: none; }
+  .aud[data-playing] .aud__icon--play { display: none; }
+  .aud[data-playing] .aud__icon--pause { display: inline; }
+
+  .aud__body { flex: 1 1 auto; min-width: 0; }
+  .aud__title { font-family: var(--serif); font-size: 1.1rem; margin: 0; }
+  .aud__caption { margin: 0.1em 0 0.7em; }
+  .aud__track {
+    height: 6px; background: var(--line); border-radius: 999px; cursor: pointer;
+    overflow: hidden; margin: 0.4em 0 0.5em;
+  }
+  .aud--soon .aud__track { cursor: default; opacity: 0.5; }
+  .aud__fill { height: 100%; width: 0%; background: var(--red); }
+  .aud__time { margin: 0; letter-spacing: 0.03em; font-family: var(--type); }
+  @media (prefers-reduced-motion: reduce) { .aud__play { transition: none; } }
+</style>
+
+<script>
+  function init(root: HTMLElement) {
+    const audio = root.querySelector<HTMLAudioElement>('[data-el]');
+    if (!audio) return; // "coming soon" state, nothing to wire
+    const playBtn = root.querySelector<HTMLButtonElement>('[data-play]')!;
+    const track = root.querySelector<HTMLElement>('[data-track]')!;
+    const fill = root.querySelector<HTMLElement>('[data-fill]')!;
+    const curEl = root.querySelector<HTMLElement>('[data-cur]');
+    const durEl = root.querySelector<HTMLElement>('[data-dur]');
+
+    const fmt = (s: number) => {
+      if (!isFinite(s)) return '0:00';
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60).toString().padStart(2, '0');
+      return `${m}:${sec}`;
+    };
+
+    audio.addEventListener('loadedmetadata', () => { if (durEl) durEl.textContent = fmt(audio.duration); });
+    audio.addEventListener('timeupdate', () => {
+      const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+      fill.style.width = pct + '%';
+      track.setAttribute('aria-valuenow', String(Math.round(pct)));
+      if (curEl) curEl.textContent = fmt(audio.currentTime);
+    });
+    audio.addEventListener('ended', () => root.removeAttribute('data-playing'));
+
+    playBtn.addEventListener('click', () => {
+      if (audio.paused) {
+        // pause any other players first
+        document.querySelectorAll<HTMLAudioElement>('[data-audio] [data-el]').forEach((a) => {
+          if (a !== audio) { a.pause(); a.closest('[data-audio]')?.removeAttribute('data-playing'); }
+        });
+        audio.play();
+        root.setAttribute('data-playing', '');
+      } else {
+        audio.pause();
+        root.removeAttribute('data-playing');
+      }
+    });
+
+    const seek = (clientX: number) => {
+      const r = track.getBoundingClientRect();
+      const pct = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
+      audio.currentTime = pct * (audio.duration || 0);
+    };
+    track.addEventListener('click', (e) => seek(e.clientX));
+    track.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { audio.currentTime = Math.min(audio.duration, audio.currentTime + 5); e.preventDefault(); }
+      else if (e.key === 'ArrowLeft') { audio.currentTime = Math.max(0, audio.currentTime - 5); e.preventDefault(); }
+    });
+  }
+
+  const start = () =>
+    document.querySelectorAll<HTMLElement>('[data-audio]').forEach((el) => {
+      if (!el.dataset.init) { el.dataset.init = '1'; init(el); }
+    });
+  if (document.readyState !== 'loading') start();
+  else document.addEventListener('DOMContentLoaded', start);
+</script>

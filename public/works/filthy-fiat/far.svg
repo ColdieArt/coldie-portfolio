@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PLACEHOLDER Filthy Fiat far layer: pile of buried bills / grime field.
+     Replace with a real transparent PNG export. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 1600" width="640" height="1600" role="img" aria-label="Placeholder far layer: a faded field of buried dollar bills">
+  <defs>
+    <linearGradient id="fff" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3a4a3a"/><stop offset="100%" stop-color="#202b22"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="1600" fill="url(#fff)"/>
+  <g fill="#4a5e48" opacity="0.5">
+    <rect x="40" y="120" width="260" height="120" rx="6" transform="rotate(-8 170 180)"/>
+    <rect x="320" y="300" width="280" height="130" rx="6" transform="rotate(6 460 365)"/>
+    <rect x="20" y="560" width="300" height="130" rx="6" transform="rotate(-5 170 625)"/>
+    <rect x="300" y="820" width="300" height="140" rx="6" transform="rotate(9 450 890)"/>
+    <rect x="40" y="1080" width="280" height="130" rx="6" transform="rotate(-7 180 1145)"/>
+    <rect x="320" y="1320" width="280" height="130" rx="6" transform="rotate(5 460 1385)"/>
+  </g>
+</svg>

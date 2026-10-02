@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PLACEHOLDER near layer: eyes + features (the "Decentral Eyes" motif). Replace with real transparent PNG export. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1500" width="1200" height="1500" role="img" aria-label="Placeholder near layer: eyes and facial features">
+  <g>
+    <ellipse cx="470" cy="640" rx="86" ry="50" fill="#f4f1ea"/>
+    <ellipse cx="730" cy="640" rx="86" ry="50" fill="#f4f1ea"/>
+    <circle cx="470" cy="640" r="30" fill="#1b2a3a"/>
+    <circle cx="730" cy="640" r="30" fill="#1b2a3a"/>
+    <circle cx="480" cy="630" r="9" fill="#f4c95d"/>
+    <circle cx="740" cy="630" r="9" fill="#f4c95d"/>
+  </g>
+  <path d="M560 720 L540 840 L620 850" stroke="#3a3020" stroke-width="10" fill="none"/>
+  <path d="M500 950 Q600 1000 700 950" stroke="#3a3020" stroke-width="12" fill="none"/>
+</svg>

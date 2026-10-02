@@ -1,0 +1,59 @@
+---
+// Persistent, always-reachable "Inquire" affordance. Hidden while the
+// acquire/inquire section is on screen (no need to float over its own form).
+---
+<a href="/#acquire" class="dock" data-dock aria-label="Inquire about a work">
+  <span class="dock__dot" aria-hidden="true"></span>
+  Inquire
+</a>
+
+<style>
+  .dock {
+    position: fixed;
+    right: clamp(1rem, 3vw, 2rem);
+    bottom: clamp(1rem, 3vw, 2rem);
+    z-index: 90;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    padding: 0.8em 1.3em;
+    font-family: var(--type);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #15110a;
+    background: var(--accent);
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 3px 3px 0 var(--red), 0 8px 30px rgba(0, 0, 0, 0.45);
+    transition: transform 0.18s ease, opacity 0.3s ease, background 0.25s, box-shadow 0.18s;
+  }
+  .dock:hover { background: var(--gold); transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--red), 0 8px 30px rgba(0,0,0,0.45); }
+  .dock[data-hidden] {
+    opacity: 0;
+    transform: translateY(140%);
+    pointer-events: none;
+  }
+  .dock__dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #11151c;
+  }
+</style>
+
+<script>
+  // Hide the dock when the acquire section is visible.
+  const dock = document.querySelector('[data-dock]');
+  const target = document.getElementById('acquire');
+  if (dock && target && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) dock.setAttribute('data-hidden', '');
+          else dock.removeAttribute('data-hidden');
+        }
+      },
+      { threshold: 0.15 }
+    );
+    io.observe(target);
+  }
+</script>

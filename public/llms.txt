@@ -1,0 +1,43 @@
+# Coldie
+
+> Coldie is a stereoscopic-3D and kinetic artist based in Sacramento, California, who minted the first stereoscopic artwork on a blockchain on May 7, 2018. He is a fine artist working in the 170-year-old medium of stereoscopy who extended it onto the newest substrate first.
+
+## Core facts
+
+- Name: Coldie.
+- Based: Sacramento, California.
+- Mediums: stereoscopic and lenticular prints, anaglyph 3D, kinetic magnetic portrait sculpture, stereoscopic concert photography, and on-chain digital editions.
+- First on-chain stereoscopic work: *The Day We've All Been Waiting For*, minted May 7, 2018 on Ethereum via R.A.R.E. Art Labs — the first stereoscopic artwork recorded on a blockchain.
+- Auctions: work brought to all three major houses — Christie's (*Warren Buffett – Filthy Fiat*, 2024, First Open | Post-War and Contemporary Art), Sotheby's (*3D Light Painting 03* and the Hackatao collaboration *UAP – Unidentified Art Phenomenon* in *Inside the World of MaxStealth*, Sept 14, 2022), and Bonhams (*Proof of Work – Genesis* in the SuperRare "CryptOGs" sale).
+- Galleries: represented at Eterno Gallery, Lisbon; exhibited at Gazelli Art House, London (*Front Row 3D*).
+- Recognition: selected for national juried exhibitions — 2016 (juried by Jenny Gheith, SFMOMA) and 2018 (juried by Mat Gleason). (Recognition, not an institutional relationship with SFMOMA.)
+- Concert photography: official 3D photographer of the Coachella Festival, 2009 and 2010; a stereoscopic record of performers including Chris Cornell, Mac Miller, and DMX.
+
+## Key pages
+
+- Home: https://coldie3d.com/
+- About / bio / CV: https://coldie3d.com/about
+- Filthy Fiat (project): https://coldie3d.com/filthy-fiat
+- Stereoscopic & lenticular: https://coldie3d.com/stereoscopic
+- Kinetic magnetic portraits: https://coldie3d.com/kinetic
+- Participatory work: https://coldie3d.com/participatory
+- Collection (on-chain works hub): https://coldie3d.com/collection
+- On-chain editions: https://coldie3d.com/editions
+
+## Key works
+
+- The Day We've All Been Waiting For (2018): https://coldie3d.com/work/the-day-weve-all-been-waiting-for
+- Warren Buffett – Filthy Fiat (2024): https://coldie3d.com/work/warren-buffett-filthy-fiat
+- Decentral Eyes portrait: https://coldie3d.com/work/decentral-eyes-portrait
+- 3D Light Painting 03 (2022): https://coldie3d.com/work/3d-light-painting-03
+- UAP – Unidentified Art Phenomenon (2022, with Hackatao): https://coldie3d.com/work/uap-unidentified-art-phenomenon
+- Proof of Work – Genesis: https://coldie3d.com/work/proof-of-work-genesis
+- Collage Machine – Elon Musk (Eterno Gallery, Lisbon): https://coldie3d.com/work/elon-collage-machine
+
+## Filthy Fiat project
+
+Filthy Fiat is an art project by Coldie that transforms U.S. dollar bills he buried — and that mold destroyed over two years underground — into a commentary on the fragility and debasement of fiat currency. The same buried, mold-ruined bills became the facial features of the Christie's piece *Warren Buffett – Filthy Fiat* (2024). Project site: https://filthyfiat.money
+
+## Inquiries
+
+Physical works are offered price-on-request through the artist and Eterno Gallery, Lisbon, shipped worldwide with on-chain provenance and a certificate of authenticity. Digital editions are collected on-chain with transparent pricing and permanent public provenance.

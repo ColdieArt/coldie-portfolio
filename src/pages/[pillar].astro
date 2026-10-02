@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import WorkCard from '../components/WorkCard.astro';
+import { pillars, type PillarKey } from '../data/site';
+import { byPillar } from '../data/works';
+import { breadcrumbLd, personLd } from '../data/jsonld';
+
+export function getStaticPaths() {
+  return (Object.keys(pillars) as PillarKey[]).map((key) => ({
+    params: { pillar: key },
+    props: { key },
+  }));
+}
+
+interface Props { key: PillarKey; }
+const { key } = Astro.props;
+const meta = pillars[key];
+const items = byPillar(key);
+const desc = `${meta.title} by Coldie. ${meta.framing}`;
+---
+<BaseLayout
+  title={meta.title}
+  description={desc}
+  path={`/${meta.slug}`}
+  jsonld={[
+    personLd(),
+    breadcrumbLd([
+      { name: 'Home', path: '/' },
+      { name: meta.title, path: `/${meta.slug}` },
+    ]),
+  ]}
+>
+  <section class="gal">
+    <div class="wrap">
+      <nav class="small muted gal__crumb" aria-label="Breadcrumb">
+        <a href="/">Home</a> · <span>{meta.title}</span>
+      </nav>
+      <header class="gal__head">
+        <p class="eyebrow">{meta.eyebrow}</p>
+        <h1>{meta.title}</h1>
+        <p class="lede">{meta.framing}</p>
+      </header>
+      <div class="gal__grid">
+        {items.map((w) => <WorkCard work={w} />)}
+      </div>
+      <p class="gal__back"><a class="link-arrow" href="/#work">Back to all work</a></p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .gal { padding-block: clamp(2.5rem, 6vw, 4.5rem) var(--section-y); }
+  .gal__crumb { margin-bottom: 2rem; }
+  .gal__crumb a { text-decoration: none; }
+  .gal__head { max-width: 60ch; margin-bottom: clamp(2.5rem, 6vw, 4rem); }
+  .gal__head h1 { margin: 0.2em 0; }
+  .gal__grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.5rem, 3.5vw, 3rem);
+  }
+  .gal__back { margin-top: clamp(2.5rem, 6vw, 4rem); }
+  @media (max-width: 760px) { .gal__grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 460px) { .gal__grid { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,83 @@
+---
+import { site } from '../data/site';
+
+const links: { label: string; href: string; external?: boolean }[] = [
+  { label: 'Current', href: '/#current-series' },
+  { label: 'Thesis', href: '/#work' },
+  { label: 'Store', href: 'https://coldie3d.myshopify.com', external: true },
+  { label: 'Story', href: '/#story' },
+];
+---
+
+<header class="nav" data-nav>
+  <div class="wrap nav__row">
+    <a class="nav__brand" href="/" aria-label={`${site.name} — home`}>
+      <span class="nav__name">Coldie</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      {links.map((l) => (
+        <a href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}</a>
+      ))}
+      <a href="/#acquire" class="btn btn--solid nav__cta">Inquire</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: saturate(140%) blur(10px);
+    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .nav[data-scrolled] {
+    border-bottom-color: var(--line-soft);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+  }
+  .nav__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 64px;
+  }
+  .nav__brand {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6em;
+    text-decoration: none;
+  }
+  .nav__name { font-family: var(--display); font-size: 1.5rem; letter-spacing: 0.02em; text-transform: uppercase; }
+  .nav__sub { font-family: var(--type); font-size: 0.72rem; color: var(--ink-mute); letter-spacing: 0.06em; text-transform: uppercase; }
+  .nav__links { display: flex; align-items: center; gap: clamp(1rem, 2.5vw, 2rem); }
+  .nav__links > a:not(.btn) {
+    font-family: var(--type);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .nav__links > a:not(.btn):hover { color: var(--ink); }
+  .nav__cta { padding: 0.5em 1em; }
+  @media (max-width: 720px) {
+    .nav__sub { display: none; }
+    .nav__links > a:not(.btn):not([href='/#work']):not([href='/#acquire']) { display: none; }
+  }
+  @media (max-width: 480px) {
+    .nav__links > a:not(.btn) { display: none; }
+  }
+</style>
+
+<script>
+  // Add a hairline once the user scrolls past the hero lip.
+  const nav = document.querySelector('[data-nav]');
+  const onScroll = () => {
+    if (window.scrollY > 24) nav?.setAttribute('data-scrolled', '');
+    else nav?.removeAttribute('data-scrolled');
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>

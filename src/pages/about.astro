@@ -1,0 +1,114 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+import { personLd, breadcrumbLd } from '../data/jsonld';
+import headshot from '../assets/coldie-headshot.jpg';
+
+// Person JSON-LD with the headshot attached (helps answer engines + rich results).
+const person = personLd();
+person.image = new URL(headshot.src, site.url).href;
+---
+<BaseLayout
+  title="About"
+  description={site.oneLineBio}
+  path="/about"
+  jsonld={[person, breadcrumbLd([{ name: 'Home', path: '/' }, { name: 'About', path: '/about' }])]}
+>
+  <article class="about">
+    <div class="wrap about__wrap">
+      <div class="about__intro">
+        <figure class="about__portrait">
+          <Image
+            src={headshot}
+            alt="Coldie, wearing red/cyan 3D glasses and a Sub Pop cap — black-and-white portrait."
+            widths={[360, 720]}
+            sizes="(max-width: 720px) 60vw, 320px"
+            loading="eager"
+          />
+          <figcaption class="about__credit muted small">Photo: Matthew Davis</figcaption>
+        </figure>
+        <div class="about__lead">
+          <p class="eyebrow">About</p>
+          <h1>Coldie</h1>
+          <!-- Answer-first: a self-contained factual sentence engines can lift whole. -->
+          <p class="lede">{site.oneLineBio}</p>
+        </div>
+      </div>
+
+      <h2>Artist statement</h2>
+      <blockquote class="about__statement">
+        <p>
+          I work in depth — the space just in front of and just behind the flat surface, where the eye is
+          fooled into believing an image is no longer flat. For more than fifteen years I’ve pursued that
+          illusion across mediums: stereoscopic and lenticular prints, anaglyph 3D, kinetic sculpture,
+          photography, and on-chain editions. My portraits are built by recombining many source images into
+          one, the way a person is built from many influences. The tools change — a hand-built 3D camera, a
+          lenticular press, a blockchain, a VR headset — but the work is always the same: take something
+          flat, and give it dimension.
+        </p>
+      </blockquote>
+
+      <h2>The auction arc</h2>
+      <p>
+        Coldie’s work has appeared at all three major auction houses — and each time, the houses chose the
+        3D work. In 2022, Sotheby’s included his stereoscopic art in <em>Inside the World of MaxStealth</em>,
+        the first single-owner NFT auction held live in its salesroom, alongside Beeple, XCOPY, Pak, and
+        Hackatao — the last a collaborator on the 3D work <em>UAP — Unidentified Art Phenomenon</em>. In 2021,
+        Bonhams featured <em>Proof of Work — Genesis</em> in its SuperRare “CryptOGs” sale. In 2024, Christie’s
+        offered <em>Warren Buffett — Filthy Fiat</em>, the debut of his portraiture as physical 3D sculpture.
+      </p>
+
+      <h2>Front Row 3D — concert photography (2009–2018)</h2>
+      <p>
+        For nearly a decade, Coldie photographed live music in stereoscopic 3D using a camera of his own
+        construction, serving as the official 3D photographer of the Coachella Festival in 2009 and 2010. He
+        shot believing a technology that did not yet exist would one day render the images in full
+        dimensional color — and in 2021, viewing the archive in VR for the first time, that conviction was
+        confirmed. The series, exhibited as <em>Front Row 3D</em> at Gazelli Art House, London, now stands as
+        a rare dimensional record of performers including Chris Cornell, Mac Miller, and DMX.
+      </p>
+
+      <h2>Credentials</h2>
+      <p>
+        Work selected for national juried exhibitions: 2016, juried by Jenny Gheith, Assistant Curator of
+        Painting and Sculpture, SFMOMA (now Curator and Interim Head of Painting and Sculpture); 2018, juried
+        by LA critic and curator Mat Gleason. Exhibited at Gazelli Art House, London. First stereoscopic
+        artwork minted on-chain (2018). Work brought to auction at all three major houses — Christie’s,
+        Sotheby’s, and Bonhams. Represented at Eterno Gallery, Lisbon. The 2016 and 2018 juried pieces were
+        anaglyph 3D landscapes on canvas, shown with 3D glasses on display.
+      </p>
+
+      <p class="about__back"><a class="link-arrow" href="/#work">See the work</a></p>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .about { padding-block: clamp(2.5rem, 6vw, 4.5rem) var(--section-y); }
+  .about__wrap { max-width: 72ch; }
+  .about__intro {
+    display: grid; grid-template-columns: 320px 1fr;
+    gap: clamp(1.5rem, 5vw, 3rem); align-items: center;
+    margin-bottom: clamp(2rem, 5vw, 3rem);
+  }
+  .about__portrait { margin: 0; }
+  .about__portrait img {
+    width: 100%; height: auto; aspect-ratio: 1; object-fit: cover;
+    border-radius: var(--radius); border: 1px solid var(--line);
+    background: var(--bg-raise);
+  }
+  .about__credit { margin-top: 0.6em; }
+  .about__lead { min-width: 0; }
+  .about__lead h1 { margin: 0.1em 0 0.4em; }
+  .about__lead .lede { margin: 0; }
+  .about h1 { margin: 0.2em 0 0.5em; }
+  @media (max-width: 620px) {
+    .about__intro { grid-template-columns: 1fr; }
+    .about__portrait { max-width: 260px; }
+  }
+  .about h2 { margin-top: 2.2em; }
+  .about__statement { margin: 1.5em 0; padding-left: 1.2em; border-left: 2px solid var(--line); }
+  .about__statement p { font-family: var(--serif); font-size: 1.2rem; font-style: italic; color: var(--ink); }
+  .about__back { margin-top: 3rem; }
+</style>

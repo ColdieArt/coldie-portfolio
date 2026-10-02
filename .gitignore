@@ -1,0 +1,24 @@
+# build output
+dist/
+# dependencies
+node_modules/
+# astro
+.astro/
+# logs
+npm-debug.log*
+# os
+.DS_Store
+# env
+.env
+.env.production
+
+# internal planning / scratch (not part of the site)
+coldie-claude-code-build-prompt.md
+coldie-update-*.md
+files/
+files.zip
+frontrow/
+frontrow.zip
+Ascension-Transition.JPG
+# local tooling config
+.claude/
