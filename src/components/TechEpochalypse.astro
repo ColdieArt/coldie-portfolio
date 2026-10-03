@@ -193,6 +193,9 @@ const overlords = [
       iframe.loading = 'eager';
       iframe.allow = 'accelerometer; gyroscope; fullscreen';
       iframe.setAttribute('allowfullscreen', '');
+      // Inline sizing: component <style> is scoped by a data-attribute that a
+      // JS-created element never receives, so the iframe must fill its box here.
+      iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;display:block;';
       player.replaceChildren(iframe);
       player.setAttribute('data-loaded', '');
     }, { once: true });
