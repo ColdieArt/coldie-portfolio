@@ -1,7 +1,11 @@
 ---
 // Tech Epochalypse — interactive kinetic 3D portraits of the "overlords" shaping
 // the age of AI. Images + links pulled from knowyouroverlord.art (the full site).
+// The right half of the top block embeds the live Elon Musk kinetic 3D artwork so
+// visitors can try it inline. It uses a click-to-load facade (like the YouTube
+// embeds) so the heavy WebGL experience only loads when someone opts in.
 const SITE = 'https://www.knowyouroverlord.art/';
+const ELON_ART = 'https://www.knowyouroverlord.art/artworks/elon-musk';
 const overlords = [
   { name: 'Elon Musk', img: '/works/tech-epochalypse/elon-musk.webp' },
   { name: 'Mark Zuckerberg', img: '/works/tech-epochalypse/mark-zuckerberg.webp' },
@@ -12,19 +16,47 @@ const overlords = [
 ---
 <section id="tech-epochalypse" class="te" aria-labelledby="te-h">
   <div class="wrap">
-    <header class="te__head">
-      <p class="eyebrow">AGI has arrived</p>
-      <h2 id="te-h">Tech Epochalypse</h2>
-      <p class="lede te__lede">
-        Interactive kinetic 3D portraits of the figures shaping the age of AI — five overlords, one
-        network. Drag, rotate, and layer the living portraits to compose your own iteration, each captured
-        on-chain.
-      </p>
-      <p class="te__cta">
-        <a class="btn btn--solid" href={SITE} target="_blank" rel="noopener">Enter the Tech Epochalypse ↗</a>
-        <a class="link-arrow" href="https://www.knowyouroverlord.art/overlords" target="_blank" rel="noopener">Meet the overlords</a>
-      </p>
-    </header>
+    <div class="te__top">
+      <div class="te__intro">
+        <p class="eyebrow">AGI has arrived</p>
+        <h2 id="te-h">Tech Epochalypse</h2>
+        <p class="lede te__lede">
+          Interactive kinetic 3D portraits of the figures shaping the age of AI — five overlords, one
+          network. Tear a living portrait apart, push the pieces into depth, and rebuild it in your own
+          language. Every iteration is captured on-chain.
+        </p>
+        <p class="te__cta">
+          <a class="btn btn--solid" href={SITE} target="_blank" rel="noopener">Enter the Tech Epochalypse ↗</a>
+          <a class="link-arrow" href="https://www.knowyouroverlord.art/overlords" target="_blank" rel="noopener">Meet the overlords</a>
+        </p>
+      </div>
+
+      <figure class="te__stage">
+        <div class="te__player" data-te-player data-src={ELON_ART}>
+          <button class="te__launch" type="button" aria-label="Launch the Elon Musk kinetic 3D artwork — loads inline">
+            <img
+              class="te__poster"
+              src="/works/tech-epochalypse/elon-musk.webp"
+              alt="Elon Musk — kinetic 3D portrait by Coldie"
+              loading="lazy"
+              decoding="async"
+            />
+            <span class="te__scrim" aria-hidden="true"></span>
+            <span class="te__play" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </span>
+            <span class="te__launch-label">
+              Launch kinetic 3D artwork
+              <small>Drag · rotate · export — right here</small>
+            </span>
+          </button>
+        </div>
+        <figcaption class="te__cap">
+          Overlord I — Elon Musk, “The Architect.”
+          <a href={ELON_ART} target="_blank" rel="noopener">Open full experience ↗</a>
+        </figcaption>
+      </figure>
+    </div>
 
     <ul class="te__grid" aria-label="The overlords">
       {overlords.map((o) => (
@@ -43,11 +75,77 @@ const overlords = [
 
 <style>
   .te { padding-block: clamp(3rem, 7vw, 6rem); border-bottom: 1px solid var(--line-soft); }
-  .te__head { max-width: 62ch; margin-bottom: clamp(2.5rem, 6vw, 4rem); }
-  .te__head h2 { margin: 0 0 0.4em; }
-  .te__lede { margin: 0 0 1.5em; }
+
+  /* two-column top: intro on the left, playable Elon artwork on the right */
+  .te__top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1.75rem, 4vw, 3.5rem);
+    align-items: center;
+    margin-bottom: clamp(2.5rem, 6vw, 4rem);
+  }
+  .te__intro h2 { margin: 0 0 0.4em; }
+  .te__lede { margin: 0 0 1.5em; max-width: 46ch; }
   .te__cta { display: flex; gap: 1.4rem; align-items: center; flex-wrap: wrap; margin: 0; }
 
+  /* the playable stage */
+  .te__stage { margin: 0; }
+  .te__player {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; background: var(--bg-raise);
+    box-shadow: 6px 6px 0 color-mix(in srgb, var(--red) 24%, transparent);
+  }
+  .te__launch {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    display: block; padding: 0; border: 0; cursor: pointer;
+    background: none; color: var(--ink); text-align: left;
+  }
+  .te__poster {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    transition: transform 0.6s cubic-bezier(0.22,0.61,0.36,1);
+  }
+  .te__launch:hover .te__poster,
+  .te__launch:focus-visible .te__poster { transform: scale(1.04); }
+  .te__scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.15) 45%, rgba(0,0,0,0.25) 100%);
+  }
+  .te__play {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 72px; height: 72px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--red); color: #fff;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.45);
+    transition: transform 0.25s ease, background 0.25s ease;
+  }
+  .te__play svg { margin-left: 3px; }
+  .te__launch:hover .te__play,
+  .te__launch:focus-visible .te__play { transform: translate(-50%, -50%) scale(1.08); }
+  .te__launch-label {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: clamp(1rem, 2.5vw, 1.5rem);
+    font-family: var(--display); text-transform: uppercase; letter-spacing: 0.02em;
+    font-size: clamp(1rem, 2vw, 1.3rem); line-height: 1.1; color: #fff;
+  }
+  .te__launch-label small {
+    display: block; margin-top: 0.5em;
+    font-family: var(--type); text-transform: uppercase; letter-spacing: 0.1em;
+    font-size: 0.7rem; color: rgba(255,255,255,0.72);
+  }
+  /* loaded state: iframe fills the stage */
+  .te__player[data-loaded] { box-shadow: 6px 6px 0 color-mix(in srgb, var(--cyan) 24%, transparent); }
+  .te__iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+  .te__cap {
+    margin: 0.9em 0 0; font-family: var(--type); font-size: 0.75rem;
+    letter-spacing: 0.04em; color: var(--ink-mute);
+  }
+  .te__cap a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line); }
+  .te__cap a:hover { color: var(--red); }
+
+  /* overlord thumbnail grid */
   .te__grid {
     list-style: none; margin: 0; padding: 0;
     display: grid; grid-template-columns: repeat(5, 1fr);
@@ -70,7 +168,33 @@ const overlords = [
   }
   .te__card a:hover .te__name { color: var(--red); }
 
-  @media (max-width: 860px) { .te__grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 860px) {
+    .te__top { grid-template-columns: 1fr; }
+    .te__player { aspect-ratio: 1 / 1; }
+    .te__grid { grid-template-columns: repeat(3, 1fr); }
+  }
   @media (max-width: 520px) { .te__grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (prefers-reduced-motion: reduce) { .te__frame img { transition: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .te__frame img, .te__poster, .te__play { transition: none; }
+  }
 </style>
+
+<script>
+  // Click-to-load facade: swap the poster for the live kinetic 3D artwork iframe.
+  document.querySelectorAll('[data-te-player]').forEach((player) => {
+    const btn = player.querySelector('.te__launch');
+    const src = player.getAttribute('data-src');
+    if (!btn || !src) return;
+    btn.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = src;
+      iframe.className = 'te__iframe';
+      iframe.title = 'Elon Musk — kinetic 3D interactive artwork by Coldie';
+      iframe.loading = 'eager';
+      iframe.allow = 'accelerometer; gyroscope; fullscreen';
+      iframe.setAttribute('allowfullscreen', '');
+      player.replaceChildren(iframe);
+      player.setAttribute('data-loaded', '');
+    }, { once: true });
+  });
+</script>
