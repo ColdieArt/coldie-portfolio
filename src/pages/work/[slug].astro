@@ -6,7 +6,7 @@ import RotatingBillboard from '../../components/RotatingBillboard.astro';
 import VerticalVideo from '../../components/VerticalVideo.astro';
 import AudioPlayer from '../../components/AudioPlayer.astro';
 import { works, type Work } from '../../data/works';
-import { pillars, site } from '../../data/site';
+import { pillars, PILLAR_PAGES, site } from '../../data/site';
 import { artworkLd, breadcrumbLd, personLd } from '../../data/jsonld';
 
 export function getStaticPaths() {
@@ -16,6 +16,7 @@ export function getStaticPaths() {
 interface Props { work: Work; }
 const { work } = Astro.props;
 const pillar = pillars[work.pillar];
+const pillarHasPage = PILLAR_PAGES.includes(work.pillar);
 const heroImg = work.image ?? work.layers?.[work.layers.length - 1]?.src;
 
 const ld = [
@@ -42,7 +43,7 @@ const desc = work.caption.split('. ')[0] + '.';
     <div class="wrap">
       <nav class="work__crumb small muted" aria-label="Breadcrumb">
         <a href="/">Home</a> ·
-        <a href={`/${pillar.slug}`}>{pillar.title}</a> ·
+        {pillarHasPage ? <a href={`/${pillar.slug}`}>{pillar.title}</a> : <span>{pillar.title}</span>} ·
         <span>{work.title}</span>
       </nav>
     </div>

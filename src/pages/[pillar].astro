@@ -1,12 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import WorkCard from '../components/WorkCard.astro';
-import { pillars, type PillarKey } from '../data/site';
+import { pillars, PILLAR_PAGES, type PillarKey } from '../data/site';
 import { byPillar } from '../data/works';
 import { breadcrumbLd, personLd } from '../data/jsonld';
 
 export function getStaticPaths() {
-  return (Object.keys(pillars) as PillarKey[]).map((key) => ({
+  return PILLAR_PAGES.map((key) => ({
     params: { pillar: key },
     props: { key },
   }));

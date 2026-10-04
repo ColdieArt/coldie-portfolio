@@ -109,6 +109,10 @@ export const pillars = {
 
 export type PillarKey = keyof typeof pillars;
 
+// Pillar keys that get a standalone gallery page at /{slug}. The others
+// (stereoscopic, participatory) live on the homepage / collection only.
+export const PILLAR_PAGES: PillarKey[] = ['kinetic'];
+
 // Current series — the active bodies of work, featured at the top of the homepage,
 // in display order (first = top). Each block either pulls works via `seriesKey`
 // or shows explicit `images`. Edit/reorder this list as the focus changes.
