@@ -1,7 +1,9 @@
 ---
-import InquireForm from './InquireForm.astro';
+import { site } from '../data/site';
 export interface Props { preselect?: string; }
 const { preselect } = Astro.props;
+const subject = preselect ? `Inquiry: ${preselect}` : 'coldie3d.com — inquiry';
+const mailto = `mailto:${site.inquiryEmail}?subject=${encodeURIComponent(subject)}`;
 ---
 <section id="acquire" class="acq section--flat" aria-labelledby="acq-h">
   <div class="wrap">
@@ -24,7 +26,7 @@ const { preselect } = Astro.props;
           <li>Ships worldwide</li>
           <li>On-chain provenance + certificate of authenticity</li>
         </ul>
-        <a href="#inquire-form" class="btn btn--solid">Inquire</a>
+        <a href={mailto} class="btn btn--solid">Inquire</a>
       </article>
 
       <article class="acq__card">
@@ -36,13 +38,14 @@ const { preselect } = Astro.props;
           <li>Open, verifiable ownership history</li>
           <li>Editions across the body of work</li>
         </ul>
-        <a href="#inquire-form" class="btn">Inquire about editions</a>
+        <a href={mailto} class="btn">Inquire about editions</a>
       </article>
     </div>
 
     <div class="acq__form" id="inquire-form">
       <h3 class="acq__form-h">Inquiry</h3>
-      <InquireForm preselect={preselect} />
+      <p class="muted acq__form-note">Email the studio directly and I’ll get back to you.</p>
+      <a href={mailto} class="btn btn--solid acq__email">{site.inquiryEmail}</a>
     </div>
   </div>
 </section>
@@ -65,6 +68,7 @@ const { preselect } = Astro.props;
   .acq__list { margin: 0.4em 0 1.4em; padding-left: 1.1em; color: var(--ink-soft); }
   .acq__list li { margin-bottom: 0.4em; }
   .acq__card .btn { align-self: flex-start; margin-top: auto; }
-  .acq__form-h { margin: 0 0 1.4em; }
+  .acq__form-h { margin: 0 0 0.6em; }
+  .acq__form-note { margin: 0 0 1.4em; max-width: 46ch; }
   @media (max-width: 720px) { .acq__cards { grid-template-columns: 1fr; } }
 </style>

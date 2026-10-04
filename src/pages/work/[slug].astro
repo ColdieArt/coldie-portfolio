@@ -5,9 +5,8 @@ import CollageBuilder from '../../components/CollageBuilder.astro';
 import RotatingBillboard from '../../components/RotatingBillboard.astro';
 import VerticalVideo from '../../components/VerticalVideo.astro';
 import AudioPlayer from '../../components/AudioPlayer.astro';
-import InquireForm from '../../components/InquireForm.astro';
 import { works, type Work } from '../../data/works';
-import { pillars } from '../../data/site';
+import { pillars, site } from '../../data/site';
 import { artworkLd, breadcrumbLd, personLd } from '../../data/jsonld';
 
 export function getStaticPaths() {
@@ -155,8 +154,11 @@ const desc = work.caption.split('. ')[0] + '.';
 
     <section id="inquire" class="wrap work__inquire">
       <h2>Inquire about this work</h2>
-      <p class="muted">Goes to the artist.</p>
-      <InquireForm preselect={work.title} includeGallery={false} />
+      <p class="muted">Email the artist directly about “{work.title}”.</p>
+      <a
+        href={`mailto:${site.inquiryEmail}?subject=${encodeURIComponent(`Inquiry: ${work.title}`)}`}
+        class="btn btn--solid"
+      >{site.inquiryEmail}</a>
     </section>
   </article>
 </BaseLayout>

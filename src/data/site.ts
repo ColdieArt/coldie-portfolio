@@ -15,7 +15,7 @@ export const site = {
   // Official store (Shopify)
   storeUrl: 'https://coldie3d.myshopify.com',
   // Routing target for inquiries. Replace with the real inbox before launch.
-  inquiryEmail: 'studio@coldie3d.com',
+  inquiryEmail: 'coldieart@gmail.com',
   galleryEmail: 'info@eternogallery.com', // [TO CONFIRM] Eterno Gallery contact
   social: {
     // [TO ADD] real handles
