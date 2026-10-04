@@ -18,8 +18,7 @@ export const site = {
   inquiryEmail: 'coldieart@gmail.com',
   galleryEmail: 'info@eternogallery.com', // [TO CONFIRM] Eterno Gallery contact
   social: {
-    // [TO ADD] real handles
-    instagram: 'https://instagram.com/coldie',
+    instagram: 'https://instagram.com/coldie3dart',
     x: 'https://x.com/Coldie',
   },
 } as const;

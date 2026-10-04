@@ -42,10 +42,14 @@ const mailto = `mailto:${site.inquiryEmail}?subject=${encodeURIComponent(subject
       </article>
     </div>
 
-    <div class="acq__form" id="inquire-form">
-      <h3 class="acq__form-h">Inquiry</h3>
-      <p class="muted acq__form-note">Email the studio directly and I’ll get back to you.</p>
-      <a href={mailto} class="btn btn--solid acq__email">{site.inquiryEmail}</a>
+    <div class="acq__contact" id="inquire-form">
+      <h3 class="acq__form-h">Get in touch</h3>
+      <p class="muted acq__form-note">Reach out directly — email or DMs.</p>
+      <div class="acq__links">
+        <a href={mailto} class="btn btn--solid">coldieart@gmail.com</a>
+        <a href={site.social.x} target="_blank" rel="me noopener" class="btn">X / @Coldie</a>
+        <a href={site.social.instagram} target="_blank" rel="me noopener" class="btn">Instagram / @coldie3dart</a>
+      </div>
     </div>
   </div>
 </section>
@@ -70,5 +74,9 @@ const mailto = `mailto:${site.inquiryEmail}?subject=${encodeURIComponent(subject
   .acq__card .btn { align-self: flex-start; margin-top: auto; }
   .acq__form-h { margin: 0 0 0.6em; }
   .acq__form-note { margin: 0 0 1.4em; max-width: 46ch; }
-  @media (max-width: 720px) { .acq__cards { grid-template-columns: 1fr; } }
+  .acq__links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
+  @media (max-width: 720px) {
+    .acq__cards { grid-template-columns: 1fr; }
+    .acq__links { flex-direction: column; align-items: flex-start; }
+  }
 </style>
