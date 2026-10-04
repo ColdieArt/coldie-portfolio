@@ -1,0 +1,105 @@
+---
+// Featured Digital Works — on-chain editions, each linking to its OpenSea page
+// where the full animation lives. Posters are self-hosted, optimized stills.
+const works = [
+  {
+    title: 'Michael Saylor',
+    collection: 'Decentral Eyes · Not One Satoshi',
+    img: '/works/digital/saylor.webp',
+    url: 'https://opensea.io/item/ethereum/0x383788c0a5a6f4cc8f1bcd3993742db6b3332850/211',
+  },
+  {
+    title: 'Jeff Bezos',
+    collection: 'Tech Epochalypse',
+    img: '/works/digital/bezos.webp',
+    url: 'https://opensea.io/item/ethereum/0xea030bb4da83c7b470f6d6109880116459509553/26',
+  },
+  {
+    title: 'En Marcha',
+    collection: 'Digital Encounters',
+    img: '/works/digital/en-marcha.webp',
+    url: 'https://opensea.io/item/ethereum/0x034220c41322ff03db1c643da2ce991440a29bdd/1',
+  },
+  {
+    title: 'Gary Gensler',
+    collection: 'Decentral Eyes',
+    img: '/works/digital/gensler.webp',
+    url: 'https://opensea.io/item/ethereum/0x892a1e9856ae529b94aaa683fc558ee107d35258/2',
+  },
+];
+---
+<section id="featured-digital" class="fd section--flat" aria-labelledby="fd-h">
+  <div class="wrap">
+    <header class="fd__head">
+      <p class="eyebrow">Collect · on-chain</p>
+      <h2 id="fd-h">Featured digital works</h2>
+      <p class="lede fd__lede">
+        Living, dimensional editions — part of an ongoing body of on-chain art. Open any piece on OpenSea to
+        see it move.
+      </p>
+    </header>
+
+    <ul class="fd__grid" aria-label="Featured digital works">
+      {works.map((w) => (
+        <li class="fd__card">
+          <a href={w.url} target="_blank" rel="noopener" aria-label={`${w.title} — ${w.collection}. Collect on OpenSea`}>
+            <span class="fd__frame">
+              <img src={w.img} alt={`${w.title} — ${w.collection}, digital work by Coldie`} loading="lazy" decoding="async" width="900" height="900" />
+            </span>
+            <span class="fd__meta">
+              <span class="fd__title">{w.title}</span>
+              <span class="fd__coll">{w.collection}</span>
+              <span class="fd__cta">Collect on OpenSea ↗</span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .fd { padding-block: clamp(4rem, 9vw, 8rem); border-top: 1px solid var(--line-soft); }
+  .fd__head { max-width: 60ch; margin-bottom: clamp(2.5rem, 6vw, 4rem); }
+  .fd__head h2 { margin: 0 0 0.4em; }
+  .fd__lede { margin: 0; }
+
+  .fd__grid {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1rem, 2.5vw, 2rem);
+  }
+  .fd__card a { text-decoration: none; display: block; color: inherit; }
+  .fd__frame {
+    display: block; overflow: hidden; border-radius: var(--radius);
+    border: 1px solid var(--line-soft); background: var(--bg-raise);
+    box-shadow: 5px 5px 0 color-mix(in srgb, var(--cyan) 20%, transparent);
+    transition: box-shadow 0.25s ease;
+  }
+  .fd__frame img {
+    width: 100%; aspect-ratio: 1; object-fit: cover; display: block;
+    transition: transform 0.6s cubic-bezier(0.22,0.61,0.36,1);
+  }
+  .fd__card a:hover .fd__frame { box-shadow: 5px 5px 0 color-mix(in srgb, var(--red) 28%, transparent); }
+  .fd__card a:hover .fd__frame img { transform: scale(1.04); }
+
+  .fd__meta { display: block; margin-top: 0.85em; }
+  .fd__title {
+    display: block; font-family: var(--serif); font-size: 1.1rem; color: var(--ink);
+  }
+  .fd__coll {
+    display: block; margin-top: 0.15em;
+    font-family: var(--type); font-size: 0.72rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-mute);
+  }
+  .fd__cta {
+    display: block; margin-top: 0.7em;
+    font-family: var(--type); font-size: 0.75rem; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink-soft);
+  }
+  .fd__card a:hover .fd__cta { color: var(--red); }
+
+  @media (max-width: 900px) { .fd__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 420px) { .fd__grid { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .fd__frame img { transition: none; } }
+</style>
