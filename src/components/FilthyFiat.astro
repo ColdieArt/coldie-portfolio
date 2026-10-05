@@ -4,6 +4,7 @@
 // mouse beneath a dark overlay, with the story over it. Then the works grid.
 import { filthyFiatWorks } from '../data/works';
 import WorkCard from './WorkCard.astro';
+import RansomHeading from './RansomHeading.astro';
 
 // Filthy Fiat project site (canonical).
 const FILTHY_FIAT_URL = 'https://filthyfiat.money';
@@ -42,7 +43,7 @@ const seriesGrid = filthyFiatWorks.filter((w) => w.slug !== 'warren-buffett-filt
     <div class="wrap ff__backstory-inner">
       <header class="ff__head">
         <p class="eyebrow">Current series</p>
-        <h2 id="ff-h">Filthy Fiat</h2>
+        <RansomHeading as="h2" id="ff-h" text="Filthy Fiat" />
         <!-- Answer-first sentence: written to be lifted whole by an answer engine. -->
         <p class="lede ff__lede">
           Filthy Fiat is an art project by Coldie that transforms U.S. dollar bills he buried — and that

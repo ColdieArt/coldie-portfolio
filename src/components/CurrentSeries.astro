@@ -6,6 +6,7 @@ import { currentSeriesList } from '../data/site';
 import { bySeries } from '../data/works';
 import WorkCard from './WorkCard.astro';
 import RotatingBillboard from './RotatingBillboard.astro';
+import RansomHeading from './RansomHeading.astro';
 
 const blocks = currentSeriesList.map((s) => ({
   ...s,
@@ -19,7 +20,7 @@ const blocks = currentSeriesList.map((s) => ({
     {blocks.map((b) => (
       <div class="cs__block">
         <div class="cs__intro">
-          <h2>{b.name}</h2>
+          <RansomHeading as="h2" text={b.name} />
           <p class="lede cs__blurb">{b.blurb}</p>
           {(b.primary || b.secondary) && (
             <p class="cs__cta">

@@ -1,6 +1,7 @@
 ---
 import { pillars, type PillarKey } from '../data/site';
 import { featuredAllFor, curatedFor } from '../data/works';
+import RansomHeading from './RansomHeading.astro';
 import DepthParallax from './DepthParallax.astro';
 import CollageBuilder from './CollageBuilder.astro';
 import WorkCard from './WorkCard.astro';
@@ -16,7 +17,7 @@ const num = String(index).padStart(2, '0');
 <section class="pillar" aria-labelledby={`pillar-${pillar}`}>
   <div class="wrap">
     <header class="pillar__head">
-      {'concept' in meta && meta.concept && <p class="pillar__concept">{meta.concept}</p>}
+      {'concept' in meta && meta.concept && <RansomHeading as="h3" text={meta.concept} size="clamp(1.7rem, 3.8vw, 3rem)" />}
       <p class="eyebrow">{meta.eyebrow}</p>
       <h3 id={`pillar-${pillar}`} class="pillar__title">{meta.title}</h3>
       <p class="lede pillar__framing">{meta.framing}</p>

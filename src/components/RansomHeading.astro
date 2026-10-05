@@ -13,8 +13,9 @@ export interface Props {
   class?: string;
   seed?: string;
   parallax?: boolean;
+  size?: string; /* optional CSS font-size override for the whole collage */
 }
-const { text, lines, as = 'h2', id, class: klass = '', seed, parallax = true } = Astro.props;
+const { text, lines, as = 'h2', id, class: klass = '', seed, parallax = true, size } = Astro.props;
 const Tag = as;
 const srcLines = (lines && lines.length ? lines : (text ?? '').split('\n')).filter((l) => l.length > 0);
 const fullText = srcLines.join(' ');
@@ -97,7 +98,7 @@ const model = srcLines.map((line) =>
   line.split(' ').map((word) => Array.from(word).map((ch) => ({ ch, ...spec() })))
 );
 ---
-<Tag id={id} class={`ransom ${klass}`.trim()} aria-label={fullText} data-ransom={parallax ? '' : undefined}>
+<Tag id={id} class={`ransom ${klass}`.trim()} aria-label={fullText} data-ransom={parallax ? '' : undefined} style={size ? `font-size:${size}` : undefined}>
   <span class="ransom__inner" aria-hidden="true">
     {model.map((line) => (
       <span class="ransom__line">
