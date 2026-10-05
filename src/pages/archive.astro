@@ -1,6 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import RansomHeading from '../components/RansomHeading.astro';
+import ArchiveCorridor from '../components/archive/ArchiveCorridor.astro';
+import ArchivePanel from '../components/archive/ArchivePanel.astro';
+import mediaJson from '../data/media.json';
+import thumbSizesJson from '../data/thumb-sizes.json';
 import { site } from '../data/site';
 import { personLd, breadcrumbLd } from '../data/jsonld';
 import {
@@ -87,6 +91,36 @@ const marketName = (url: string) =>
   : url.includes('deca.art') ? 'Deca'
   : new URL(url).hostname.replace(/^www\./, '');
 
+// One record per work for the corridor, grid and detail panel (description is read
+// from the list view's DOM instead of being duplicated here).
+const media = mediaJson as Record<string, { src: string; type: 'video' | 'gif' } | null>;
+const sizes = thumbSizesJson as Record<string, [number, number]>;
+const archiveItems = sortedReleases.map((r) => {
+  const mk = market[r.id];
+  const o = mk?.owner;
+  return {
+    id: r.id,
+    title: r.title,
+    date: formatReleaseDate(r.date),
+    year: String(releaseYear(r) ?? 'tbc'),
+    img: thumbs[r.id] ?? null,
+    size: sizes[r.id] ?? null,
+    media: media[r.id] ?? null,
+    kind: `${KIND_LABEL[r.kind]}${r.supply != null && r.kind !== '1/1' ? ` · ${r.supply.toLocaleString('en-US')}` : ''}`,
+    series: r.series ?? null,
+    platform: r.platform,
+    chain: r.chain,
+    badge: r.badge ?? null,
+    url: r.url ?? null,
+    market: r.url ? marketName(r.url) : null,
+    slug: r.slug ?? null,
+    owner: o ? { label: ownerLabel(o), href: ownerUrl(r, o), artist: o.artist, addr: shortAddr(o.address) } : null,
+    sale: mk?.lastSale ? `${fmtEth(mk.lastSale)}${mk.lastSale.date ? ` · ${formatReleaseDate(mk.lastSale.date)}` : ''}` : null,
+    listing: mk?.listing ? { label: LISTING_LABEL[mk.listing.kind], price: fmtEth(mk.listing), usd: fmtUsd(mk.listing.usd) } : null,
+    price: mk?.listing?.amount ?? null,
+  };
+});
+
 const searchText = (r: Release) =>
   [
     r.title, r.series, r.platform, r.chain, KIND_LABEL[r.kind], r.kindNote, r.notes, r.badge,
@@ -108,7 +142,17 @@ const searchText = (r: Release) =>
     { name: 'Archive', path: '/archive' },
   ])]}
 >
-  <section class="rel">
+  <section class="rel" data-view="list">
+    <script is:inline>
+      // Before first paint: the corridor (followed by the full list) on desktop;
+      // just the list on phones, with reduced motion, or without JavaScript.
+      (function () {
+        var s = document.currentScript.parentElement;
+        var calm = matchMedia('(prefers-reduced-motion: reduce)').matches || innerWidth < 900;
+        if (!calm && new URLSearchParams(location.search).get('view') !== 'list') s.dataset.view = 'corridor';
+      })();
+    </script>
+    <script type="application/json" id="arc-data" set:html={JSON.stringify(archiveItems)} />
     <div class="wrap">
       <nav class="small muted rel__crumb" aria-label="Breadcrumb"><a href="/">Home</a> · <span>Archive</span></nav>
       <header class="rel__head">
@@ -197,6 +241,9 @@ const searchText = (r: Release) =>
             ))}
           </nav>
 
+          <ArchiveCorridor />
+
+          <div class="arc-list" id="rel-list">
           <ol class="rel__timeline" id="rel-timeline">
             {groups.map((g) => (
               <li class="rel__year" id={`y-${g.key}`} data-year={g.key}>
@@ -210,6 +257,7 @@ const searchText = (r: Release) =>
                     <li
                       class="rel__entry"
                       data-entry
+                      data-id={r.id}
                       data-search={searchText(r)}
                       data-kind={r.kind}
                       data-series={r.series ?? ''}
@@ -316,6 +364,7 @@ const searchText = (r: Release) =>
         ))}
       </ol>
       <ol class="rel__entries rel__flat" id="rel-flat" hidden aria-label="For sale, sorted by price"></ol>
+          </div>
       <p class="rel__empty muted" id="rel-empty" hidden>No releases match your search.</p>
 
       <p class="rel__note small muted">
@@ -327,11 +376,55 @@ const searchText = (r: Release) =>
         </div>
       </div>
     </div>
+    <ArchivePanel />
+    <nav class="arc-listyears" id="arc-listyears" aria-label="Jump to a year in the list">
+      {groups.filter((g) => g.items.length).map((g) => (
+        <button type="button" data-year={g.key}>{g.key === 'tbc' ? 'Undated' : g.label}</button>
+      ))}
+    </nav>
   </section>
 </BaseLayout>
 
 <style>
   .rel { padding-block: clamp(2.5rem, 6vw, 4.5rem) var(--section-y); }
+
+  /* The corridor shows on desktop only; the full list always follows it. */
+  /* :global — the corridor lives in its own component, outside this page's style scope */
+  .rel:not([data-view='corridor']) :global([data-view-pane='corridor']) { display: none; }
+  .arc-list { scroll-margin-top: 80px; }
+  /* year jump list for the detailed list — fixed to the right edge while the list is in view */
+  .arc-listyears {
+    position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); z-index: 40;
+    display: flex; flex-direction: column; gap: 0.15rem;
+    opacity: 0; pointer-events: none; transition: opacity 0.25s;
+  }
+  .arc-listyears[data-show] { opacity: 1; pointer-events: auto; }
+  .arc-listyears button {
+    padding: 0.3rem 0.4rem; background: none; border: 0; cursor: pointer; text-align: right;
+    font-family: var(--display); font-size: 0.95rem; letter-spacing: 0.04em; line-height: 1;
+    color: rgb(236 233 226 / 0.38); transition: color 0.2s, transform 0.2s;
+  }
+  .arc-listyears button:hover { color: #ece9e2; }
+  .arc-listyears button[hidden], .arc-listyears[hidden] { display: none; }
+  .arc-listyears button[aria-current='true'] { color: #ece9e2; transform: translateX(-4px); }
+  .arc-listyears button[aria-current='true']::before { content: '— '; }
+  /* keep the list's price column clear of the year list on narrower desktops */
+  @media (min-width: 901px) and (max-width: 1440px) { .arc-list { padding-right: 3.75rem; } }
+  @media (max-width: 900px) { .arc-listyears { display: none; } }
+
+  /* the corridor redraws constantly; scroll anchoring would fight it and jump the page */
+  :global(html:has(.rel[data-view='corridor'])) { overflow-anchor: none; }
+  .rel[data-view='corridor'] .arc-list { margin-top: clamp(3rem, 7vw, 5rem); }
+
+  /* The archive sits in a dark void so the art is the only light. */
+  .rel {
+    --bg: #0b0b0b; --bg-raise: #141414; --bg-flat: #070707;
+    --ink: #ece9e2; --ink-soft: #c6c1b6; --ink-mute: #85817a;
+    --line: #2e2e2e; --line-soft: #1c1c1c; --gold: #ece9e2; --red: #ffffff;
+    background: var(--bg); color: var(--ink);
+  }
+  .rel .rel__filter select { color-scheme: dark; }
+
   .rel__crumb { margin-bottom: 2rem; }
   .rel__crumb a { text-decoration: none; }
   .rel__head { max-width: 60ch; margin-bottom: clamp(1.75rem, 4vw, 2.5rem); }
@@ -610,6 +703,22 @@ const searchText = (r: Release) =>
     shown.textContent = String(total);
     empty.hidden = total > 0;
     reset.hidden = !filtering && sort.value === 'oldest';
+    announce();
+  }
+
+  /** Tell the corridor and grid which works match, in display order. */
+  function announce() {
+    const byPrice = sort.value.startsWith('price');
+    let list = entries.filter((e) => !e.hidden);
+    if (byPrice) {
+      const dir = sort.value === 'price-asc' ? 1 : -1;
+      list = list.sort((a, b) => dir * (Number(a.dataset.price) - Number(b.dataset.price)));
+    } else if (sort.value === 'newest') {
+      list = list.reverse();
+    }
+    document.dispatchEvent(
+      new CustomEvent('archive:results', { detail: { ids: list.map((e) => e.dataset.id!), byPrice } })
+    );
   }
 
   /** Timeline by date, or one flat list by listing price (price sorts need "For sale only"). */
@@ -655,7 +764,48 @@ const searchText = (r: Release) =>
   const initial = new URLSearchParams(location.search).get('q');
   if (initial) q.value = initial;
 
-  update();
+  // Year bar: in the corridor, jump straight to that year; otherwise anchor into the list.
+  const section = document.querySelector<HTMLElement>('.rel')!;
+  rail.addEventListener('click', (e) => {
+    const bar = (e.target as HTMLElement).closest<HTMLElement>('[data-rail]');
+    if (!bar || section.dataset.view !== 'corridor') return;
+    e.preventDefault();
+    document.dispatchEvent(new CustomEvent('archive:jump-year', { detail: bar.dataset.rail! }));
+  });
+
+  // ── Year jump list for the detailed list ─────────────────
+  const listNav = $('arc-listyears');
+  const listEl = $('rel-list');
+  const navBtns = [...listNav.querySelectorAll<HTMLButtonElement>('[data-year]')];
+  // show it only while the list (not the corridor) fills the screen
+  new IntersectionObserver(([e]) => listNav.toggleAttribute('data-show', e.isIntersecting), {
+    rootMargin: '-45% 0px -45% 0px',
+  }).observe(listEl);
+  // highlight the year being read
+  const yearSeen = new IntersectionObserver(
+    (es) => {
+      for (const e of es) {
+        if (!e.isIntersecting) continue;
+        const y = (e.target as HTMLElement).dataset.year;
+        navBtns.forEach((b) => b.setAttribute('aria-current', String(b.dataset.year === y)));
+      }
+    },
+    { rootMargin: '-35% 0px -60% 0px' }
+  );
+  years.forEach((y) => yearSeen.observe(y));
+  listNav.addEventListener('click', (e) => {
+    const y = (e.target as HTMLElement).closest<HTMLElement>('[data-year]')?.dataset.year;
+    const target = y && document.getElementById(`y-${y}`);
+    if (target) scrollTo({ top: target.getBoundingClientRect().top + scrollY - 80, behavior: 'instant' as ScrollBehavior });
+  });
+  // follow the filters: years with no matching works drop out
+  document.addEventListener('archive:results', () => {
+    for (const b of navBtns) b.hidden = !!years.find((y) => y.dataset.year === b.dataset.year)?.hidden;
+    listNav.hidden = sort.value.startsWith('price'); // a price-sorted list has no years
+  });
+
+  // let the corridor script attach its listeners before the first results
+  setTimeout(update, 0);
 
   // Descriptions clamp to five lines; offer "More" only where text is actually cut off.
   for (const text of document.querySelectorAll<HTMLElement>('[data-desc]')) {

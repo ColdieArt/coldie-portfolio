@@ -13,7 +13,7 @@
         "kind": "floor",
         "amount": 0.5,
         "symbol": "ETH",
-        "usd": 1367
+        "usd": 1354
       }
     },
     "gandinsky-3d-1": {
@@ -104,7 +104,7 @@
         "kind": "floor",
         "amount": 2.1,
         "symbol": "ETH",
-        "usd": 5743
+        "usd": 5689
       }
     },
     "trust-your-intuition": {
@@ -119,7 +119,7 @@
         "kind": "floor",
         "amount": 0.1,
         "symbol": "ETH",
-        "usd": 273
+        "usd": 271
       }
     },
     "decentral-eyes-vr-og-collage": {
@@ -162,9 +162,9 @@
       },
       "listing": {
         "kind": "floor",
-        "amount": 0.13244,
+        "amount": 0.132247,
         "symbol": "ETH",
-        "usd": 362
+        "usd": 358
       }
     },
     "filthy-fiat": {
@@ -189,7 +189,7 @@
         "kind": "floor",
         "amount": 0.0255,
         "symbol": "ETH",
-        "usd": 70
+        "usd": 69
       }
     },
     "swaps": {
@@ -244,7 +244,7 @@
         "kind": "floor",
         "amount": 0.99,
         "symbol": "ETH",
-        "usd": 2707
+        "usd": 2682
       }
     },
     "chronicles-2019": {
@@ -279,7 +279,7 @@
         "kind": "floor",
         "amount": 0.05884,
         "symbol": "ETH",
-        "usd": 161
+        "usd": 159
       }
     },
     "deyes-assembled": {
@@ -294,7 +294,7 @@
         "kind": "floor",
         "amount": 6,
         "symbol": "ETH",
-        "usd": 16408
+        "usd": 16252
       }
     },
     "talking-heads": {
@@ -307,9 +307,9 @@
       },
       "listing": {
         "kind": "floor",
-        "amount": 0.1,
+        "amount": 0.176498,
         "symbol": "ETH",
-        "usd": 273
+        "usd": 478
       }
     },
     "uae-first-immersion": {
@@ -334,7 +334,7 @@
         "kind": "floor",
         "amount": 0.0666,
         "symbol": "ETH",
-        "usd": 182
+        "usd": 180
       }
     },
     "async-energetic-body": {
@@ -387,16 +387,16 @@
     "decentral-eyes-editions": {
       "description": "Collection of Decentral Eyes portrait editions by Coldie.",
       "lastSale": {
-        "amount": 0.0261,
+        "amount": 0.0229,
         "symbol": "ETH",
-        "usd": 70,
-        "date": "2026-09-30"
+        "usd": 61,
+        "date": "2026-10-03"
       },
       "listing": {
         "kind": "floor",
         "amount": 0.04197,
         "symbol": "ETH",
-        "usd": 115
+        "usd": 114
       }
     },
     "fake-rares-filthy-pepe": {
@@ -411,7 +411,22 @@
         "kind": "buy",
         "amount": 0.25,
         "symbol": "ETH",
-        "usd": 684
+        "usd": 677
+      }
+    },
+    "sin-king-ship": {
+      "description": "Fiat currency is a sinking ship. Be free to transact without the shackles of a central bank controlled debt note.\n\nThis early release of the Filthy Fiat series encodes multiple narratives and vibes (left up to your interpretation) wrapped inside the story of Titanic. At face value it illustrates how the fiat-based currency system is a sinking ship. The ship is taken down by the memes of decentralization. \n\nThe dark tale of the sinking ship we all know about is juxtaposed by a inset scene of two Pepe’s on the bow of the ship, basking in the glory of the open water and glory of sailing. A nod to the movie and just as historically accurate as the film itself. Don’t worry, the Pepe lovers survived. They are frogs.\n\nHistorical context for the piece:  \nApril 15, 1912 – The Titanic disaster claimed over 1,500 lives, including three of the world's richest men: John Jacob Astor IV, Benjamin Guggenheim, and Isidor Straus, all of whom opposed a central bank in the U.S. Meanwhile, financier J.P. Morgan, a key figure in the Federal Reserve’s creation, canceled his trip last minute, sparking speculation that he intentionally avoided the doomed voyage.\n\nDownload VR Stereoscopic 3D Version:  \nhttps://app.ardrive.io/#/file/0362318a-1325-43bd-bb09-b8aacc62ec71/view\n\nMeme: 7  \nSeason: 10  \nCard: 7",
+      "lastSale": {
+        "amount": 0.04,
+        "symbol": "ETH",
+        "usd": 108,
+        "date": null
+      },
+      "listing": {
+        "kind": "buy",
+        "amount": 0.0599999,
+        "symbol": "ETH",
+        "usd": 163
       }
     },
     "tech-epochalypse": {
@@ -421,7 +436,7 @@
         "kind": "floor",
         "amount": 5,
         "symbol": "ETH",
-        "usd": 13673
+        "usd": 13547
       }
     },
     "tech-epochalypse-moments": {
@@ -436,32 +451,22 @@
         "kind": "floor",
         "amount": 0.0999999,
         "symbol": "ETH",
-        "usd": 273
-      }
-    },
-    "sin-king-ship": {
-      "description": null,
-      "lastSale": null,
-      "listing": {
-        "kind": "buy",
-        "amount": 0.035,
-        "symbol": "ETH",
-        "usd": 96
+        "usd": 271
       }
     },
     "not-one-satoshi": {
       "description": null,
       "lastSale": {
-        "amount": 0.075,
+        "amount": 0.0103,
         "symbol": "ETH",
-        "usd": 192,
-        "date": "2026-09-11"
+        "usd": 28,
+        "date": "2026-10-05"
       },
       "listing": {
         "kind": "floor",
         "amount": 0.059,
         "symbol": "ETH",
-        "usd": 161
+        "usd": 160
       }
     },
     "en-marcha": {
@@ -475,21 +480,6 @@
       "description": "En Marcha is a digital kinetic 3D mural inspired by the works of Diego Rivera and Museo Anahuacalli. During my residency for the Digital Encounters project, curated by 8NAP and Superchief, I was offered the unique opportunity to experience a variety of Rivera’s murals with his Grandsons as personal guides. This in-depth connection to the works and his lineage resonated deeply. Having come into the residency with an initial concept in mind, I was taken aback and pivoted to honor Rivera’s mural work and collection of cultural artifacts he collected during his life.\n\nThe vision for this work is to invite the viewer to take control and have an experience. By allowing the viewer to ‘touch the art’ they become impassioned, curious, and inquisitive about the objects being used. I integrated my favorite artifacts and the museum itself as elements in the mural. I photographed every element in the mural during my tour of Museo Anahuacalli and Rivera's private vault collection of Mexican artifacts. Each element is hand-embellished with textures consistent with my collage practice to blend my aesthetic with the cultural artifacts to create an integrated, interactive art experience.\n\nAs part of the interactive mural experience, I created a variety of visual effects that that relate directly to Diego Rivera’s murals and Museo Anahuacalli. Two of my favorite murals, Dream of a Sunday Afternoon in Alameda Park and Fertile Land are represented, as well as the three realms / levels the museum was constructed to embody. I hope this work creates a deeper connection with viewers who interact with the work and educate about Museo Anahuacalli and Diego Rivera.",
       "lastSale": null,
       "listing": null
-    },
-    "nft-magazine": {
-      "description": "#Welcome to The first NFT Magazine to be read and collected on Ethereum!\n\n## With this NFT Cover, you can access the exclusive READERS CLUB to read the magazine and participate in decisions on the topics to be included, rankings, interviews, cover, and more of THE NFT MAGAZINE!\n\n**02 Issue \"THE NFT COLLECTIBLES\"**\n\nWe are proud to announce the #02 Issue of “The NFT Magazine” featuring the amazing international artist COLDIE!!\n\nFor this exclusive #02 ISSUE our editorial team has put together over 130 pages on insights and in-depth content about NFT COLLECTIBLES!\n\nDiscover everything about collectibles market trends, the top 25 NFT Collectibles Projects, the top 12 NFT Gatekeepers, and read the exclusive interviews.\n\nFind out the Top 5 tools for collectibles, the glossary, and much more.\n\nwww.thenftmag.io",
-      "lastSale": {
-        "amount": 0.0018,
-        "symbol": "ETH",
-        "usd": 5,
-        "date": null
-      },
-      "listing": {
-        "kind": "buy",
-        "amount": 0.02,
-        "symbol": "ETH",
-        "usd": 55
-      }
     },
     "sr-41a322-501": {
       "owner": {

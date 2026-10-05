@@ -1,0 +1,386 @@
+---
+// The archive as a corridor through time: scrolling moves the camera forward along
+// the Z axis. Works start small in the dark distance, arrive in front of the viewer,
+// then pass by. The work in front auto-plays its animation; any work opens the
+// detail panel on click. Built from the #arc-data JSON and rebuilt on every
+// `archive:results` event, so search, filters and sort shape the corridor.
+---
+<section class="arc-corridor" id="arc-corridor" data-view-pane="corridor" aria-label="Archive corridor. Scroll to travel forward in time.">
+  <div class="arc-stage">
+    <div class="arc-world" data-world></div>
+    <p class="arc-hint" data-hint>Scroll to travel forward in time</p>
+    <nav class="arc-years" data-years aria-label="Jump to year"></nav>
+    <a class="arc-skip" href="#rel-list">Skip to the full list ↓</a>
+  </div>
+  <div class="arc-track" data-track></div>
+</section>
+
+<style>
+  .arc-corridor { position: relative; overflow-anchor: none; }
+  .arc-stage {
+    position: sticky; top: 64px; height: calc(100vh - 64px); overflow: hidden;
+    background: radial-gradient(ellipse at 50% 46%, #161616 0%, #0a0a0a 55%, #050505 100%);
+  }
+  /* perspective must sit on the pieces' direct parent */
+  .arc-world { position: absolute; inset: 0; perspective: 1100px; perspective-origin: 50% 46%; }
+  .arc-track { pointer-events: none; }
+
+  /* a work in space */
+  .arc-world :global(.arc-piece) {
+    position: absolute; left: 50%; top: 46%; margin: 0; padding: 0; border: 0; background: none;
+    color: inherit; cursor: pointer; will-change: transform, opacity; transform-origin: 50% 50%;
+    backface-visibility: hidden;
+  }
+  .arc-world :global(.arc-piece__art) { display: block; position: relative; background: #000; box-shadow: 0 30px 80px rgb(0 0 0 / 0.65); }
+  .arc-world :global(.arc-piece__art > img),
+  .arc-world :global(.arc-piece__art > video) {
+    display: block; width: 100%; height: 100%; object-fit: contain;
+  }
+  .arc-world :global(.arc-piece__art > [data-anim]) { position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s; }
+  .arc-world :global(.arc-piece__art > [data-anim][data-on]) { opacity: 1; }
+  .arc-world :global(.arc-piece__cap) {
+    display: flex; justify-content: space-between; gap: 1rem; padding-top: 0.6rem; text-align: left;
+    font-family: var(--sans); color: #ece9e2;
+  }
+  .arc-world :global(.arc-piece__title) { font-family: var(--serif); font-size: 15px; line-height: 1.25; }
+  .arc-world :global(.arc-piece__date) { flex: none; font-size: 10px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #8a867f; padding-top: 3px; }
+  .arc-world :global(.arc-piece:focus-visible .arc-piece__art) { outline: 1px solid #ece9e2; outline-offset: 4px; }
+
+  /* a year floating in space */
+  .arc-world :global(.arc-yearmark) {
+    position: absolute; left: 50%; top: 46%; margin: 0; pointer-events: none; will-change: transform, opacity;
+    font-family: var(--display); font-size: 280px; line-height: 1; letter-spacing: 0.03em;
+    color: rgb(10 10 10 / 0.7); -webkit-text-stroke: 3px rgb(236 233 226 / 0.62); paint-order: stroke fill;
+  }
+
+  .arc-hint {
+    position: absolute; right: 1.25rem; bottom: 1.2rem; margin: 0; pointer-events: none;
+    font-family: var(--sans); font-size: 0.6rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase;
+    color: #8a867f; transition: opacity 0.6s;
+  }
+  .arc-hint[data-gone] { opacity: 0; }
+
+  .arc-skip {
+    position: absolute; left: 50%; bottom: 1.2rem; transform: translateX(-50%); z-index: 200000;
+    font-family: var(--sans); font-size: 0.6rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase;
+    color: #c6c1b6; text-decoration: none; border-bottom: 1px solid #555; padding-bottom: 2px;
+  }
+  .arc-skip:hover { color: #fff; border-color: #ece9e2; }
+
+  /* jump to a year: always visible down the right edge of the stage */
+  .arc-years {
+    position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); z-index: 200000;
+    display: flex; flex-direction: column; gap: 0.15rem;
+  }
+  .arc-years[hidden] { display: none; }
+  .arc-years :global(button) {
+    padding: 0.3rem 0.4rem; background: none; border: 0; cursor: pointer; text-align: right;
+    font-family: var(--display); font-size: 0.95rem; letter-spacing: 0.04em; line-height: 1;
+    color: rgb(236 233 226 / 0.38); transition: color 0.2s, transform 0.2s;
+  }
+  .arc-years :global(button:hover) { color: #ece9e2; }
+  .arc-years :global(button[aria-current='true']) { color: #ece9e2; transform: translateX(-4px); }
+  .arc-years :global(button[aria-current='true'])::before { content: '— '; }
+</style>
+
+<script>
+  type Item = {
+    id: string; title: string; date: string; year: string; img: string | null; size: [number, number] | null;
+    media: { src: string; type: 'video' | 'gif' } | null; price: number | null; listing: { price: string } | null;
+  };
+
+  const root = document.getElementById('arc-corridor')!;
+  const section = root.closest<HTMLElement>('[data-view]')!;
+  const stage = root.querySelector<HTMLElement>('.arc-stage')!;
+  const world = root.querySelector<HTMLElement>('[data-world]')!;
+  const track = root.querySelector<HTMLElement>('[data-track]')!;
+  const hint = root.querySelector<HTMLElement>('[data-hint]')!;
+  const data: Item[] = JSON.parse(document.getElementById('arc-data')!.textContent!);
+  const byId = new Map(data.map((d) => [d.id, d]));
+
+  // ── Tuning ──────────────────────────────────────────────────
+  const GAP = 950; // depth between consecutive works (px of Z)
+  const SCROLL_PER = 480; // page scroll that moves the camera one GAP forward
+  const R = SCROLL_PER / GAP; // page scroll per px of depth
+  const YEAR_EXTRA = GAP * 1.4; // extra depth before the first work of each new year
+  const MARK_AHEAD = GAP * 1.2; // the year number floats this far before that work
+  const FAR = 7600; // beyond this depth works are not drawn
+  // Works fade out quickly once past the viewer. Going further would magnify them
+  // ~9x (perspective / (perspective + d)), creating layers too big for the GPU to
+  // rasterise while scrolling — the cause of half-drawn tiles. At -420 the max is ~1.6x.
+  const PASS = -420;
+  const EASE = 0.11; // camera smoothing (0..1, higher = snappier)
+  const NAV = 64; // the stage pins this far from the top, under the site nav
+  const LEAD = MARK_AHEAD + GAP * 0.9; // the journey starts with the first year number in view
+
+  type Node = { el: HTMLElement; art: HTMLElement; img: HTMLImageElement; w: number; h: number; x: number; y: number; z: number };
+  type Mark = { el: HTMLElement; z: number; year: string };
+  let order: string[] = data.map((d) => d.id);
+  let byPrice = false;
+  const nodes = new Map<string, Node>();
+  let marks: Mark[] = [];
+  let lastZ = 0;
+  let currentYear = '';
+  const yearNav = root.querySelector<HTMLElement>('[data-years]')!;
+  let camera = 0;
+  let target = 0;
+  let front: string | null = null;
+  let raf = 0;
+
+  // deterministic scatter per work, so a work keeps its place between visits
+  const hash = (s: string) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
+
+  function boxFor(it: Item) {
+    const sw = stage.clientWidth;
+    const sh = stage.clientHeight;
+    const maxW = Math.min(sw * 0.5, 760);
+    const maxH = sh * 0.72;
+    const [w0, h0] = it.size ?? [1, 1];
+    const s = Math.min(maxW / w0, maxH / h0);
+    return { w: Math.round(w0 * s), h: Math.round(h0 * s) };
+  }
+
+  function makeNode(id: string, k: number, z: number): Node {
+    const it = byId.get(id)!;
+    const el = document.createElement('button');
+    el.type = 'button';
+    el.className = 'arc-piece';
+    el.dataset.openId = id;
+    el.setAttribute('aria-label', `${it.title}, ${it.date}`);
+    const art = document.createElement('span');
+    art.className = 'arc-piece__art';
+    const img = document.createElement('img');
+    img.alt = '';
+    img.decoding = 'async';
+    art.append(img);
+    const cap = document.createElement('span');
+    cap.className = 'arc-piece__cap';
+    cap.innerHTML = '<span class="arc-piece__title"></span><span class="arc-piece__date"></span>';
+    cap.children[0].textContent = it.title;
+    cap.children[1].textContent = byPrice && it.listing ? it.listing.price : it.date;
+    el.append(art, cap);
+    const { w, h } = boxFor(it);
+    art.style.width = `${w}px`;
+    art.style.height = `${h}px`;
+    el.style.width = `${w}px`;
+    const sw = stage.clientWidth;
+    const sh = stage.clientHeight;
+    // strict left/right alternation, small per-work variation
+    const side = k % 2 === 0 ? -1 : 1;
+    const lane = 0.22 + ((hash(id) % 9) / 100); // 0.22–0.30 of the stage width
+    const x = side * lane * sw;
+    const y = ((hash(id) >> 7) % 90) - 45;
+    // in focus (depth 0) the whole work stays inside the stage, with a margin
+    const limitX = Math.max(0, sw / 2 - w / 2 - 24);
+    const limitY = Math.max(0, sh * 0.46 - h / 2 - 24);
+    return { el, art, img, w, h, x: Math.max(-limitX, Math.min(limitX, x)), y: Math.max(-limitY, Math.min(limitY, y)), z };
+  }
+
+  function build() {
+    world.replaceChildren();
+    nodes.clear();
+    stopFront();
+    // depth for each work: GAP apart, plus extra room where a new year begins;
+    // the year number floats MARK_AHEAD before that year's first work
+    marks = [];
+    let z = 0;
+    let prev = '';
+    order.forEach((id, k) => {
+      const year = byId.get(id)!.year;
+      const newYear = !byPrice && year !== prev;
+      if (k > 0) z += GAP + (newYear ? YEAR_EXTRA : 0);
+      nodes.set(id, makeNode(id, k, z));
+      if (newYear) {
+        const el = document.createElement('p');
+        el.className = 'arc-yearmark';
+        el.textContent = year === 'tbc' ? 'Undated' : year;
+        marks.push({ el, z: z - MARK_AHEAD, year });
+        prev = year;
+      }
+    });
+    lastZ = z;
+    currentYear = ''; // re-mark the current year in the fresh year list
+    track.style.height = `${Math.round((lastZ + LEAD) * R) + 1}px`;
+    // year jump list (chronological sorts only)
+    yearNav.replaceChildren(
+      ...marks.map((m) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.dataset.year = m.year;
+        b.textContent = m.year === 'tbc' ? 'Undated' : m.year;
+        b.setAttribute('aria-label', `Jump to ${b.textContent}`);
+        return b;
+      })
+    );
+    yearNav.hidden = marks.length < 2;
+    camera = target = progressDepth();
+    render();
+  }
+
+  /** camera depth for the current scroll: -LEAD at the start, the last work at the end */
+  function progressDepth() {
+    const top = root.getBoundingClientRect().top + scrollY;
+    const p = (scrollY + NAV - top) / Math.max(track.offsetHeight - 1, 1);
+    return Math.max(0, Math.min(1, p)) * (lastZ + LEAD) - LEAD;
+  }
+  /** page scroll position that puts the camera at a given depth */
+  const scrollForDepth = (depth: number) => root.getBoundingClientRect().top + scrollY - NAV + (depth + LEAD) * R;
+  const scrollFor = (k: number) => scrollForDepth(nodes.get(order[k])?.z ?? 0);
+  /** fly to a year: land just before its number so it comes into view */
+  function flyToYear(year: string) {
+    const m = marks.find((mk) => mk.year === year);
+    if (!m) return;
+    // jump straight there (no flight through the works in between), landing once the
+    // previous year's last work has passed, with the year number just ahead
+    scrollTo({ top: scrollForDepth(m.z - GAP * 0.3), behavior: 'instant' as ScrollBehavior });
+    camera = target = progressDepth();
+    render();
+  }
+
+  function place(el: HTMLElement, x: number, y: number, w: number, h: number, d: number, opacity: number) {
+    el.style.transform = `translate3d(${x - w / 2}px, ${y - h / 2}px, ${-d}px)`;
+    el.style.opacity = opacity.toFixed(3);
+    el.style.zIndex = String(Math.round(100000 - d));
+  }
+
+  const fade = (d: number) =>
+    d < 0 ? Math.max(0, 1 + d / -PASS) : d > FAR - 2600 ? Math.max(0, (FAR - d) / 2600) : 1;
+
+  function render() {
+    let nearest: string | null = null;
+    let nearestD = Infinity;
+    for (const [id, n] of nodes) {
+      const d = n.z - camera;
+      if (d < PASS || d > FAR) {
+        if (n.el.isConnected) n.el.remove();
+        continue;
+      }
+      if (!n.el.isConnected) world.append(n.el);
+      if (!n.img.src) n.img.src = byId.get(id)!.img ?? '';
+      place(n.el, n.x, n.y, n.w, n.h, d, fade(d));
+      if (d > -GAP * 0.3 && Math.abs(d) < nearestD) {
+        nearestD = Math.abs(d);
+        nearest = id;
+      }
+    }
+    for (const m of marks) {
+      const d = m.z - camera;
+      const on = d > PASS && d < FAR;
+      if (on !== m.el.isConnected) on ? world.append(m.el) : m.el.remove();
+      if (on) {
+        const w = m.el.offsetWidth || 600;
+        place(m.el, 0, -stage.clientHeight * 0.2, w, 280, d, fade(d) * 0.95);
+      }
+    }
+    if (nearest && nearestD < GAP * 0.6) setFront(nearest);
+    else setFront(null);
+    if (nearest) {
+      const year = byId.get(nearest)!.year;
+      if (year !== currentYear) {
+        currentYear = year;
+        for (const b of yearNav.children) b.setAttribute('aria-current', String((b as HTMLElement).dataset.year === year));
+      }
+    }
+  }
+
+  // ── The work in front plays its animation; others stay stills ─────────
+  // The animation is a layer over the still, never a swap of the still's source,
+  // so stopping it can't leave a blank frame (e.g. when scrolling backward).
+  function stopFront() {
+    clearTimeout(pending);
+    if (!front) return;
+    nodes.get(front)?.art.querySelector('[data-anim]')?.remove();
+    front = null;
+  }
+  let pending = 0;
+  /** Start a work's animation only once it has stayed in front briefly, so fast
+   *  scrolling doesn't start (and download) an animation for every work it passes. */
+  function setFront(id: string | null) {
+    if (id === front) return;
+    stopFront();
+    clearTimeout(pending);
+    if (!id) return;
+    front = id;
+    pending = window.setTimeout(() => front === id && startAnim(id), 320);
+  }
+  function startAnim(id: string) {
+    const it = byId.get(id)!;
+    const n = nodes.get(id)!;
+    if (!it.media) return;
+    let layer: HTMLImageElement | HTMLVideoElement;
+    if (it.media.type === 'gif') {
+      layer = document.createElement('img');
+      layer.alt = '';
+      layer.addEventListener('load', () => layer.setAttribute('data-on', ''), { once: true });
+    } else {
+      layer = document.createElement('video');
+      for (const a of ['muted', 'autoplay', 'loop', 'playsinline']) layer.setAttribute(a, '');
+      (layer as HTMLVideoElement).muted = true;
+      layer.addEventListener('playing', () => layer.setAttribute('data-on', ''), { once: true });
+    }
+    layer.dataset.anim = '';
+    layer.src = it.media.src;
+    n.art.append(layer);
+    if (layer instanceof HTMLVideoElement) layer.play().catch(() => {});
+  }
+
+  // ── Camera loop ────────────────────────────────────────────
+  function tick() {
+    raf = 0;
+    camera += (target - camera) * EASE;
+    if (Math.abs(target - camera) < 0.5) camera = target;
+    render();
+    if (camera !== target) raf = requestAnimationFrame(tick);
+  }
+  const active = () => section.dataset.view === 'corridor';
+  function onScroll() {
+    if (!active()) return;
+    target = progressDepth();
+    if (target > -LEAD + GAP * 0.5) hint.setAttribute('data-gone', '');
+    if (!raf) raf = requestAnimationFrame(tick);
+  }
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', () => active() && build());
+
+  // Filters, search and sort reshape the corridor.
+  document.addEventListener('archive:results', (e) => {
+    const detail = (e as CustomEvent<{ ids: string[]; byPrice: boolean }>).detail;
+    order = detail.ids;
+    byPrice = detail.byPrice;
+    const top = root.getBoundingClientRect().top + scrollY - NAV;
+    if (active()) {
+      build();
+      if (scrollY > top) scrollTo({ top, behavior: 'instant' as ScrollBehavior });
+    }
+  });
+  document.addEventListener('archive:view', () => {
+    if (active()) build();
+    else stopFront();
+  });
+
+  // Year bar above the corridor, or the year list inside it → fly to that year.
+  document.addEventListener('archive:jump-year', (e) => {
+    if (active()) flyToYear((e as CustomEvent<string>).detail);
+  });
+  // "Skip to the full list": jump straight past the corridor (the site's global smooth
+  // scrolling would otherwise glide through every work on the way down).
+  root.querySelector<HTMLAnchorElement>('.arc-skip')!.addEventListener('click', (e) => {
+    const list = document.getElementById('rel-list');
+    if (!list) return;
+    e.preventDefault();
+    scrollTo({ top: list.getBoundingClientRect().top + scrollY - 80, behavior: 'instant' as ScrollBehavior });
+    history.replaceState(null, '', '#rel-list');
+  });
+  yearNav.addEventListener('click', (e) => {
+    const year = (e.target as HTMLElement).closest<HTMLElement>('[data-year]')?.dataset.year;
+    if (year) flyToYear(year);
+  });
+
+  // Keyboard focus on a work brings it to the front.
+  world.addEventListener('focusin', (e) => {
+    const id = (e.target as HTMLElement).closest<HTMLElement>('[data-open-id]')?.dataset.openId;
+    const k = id ? order.indexOf(id) : -1;
+    if (k < 0) return;
+    scrollTo({ top: scrollFor(k), behavior: 'smooth' });
+  });
+</script>

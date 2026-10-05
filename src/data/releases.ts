@@ -68,6 +68,8 @@ export type Release = {
   /** skip scripts/fetch-market.mjs — the listing page isn't Coldie-only, so its prices would mislead */
   noMarket?: boolean;
   confirm?: boolean;
+  /** kept in the data but left off the site (remove the flag to show it again) */
+  hidden?: boolean;
   source: ReleaseSource;
 };
 
@@ -83,7 +85,7 @@ const NG_BAUHAUS = '0xe9662B4E55b5feEF13ca7067f319562142BD1681';
 const osItem = (contract: string, tokenId: string, chain = 'ethereum') =>
   `https://opensea.io/item/${chain}/${contract.toLowerCase()}/${tokenId}`;
 
-export const releases: Release[] = [
+const allReleases: Release[] = [
   // ─────────────────────────── 2018 ───────────────────────────
   {
     id: 'the-day',
@@ -211,7 +213,7 @@ export const releases: Release[] = [
     kind: 'programmable',
     supply: 1,
     series: 'Landscapes',
-    platform: 'Async Art',
+    platform: 'ASYNC',
     chain: 'Ethereum',
     url: osItem(ASYNC_MASTERS, '392'),
     contract: ASYNC_MASTERS,
@@ -469,11 +471,12 @@ export const releases: Release[] = [
     date: '2022-11-10',
     kind: 'generative',
     supply: 1000,
-    platform: 'OpenSea',
+    platform: 'ASYNC',
     chain: 'Ethereum',
     url: 'https://opensea.io/collection/market-psychology-v2',
-    contract: '0x147835D1e3d84C9313E51DEFd172c55a3600F439',
+    contract: '0x147835D1e3d84C9313E51DEFd172c55a3600F439', // "market psycholOGy by Coldie" (MKTOG)
     salesBot: true,
+    notes: 'Generative release of 1,000 on ASYNC.',
     source: 'sheet:editions',
   },
   {
@@ -558,7 +561,7 @@ export const releases: Release[] = [
     kind: 'edition',
     supply: 355,
     series: 'Async',
-    platform: 'Async Art',
+    platform: 'ASYNC',
     chain: 'Ethereum',
     url: 'https://opensea.io/collection/energy-system',
     contract: ENERGY_SYSTEM,
@@ -581,7 +584,7 @@ export const releases: Release[] = [
     kind: 'edition',
     supply: null,
     series: 'Async',
-    platform: 'Async Art',
+    platform: 'ASYNC',
     chain: 'Ethereum',
     url: 'https://opensea.io/item/ethereum/0x355fabfef6389e42774e39b291a7a8e37d4f8b84/1',
     contract: '0x355fabfef6389e42774e39b291a7a8e37d4f8b84',
@@ -679,6 +682,24 @@ export const releases: Release[] = [
 
   // ─────────────────────────── 2025 ───────────────────────────
   {
+    id: 'sin-king-ship',
+    title: 'SIN.KING.SHIP',
+    date: '2025-03-14',
+    kind: 'edition',
+    supply: 305,
+    series: 'Filthy Fiat',
+    platform: 'The Memes by 6529',
+    chain: 'Ethereum',
+    url: osItem('0x33fd426905f149f8376e227d0c9d3340aad17af1', '342'),
+    links: [{ label: '6529', url: 'https://seize.io/the-memes/342' }],
+    contract: '0x33fd426905f149f8376e227d0c9d3340aad17af1',
+    tokenId: '342',
+    badge: 'The Memes by 6529 · Card #342',
+    thumbSrc: 'https://i2c.seadn.io/ethereum/0x33fd426905f149f8376e227d0c9d3340aad17af1/f4da51eb23cd4398910e86e8f9a1d7/5df4da51eb23cd4398910e86e8f9a1d7.gif',
+    notes: 'An early release of the Filthy Fiat series.',
+    source: 'opensea',
+  },
+  {
     id: 'tech-epochalypse',
     title: 'Tech Epochalypse - Decentral Eyes',
     date: '2025-11-21',
@@ -742,22 +763,6 @@ export const releases: Release[] = [
     source: 'opensea',
   },
   {
-    id: 'sin-king-ship',
-    title: 'SIN.KING.SHIP',
-    date: '2026-05-29',
-    kind: 'edition',
-    supply: 100,
-    series: 'Collaborations',
-    platform: 'OpenSea',
-    chain: 'Base',
-    url: osItem('0x33ef3272133d371adcdb942b3601a5f5b1418600', '1', 'base'),
-    contract: '0x33ef3272133d371adcdb942b3601a5f5b1418600',
-    tokenId: '1',
-    badge: 'SIN.KING.SHIP by 6529',
-    thumbSrc: 'https://i2.seadn.io/polygon/0xbafe49ad722d16b27f3d04264f47198a407b1cf4/28f89c2ae8ce023fdc8870047de718/7028f89c2ae8ce023fdc8870047de718.mp4?frame-time=1&w=500',
-    source: 'opensea',
-  },
-  {
     id: 'not-one-satoshi',
     title: 'Michael Saylor - Not One Satoshi - Decentral Eyes',
     date: '2026-08-21',
@@ -791,6 +796,7 @@ export const releases: Release[] = [
   // ─────────────────────── Date to confirm ───────────────────────
   {
     id: 'nft-magazine',
+    hidden: true, // undated; hidden at Coldie's request until the details are in
     title: 'NFT Magazine',
     date: null,
     kind: 'edition',
@@ -882,7 +888,10 @@ const srReleases: Release[] = superrare.tokens
     ...SR_EXTRAS[key],
   } satisfies Release;
 });
-releases.push(...srReleases);
+allReleases.push(...srReleases);
+
+/** Every release shown on the site (entries flagged `hidden` are left out). */
+export const releases: Release[] = allReleases.filter((r) => !r.hidden);
 
 // ── Derived helpers ───────────────────────────────────────────
 

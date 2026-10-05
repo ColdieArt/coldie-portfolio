@@ -1,0 +1,122 @@
+---
+// Detail panel for one work, opened from the corridor or the grid (any element
+// with data-open-id). Reads the work from the #arc-data JSON and the full
+// description from the list view's [data-desc] text, so nothing is duplicated.
+---
+<dialog class="arc-panel" id="arc-panel" aria-labelledby="arc-panel-title">
+  <button type="button" class="arc-panel__close" data-close aria-label="Close">×</button>
+  <div class="arc-panel__grid">
+    <figure class="arc-panel__art" data-art></figure>
+    <div class="arc-panel__info">
+      <p class="arc-panel__date" data-date></p>
+      <h2 class="arc-panel__title" id="arc-panel-title" data-title></h2>
+      <p class="arc-panel__badge" data-badge></p>
+      <p class="arc-panel__meta" data-meta></p>
+      <dl class="arc-panel__facts" data-facts></dl>
+      <p class="arc-panel__desc" data-desc-out></p>
+      <p class="arc-panel__links" data-links></p>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .arc-panel {
+    width: min(1180px, calc(100vw - 2rem)); max-height: calc(100vh - 2rem); padding: 0; border: 0;
+    background: #0d0d0d; color: #ece9e2; overflow: auto;
+  }
+  .arc-panel::backdrop { background: rgb(0 0 0 / 0.82); backdrop-filter: blur(3px); }
+  .arc-panel__close {
+    position: sticky; top: 0; float: right; z-index: 2; width: 2.75rem; height: 2.75rem; border: 0; cursor: pointer;
+    background: transparent; color: #ece9e2; font-size: 1.8rem; line-height: 1;
+  }
+  .arc-panel__close:hover { color: #fff; }
+  .arc-panel__grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: clamp(1.25rem, 3vw, 2.5rem); padding: clamp(1rem, 3vw, 2.25rem); }
+  .arc-panel__art { margin: 0; display: grid; place-items: center; background: #050505; min-height: 40vh; }
+  .arc-panel__art :is(img, video) { display: block; max-width: 100%; max-height: calc(100vh - 6rem); width: auto; height: auto; object-fit: contain; }
+  .arc-panel__date, .arc-panel__meta {
+    font-family: var(--sans); font-size: 0.62rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #8a867f; margin: 0;
+  }
+  .arc-panel__title { font-family: var(--serif); font-weight: 400; font-size: clamp(1.5rem, 2.6vw, 2.2rem); line-height: 1.15; margin: 0.4rem 0 0.5rem; text-transform: none; letter-spacing: 0; color: #ece9e2; }
+  .arc-panel__badge { font-family: var(--sans); font-size: 0.78rem; color: #cfc9bd; margin: 0 0 0.75rem; }
+  .arc-panel__badge:empty { display: none; }
+  .arc-panel__meta { margin-bottom: 1.25rem; line-height: 1.7; }
+  .arc-panel__facts { display: grid; grid-template-columns: auto 1fr; gap: 0.45rem 1.25rem; margin: 0 0 1.25rem; font-size: 0.9rem; }
+  .arc-panel__facts dt { font-family: var(--sans); font-size: 0.6rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #8a867f; padding-top: 0.2rem; }
+  .arc-panel__facts dd { margin: 0; font-variant-numeric: tabular-nums; }
+  .arc-panel__facts a { color: #ece9e2; }
+  .arc-panel__facts small { color: #8a867f; margin-left: 0.4em; }
+  .arc-panel__desc { font-family: var(--serif); font-size: 1rem; line-height: 1.6; color: #cfc9bd; white-space: pre-line; margin: 0 0 1.25rem; }
+  .arc-panel__desc:empty { display: none; }
+  .arc-panel__links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin: 0; }
+  .arc-panel__links a {
+    font-family: var(--sans); font-size: 0.66rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase;
+    color: #ece9e2; text-decoration: none; border-bottom: 1px solid #555; padding-bottom: 2px;
+  }
+  .arc-panel__links a:hover { border-color: #ece9e2; }
+  @media (max-width: 820px) { .arc-panel__grid { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  type Item = {
+    id: string; title: string; date: string; img: string | null; size: [number, number] | null;
+    media: { src: string; type: 'video' | 'gif' } | null; kind: string; series: string | null;
+    platform: string; chain: string; badge: string | null; url: string | null; market: string | null;
+    slug: string | null; owner: { label: string; href: string; artist: boolean; addr: string } | null;
+    sale: string | null; listing: { label: string; price: string; usd: string } | null;
+  };
+  const data: Item[] = JSON.parse(document.getElementById('arc-data')!.textContent!);
+  const byId = new Map(data.map((d) => [d.id, d]));
+  const panel = document.getElementById('arc-panel') as HTMLDialogElement;
+  const q = <T extends HTMLElement>(sel: string) => panel.querySelector<T>(sel)!;
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+
+  function open(id: string) {
+    const it = byId.get(id);
+    if (!it) return;
+    const art = q('[data-art]');
+    art.replaceChildren();
+    const poster = Object.assign(document.createElement('img'), { src: it.img ?? '', alt: `${it.title} by Coldie` });
+    if (it.size) Object.assign(poster, { width: it.size[0], height: it.size[1] });
+    art.append(poster);
+    if (it.media) {
+      const el =
+        it.media.type === 'video'
+          ? Object.assign(document.createElement('video'), { src: it.media.src, muted: true, loop: true, playsInline: true, autoplay: true, controls: true, poster: it.img ?? '' })
+          : Object.assign(document.createElement('img'), { src: it.media.src, alt: poster.alt });
+      if (el instanceof HTMLVideoElement) for (const a of ['muted', 'autoplay', 'loop', 'playsinline']) el.setAttribute(a, '');
+      el.addEventListener(el instanceof HTMLVideoElement ? 'loadeddata' : 'load', () => poster.replaceWith(el), { once: true });
+    }
+
+    q('[data-date]').textContent = it.date;
+    q('[data-title]').textContent = it.title;
+    q('[data-badge]').textContent = it.badge ?? '';
+    q('[data-meta]').textContent = [it.kind, it.series, it.platform, it.chain].filter(Boolean).join(' · ');
+    const facts: string[] = [];
+    if (it.owner)
+      facts.push(`<dt>${it.owner.artist ? 'Held by' : 'Collector'}</dt><dd>${it.owner.artist ? 'The artist' : `<a href="${esc(it.owner.href)}" target="_blank" rel="noopener">${esc(it.owner.label)}</a><small> ${esc(it.owner.addr)}</small>`}</dd>`);
+    if (it.sale) facts.push(`<dt>Last sale</dt><dd>${esc(it.sale)}</dd>`);
+    if (it.listing) facts.push(`<dt>${esc(it.listing.label)}</dt><dd>${esc(it.listing.price)}<small> ${esc(it.listing.usd)}</small></dd>`);
+    q('[data-facts]').innerHTML = facts.join('');
+    q('[data-desc-out]').textContent =
+      document.querySelector(`[data-entry][data-id="${CSS.escape(id)}"] [data-desc]`)?.textContent?.trim() ?? '';
+    const links: string[] = [];
+    if (it.url) links.push(`<a href="${esc(it.url)}" target="_blank" rel="noopener">View on ${esc(it.market ?? 'marketplace')} ↗</a>`);
+    if (it.slug) links.push(`<a href="/work/${esc(it.slug)}">About this work</a>`);
+    q('[data-links]').innerHTML = links.join('');
+
+    panel.showModal();
+    panel.scrollTop = 0;
+  }
+
+  panel.addEventListener('close', () => q('[data-art]').replaceChildren()); // stop playback
+  panel.addEventListener('click', (e) => {
+    if (e.target === panel || (e.target as HTMLElement).closest('[data-close]')) panel.close();
+  });
+  document.addEventListener('click', (e) => {
+    const trigger = (e.target as HTMLElement).closest<HTMLElement>('[data-open-id]');
+    if (trigger) {
+      e.preventDefault();
+      open(trigger.dataset.openId!);
+    }
+  });
+</script>
