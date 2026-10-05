@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import RansomHeading from '../components/RansomHeading.astro';
 import { site } from '../data/site';
 import { personLd, breadcrumbLd } from '../data/jsonld';
 import {
@@ -112,7 +113,7 @@ const searchText = (r: Release) =>
       <nav class="small muted rel__crumb" aria-label="Breadcrumb"><a href="/">Home</a> · <span>Archive</span></nav>
       <header class="rel__head">
         <p class="eyebrow">Digital releases · {FIRST_YEAR}–{thisYear}</p>
-        <h1>Archive</h1>
+        <RansomHeading as="h1" text="Archive" />
         <p class="lede">
           Every on-chain release, in order — from the first stereoscopic artwork minted on a blockchain
           in 2018 to today. Search by title, series, platform, collector, contract or token ID.
