@@ -14,7 +14,7 @@ const links: { label: string; href: string; external?: boolean }[] = [
 <header class="nav" data-nav>
   <div class="wrap nav__row">
     <a class="nav__brand" href="/" aria-label={`${site.name} — home`}>
-      <img class="nav__logo" src="/logo/coldie-sticker.webp" alt="Coldie" width="460" height="346" />
+      <img class="nav__logo" src="/logo/coldie-sticker.webp" alt="Coldie" width="640" height="481" />
     </a>
     <nav class="nav__links" aria-label="Primary">
       {links.map((l) => (
@@ -51,8 +51,8 @@ const links: { label: string; href: string; external?: boolean }[] = [
     gap: 0.6em;
     text-decoration: none;
   }
-  .nav__logo { height: 42px; width: auto; display: block; }
-  @media (max-width: 480px) { .nav__logo { height: 34px; } }
+  .nav__logo { height: 126px; width: auto; display: block; background: transparent; }
+  @media (max-width: 480px) { .nav__logo { height: 102px; } }
   .nav__sub { font-family: var(--type); font-size: 0.72rem; color: var(--ink-mute); letter-spacing: 0.06em; text-transform: uppercase; }
   .nav__links { display: flex; align-items: center; gap: clamp(1rem, 2.5vw, 2rem); }
   .nav__links > a:not(.btn) {
