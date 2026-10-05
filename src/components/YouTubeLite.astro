@@ -65,6 +65,8 @@ const src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0${star
         'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
       iframe.referrerPolicy = 'strict-origin-when-cross-origin';
       iframe.allowFullscreen = true;
+      // Scoped `.ytl iframe` CSS can't match a JS-created element, so size inline.
+      iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;display:block;';
       el.replaceChildren(iframe);
     });
   });
