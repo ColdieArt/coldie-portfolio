@@ -131,7 +131,7 @@ img { background: var(--bg-raise); }
   flex: none;
 }
 
-.lede { font-family: var(--serif); font-size: clamp(1.2rem, 2vw, 1.6rem); color: var(--ink-soft); line-height: 1.45; }
+.lede { font-family: var(--serif); font-size: clamp(0.96rem, 1.6vw, 1.28rem); color: var(--ink-soft); line-height: 1.45; }
 
 .quote {
   font-family: var(--serif);
