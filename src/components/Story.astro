@@ -3,6 +3,7 @@
 // his career in a spacious two-column index. Facade embeds (YouTubeLite) keep it
 // clean and gallery-grade. Titles/descriptions pulled from the YouTube pages.
 import YouTubeLite from './YouTubeLite.astro';
+import RansomHeading from './RansomHeading.astro';
 
 const FEATURED_ID = 'kMIMr8Ro9So';
 
@@ -37,8 +38,9 @@ const interviews = [
 <section id="story" class="story" aria-labelledby="story-h">
   <div class="wrap">
     <header class="story__head">
-      <p class="eyebrow">In his own words</p>
-      <h2 id="story-h">A life spent capturing depth, and trusting the technology would catch up.</h2>
+      <p class="eyebrow">Interviews &amp; talks</p>
+      <RansomHeading as="h2" id="story-h" text="In Coldie’s Words" />
+      <p class="story__sub">A life spent capturing depth, and trusting the technology would catch up.</p>
     </header>
 
     <figure class="story__feature">
@@ -72,8 +74,12 @@ const interviews = [
 
 <style>
   .story { padding-block: clamp(4.5rem, 10vw, 9rem); border-top: 1px solid var(--line-soft); }
-  .story__head { max-width: 30ch; margin-bottom: clamp(2.5rem, 6vw, 4.5rem); }
+  .story__head { max-width: 48ch; margin-bottom: clamp(2.5rem, 6vw, 4.5rem); }
   .story__head h2 { margin: 0; }
+  .story__sub {
+    font-family: var(--serif); font-size: clamp(1.05rem, 2vw, 1.5rem);
+    color: var(--ink-soft); margin: 0.25em 0 0; max-width: 34ch;
+  }
 
   /* featured interview */
   .story__feature { margin: 0 0 clamp(4rem, 9vw, 7rem); }
