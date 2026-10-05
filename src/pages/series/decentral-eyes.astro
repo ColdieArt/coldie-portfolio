@@ -1,0 +1,435 @@
+---
+// Series hub — the template for every series page.
+// Data (works, subjects, collectors, sales) is generated; the artist's words live in
+// src/data/copy/decentral-eyes.ts and show as copy slots until written.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PlayableMedia from '../../components/PlayableMedia.astro';
+import CopySlot from '../../components/CopySlot.astro';
+import { site } from '../../data/site';
+import { personLd, breadcrumbLd } from '../../data/jsonld';
+import { sortedReleases, releaseYear, formatReleaseDate, KIND_LABEL, type Release } from '../../data/releases';
+import { SUBJECTS, subjectOf } from '../../data/subjects';
+import marketJson from '../../data/market.json';
+import thumbsJson from '../../data/thumbs.json';
+import mediaJson from '../../data/media.json';
+import thumbSizesJson from '../../data/thumb-sizes.json';
+import { decentralEyesCopy as copy } from '../../data/copy/decentral-eyes';
+
+type Owner = { address: string; name: string | null; ens: string | null; artist: boolean };
+type Price = { amount: number; symbol: string; usd: number | null };
+type Market = { owner?: Owner | null; lastSale: (Price & { date?: string | null }) | null; listing: (Price & { kind: string }) | null };
+const market = marketJson.releases as Record<string, Market>;
+const thumbs: Record<string, string> = thumbsJson;
+const media = mediaJson as Record<string, { src: string; type: 'video' | 'gif' } | null>;
+const sizes = thumbSizesJson as Record<string, [number, number]>;
+
+const SERIES = 'Decentral Eyes';
+const PATH = '/series/decentral-eyes';
+const works = sortedReleases.filter((r) => r.series === SERIES);
+
+// ── Derived facts ─────────────────────────────────────────────
+const years = works.map(releaseYear).filter((y): y is number => y != null);
+const firstYear = Math.min(...years);
+const lastYear = Math.max(...years);
+const tokens = works.reduce((n, r) => n + (r.supply ?? 0), 0);
+const topSale = works
+  .filter((r) => market[r.id]?.lastSale)
+  .sort((a, b) => market[b.id].lastSale!.amount - market[a.id].lastSale!.amount)[0];
+
+const fmtEth = (p: Price) => `${p.amount.toLocaleString('en-US', { maximumFractionDigits: p.amount < 1 ? 4 : 2 })} ${p.symbol}`;
+const shortAddr = (a: string) => `${a.slice(0, 6)}…${a.slice(-4)}`;
+const ownerLabel = (o: Owner) => o.ens ?? (o.name && !o.name.startsWith('0x') ? o.name : shortAddr(o.address));
+const marketName = (url: string) =>
+  url.includes('superrare.com') ? 'SuperRare' : url.includes('opensea.io') ? 'OpenSea' : new URL(url).hostname.replace(/^www\./, '');
+
+// Subjects, in order of first portrait
+const subjects = SUBJECTS.map((s) => {
+  const list = works.filter((r) => subjectOf(r)?.key === s.key);
+  const best =
+    list.filter((r) => market[r.id]?.lastSale).sort((a, b) => market[b.id].lastSale!.amount - market[a.id].lastSale!.amount)[0] ??
+    list[0];
+  const ys = list.map(releaseYear).filter((y): y is number => y != null);
+  return { ...s, list, best, from: Math.min(...ys), to: Math.max(...ys) };
+})
+  .filter((s) => s.list.length)
+  .sort((a, b) => a.from - b.from || b.list.length - a.list.length);
+
+// Collectors of Decentral Eyes 1/1s
+const collectorMap = new Map<string, { owner: Owner; works: Release[] }>();
+for (const r of works) {
+  const o = market[r.id]?.owner;
+  if (!o || o.artist) continue;
+  const entry = collectorMap.get(o.address) ?? { owner: o, works: [] };
+  entry.works.push(r);
+  collectorMap.set(o.address, entry);
+}
+const collectors = [...collectorMap.values()].sort(
+  (a, b) => b.works.length - a.works.length || Number(!!b.owner.ens) - Number(!!a.owner.ens)
+);
+
+// Eras — by year range, except works the artist placed in a different era.
+type EraKey = 'genesis' | 'motion' | 'generative' | 'kinetic';
+const ERAS = [
+  { key: 'genesis', title: 'Genesis', from: 2018, to: 2019, guide: 'What the first portraits were: animated GIF anaglyphs on SuperRare, the subjects you started with, why then.' },
+  { key: 'motion', title: '3D Motion', from: 2020, to: 2021, guide: 'The move to video, editions on Nifty Gateway and OpenSea, the Snoop Dogg collaboration, and the 1/1 portraits of Gensler, Armstrong, Dorsey, Trump and Saylor.' },
+  { key: 'generative', title: 'Generative, AR/VR/Metaverse', from: 2022, to: 2023, guide: 'Mashup, Ascended, Assembled and Legends: turning the series into generative collections.' },
+  { key: 'kinetic', title: 'Kinetic 3D', from: 2024, to: 9999, guide: 'The kinetic 3D portraits of Tech Epochalypse: what changed in technique and intent.' },
+] as const satisfies readonly { key: EraKey; title: string; from: number; to: number; guide: string }[];
+const ERA_OVERRIDES: Record<string, EraKey> = {
+  'sr-892a1e-2': 'motion', // Gary Gensler
+  'pascal-gauthier-coindesk': 'motion',
+  'sr-892a1e-3': 'motion', // Brian Armstrong
+  'decentral-eyes-editions': 'motion',
+  'sr-892a1e-4': 'motion', // Jack Dorsey — Safe Passage
+  'sr-892a1e-5': 'motion', // Donald Trump — Crypto President
+  'tech-epochalypse-moments': 'motion',
+  'not-one-satoshi': 'motion', // Michael Saylor
+  'decentraleyes-mashup': 'generative',
+  'decentral-eyes-vr-og-collage': 'generative',
+};
+const eraOf = (r: Release): EraKey | undefined => {
+  if (ERA_OVERRIDES[r.id]) return ERA_OVERRIDES[r.id];
+  const y = releaseYear(r);
+  return y == null ? undefined : ERAS.find((e) => y >= e.from && y <= e.to)?.key;
+};
+const eras = ERAS.map((e) => {
+  const list = works.filter((r) => eraOf(r) === e.key);
+  const ys = list.map(releaseYear).filter((y): y is number => y != null);
+  const [lo, hi] = [Math.min(...ys), Math.max(...ys)];
+  return { ...e, list, label: lo === hi ? String(lo) : `${lo}–${hi}` };
+}).filter((e) => e.list.length);
+
+const hero = works.find((r) => /\bdogg\b/i.test(r.title)) ?? topSale ?? works[0];
+
+// ── SEO ──────────────────────────────────────────────────────
+const description =
+  copy.lead ??
+  `Decentral Eyes is Coldie’s stereoscopic 3D portrait series of crypto and tech figures, ${firstYear}–${lastYear}: ${works.length} releases across SuperRare, Nifty Gateway and OpenSea.`;
+const absolute = (p: string) => new URL(p, site.url).href;
+const collectionLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Decentral Eyes by Coldie',
+  url: absolute(PATH),
+  description,
+  creator: { '@id': `${site.url}/#person` },
+  about: { '@type': 'CreativeWorkSeries', name: 'Decentral Eyes', creator: { '@id': `${site.url}/#person` } },
+  hasPart: {
+    '@type': 'ItemList',
+    numberOfItems: works.length,
+    itemListElement: works.map((r, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'VisualArtwork',
+        name: r.title,
+        creator: { '@id': `${site.url}/#person` },
+        dateCreated: r.date ?? undefined,
+        artform: 'Digital art — stereoscopic 3D portrait',
+        image: thumbs[r.id] ? absolute(thumbs[r.id]) : undefined,
+        url: r.url,
+        about: subjectOf(r) ? { '@type': 'Person', name: subjectOf(r)!.name } : undefined,
+      },
+    })),
+  },
+};
+const answered = copy.faq.filter((f) => f.a);
+const faqLd = answered.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: answered.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+    }
+  : null;
+const FILE = 'src/data/copy/decentral-eyes.ts';
+---
+<BaseLayout
+  title="Decentral Eyes — portrait series"
+  description={description}
+  path={PATH}
+  ogImage={thumbs[hero.id]}
+  noindex={!copy.ready}
+  jsonld={[
+    personLd(),
+    collectionLd,
+    ...(faqLd ? [faqLd] : []),
+    breadcrumbLd([
+      { name: 'Home', path: '/' },
+      { name: 'Releases', path: '/releases' },
+      { name: 'Decentral Eyes', path: PATH },
+    ]),
+  ]}
+>
+  {!copy.ready && (
+    <p class="de-draft">
+      Draft template — dashed boxes mark copy you write in <code>{FILE}</code>. Hidden from search until it’s done.
+    </p>
+  )}
+
+  <article class="de">
+    <div class="wrap">
+      <nav class="de-crumb" aria-label="Breadcrumb">
+        <a href="/">Home</a> <span>/</span> <a href="/releases">Releases</a> <span>/</span> <span>Decentral Eyes</span>
+      </nav>
+
+      <!-- ── Hero ─────────────────────────────────────── -->
+      <header class="de-hero">
+        <div class="de-hero__text">
+          <p class="de-eyebrow">Series · {firstYear}–{lastYear}</p>
+          <h1>Decentral Eyes</h1>
+          {copy.lead
+            ? <p class="de-lead">{copy.lead}</p>
+            : <CopySlot
+                label="Lead sentence"
+                length="25–40 words · 1 sentence"
+                guidance="The single factual sentence that defines the series. Search engines and AI assistants quote this line, so name the series, what it is, when it began and where it was minted."
+                example="Decentral Eyes is a stereoscopic 3D portrait series by Coldie, begun in 2018 on SuperRare, that rebuilds the faces of crypto’s defining figures from dozens of recombined images."
+                field="lead"
+              />}
+          <dl class="de-stats">
+            <div><dt>Releases</dt><dd>{works.length}</dd></div>
+            <div><dt>Tokens</dt><dd>{tokens.toLocaleString('en-US')}</dd></div>
+            <div><dt>Subjects</dt><dd>{subjects.length}</dd></div>
+            <div><dt>Collectors</dt><dd>{collectors.length}</dd></div>
+            {topSale && <div><dt>Top sale</dt><dd>{fmtEth(market[topSale.id].lastSale!)}</dd></div>}
+          </dl>
+        </div>
+        <figure class="de-hero__media">
+          <PlayableMedia poster={thumbs[hero.id]} media={media[hero.id]} title={hero.title} size={sizes[hero.id]} eager />
+          <figcaption>
+            <span>{hero.title}</span>
+            {hero.badge && <span class="de-muted">{hero.badge}</span>}
+          </figcaption>
+        </figure>
+      </header>
+
+      <!-- ── About + technique ─────────────────────────── -->
+      <section class="de-about" aria-labelledby="about">
+        <div>
+          <h2 id="about" class="de-h2">About the series</h2>
+          {copy.intro
+            ? copy.intro.map((p) => <p class="de-prose">{p}</p>)
+            : <CopySlot
+                label="About the series"
+                length="2–3 paragraphs · 150–250 words"
+                guidance="The origin story in your voice: what Decentral Eyes means, the first portrait (Vitalik, July 2018), why you portray the people shaping crypto and tech, and what connects 2018 to the kinetic work today."
+                field="intro"
+              />}
+        </div>
+        <div>
+          <h2 class="de-h2">How a portrait is made</h2>
+          {copy.technique
+            ? copy.technique.map((p) => <p class="de-prose">{p}</p>)
+            : <CopySlot
+                label="Technique"
+                length="1–2 paragraphs · 80–150 words"
+                guidance="The process: how many source images, how they’re recombined, how the stereoscopic depth is built, anaglyph vs Flex3D/VR formats. Concrete detail is what makes this citable."
+                field="technique"
+              />}
+        </div>
+      </section>
+
+      <!-- ── Subjects ─────────────────────────────────── -->
+      <section aria-labelledby="subjects">
+        <div class="de-sechead">
+          <h2 id="subjects" class="de-h2">Subjects</h2>
+          <p class="de-muted">{subjects.length} people portrayed · each will get its own page</p>
+        </div>
+        <ul class="de-subjects">
+          {subjects.map((s) => (
+            <li>
+              <a href={`/releases?q=${encodeURIComponent(s.name === 'Tech overlords' ? 'Tech Epochalypse' : s.name.split(' ').at(-1)!)}`} class="de-subject">
+                <span class="de-subject__img">{thumbs[s.best.id] && <img src={thumbs[s.best.id]} alt="" loading="lazy" decoding="async" />}</span>
+                <span class="de-subject__name">{s.name}</span>
+                <span class="de-subject__meta">
+                  {s.list.length} {s.list.length === 1 ? 'work' : 'works'} · {s.from === s.to ? s.from : `${s.from}–${s.to}`}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- ── Works by era ─────────────────────────────── -->
+      <section aria-labelledby="works">
+        <h2 id="works" class="de-h2 de-h2--big">The works</h2>
+        {eras.map((e) => (
+          <section class="de-era" aria-labelledby={`era-${e.key}`}>
+            <header class="de-era__head">
+              <p class="de-era__years">{e.label}</p>
+              <h3 id={`era-${e.key}`}>{e.title}</h3>
+              <p class="de-muted">{e.list.length} {e.list.length === 1 ? 'release' : 'releases'}</p>
+            </header>
+            {copy.eras[e.key]
+              ? <p class="de-prose de-era__text">{copy.eras[e.key]}</p>
+              : <CopySlot label={`Era — ${e.title}`} length="1–2 sentences" guidance={e.guide} field={`eras.${e.key}`} />}
+            <div class="de-grid">
+              {e.list.map((r) => {
+                const mk = market[r.id];
+                return (
+                  <article class="de-card" id={r.id}>
+                    <PlayableMedia poster={thumbs[r.id]} media={media[r.id]} title={r.title} size={sizes[r.id]} />
+                    <div class="de-card__meta">
+                      <p class="de-card__date">{formatReleaseDate(r.date)} · {KIND_LABEL[r.kind]}{r.supply && r.supply > 1 ? ` · ${r.supply.toLocaleString('en-US')}` : ''}</p>
+                      <h4 class="de-card__title">{r.title.replace(/\s*-\s*Decentral Eyes\s*-?\s*/i, ' — ').replace(/^Decentral Eyes\s*-\s*/i, '').replace(/\s—\s*$/, '')}</h4>
+                      {r.badge && <p class="de-card__badge">{r.badge}</p>}
+                      {mk?.owner && (
+                        <p class="de-card__owner">
+                          {mk.owner.artist ? 'Held by the artist' : 'Collected by'}{' '}
+                          {!mk.owner.artist && <a href={`https://opensea.io/${mk.owner.address}`} target="_blank" rel="noopener">{ownerLabel(mk.owner)}</a>}
+                        </p>
+                      )}
+                      {(mk?.lastSale || mk?.listing) && (
+                        <p class="de-card__market">
+                          {mk.lastSale && <span>Last sale {fmtEth(mk.lastSale)}</span>}
+                          {mk.listing && <span class="de-card__ask">{mk.listing.kind === 'floor' ? 'Floor' : 'Ask'} {fmtEth(mk.listing)}</span>}
+                        </p>
+                      )}
+                      {r.url && <a class="de-card__link" href={r.url} target="_blank" rel="noopener">{marketName(r.url)} ↗</a>}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        ))}
+      </section>
+
+      <!-- ── Collectors ───────────────────────────────── -->
+      <section class="de-collectors" aria-labelledby="collectors">
+        <div class="de-sechead">
+          <h2 id="collectors" class="de-h2">Collectors</h2>
+          <p class="de-muted">Current holders of Decentral Eyes 1/1s, from the blockchain</p>
+        </div>
+        <ul class="de-collectorlist">
+          {collectors.map(({ owner, works: held }) => (
+            <li>
+              <a href={`https://opensea.io/${owner.address}`} target="_blank" rel="noopener" title={owner.address}>{ownerLabel(owner)}</a>
+              <span class="de-muted">{held.length > 1 ? `${held.length} works` : held[0].title.replace(/\s*-\s*Decentral Eyes.*$/i, '').replace(/^Decentral Eyes\s*-\s*/i, '')}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- ── FAQ ──────────────────────────────────────── -->
+      <section class="de-faq" aria-labelledby="faq">
+        <h2 id="faq" class="de-h2">Questions</h2>
+        {copy.faq.map((f, i) => (
+          <div class="de-faq__item">
+            <h3>{f.q}</h3>
+            {f.a
+              ? <p class="de-prose">{f.a}</p>
+              : <CopySlot label="Answer" length="2–4 sentences" guidance="Answer plainly, as if to someone who has never heard of you. These become a FAQ result in Google and a ready-made answer for AI assistants." field={`faq[${i}].a`} />}
+          </div>
+        ))}
+      </section>
+
+      <!-- ── Press ────────────────────────────────────── -->
+      <section aria-labelledby="press">
+        <h2 id="press" class="de-h2">Exhibitions & press</h2>
+        {copy.press.length
+          ? (
+            <ul class="de-press">
+              {copy.press.map((p) => (
+                <li>{p.url ? <a href={p.url} target="_blank" rel="noopener">{p.title}</a> : p.title} <span class="de-muted">{p.source}, {p.year}</span></li>
+              ))}
+            </ul>
+          )
+          : <CopySlot label="Exhibitions & press" length="a list" guidance="Shows, auctions, articles and interviews that featured Decentral Eyes — title, outlet or venue, year, link. Third-party mentions are among the strongest ranking signals." field="press" />}
+      </section>
+
+      <nav class="de-next" aria-label="More">
+        <a class="link-arrow" href="/releases">All {sortedReleases.length} releases</a>
+      </nav>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .de-draft {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; margin: 0; max-width: none; padding: 0.55rem var(--gutter);
+    font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.04em; text-align: center;
+    color: var(--bg); background: var(--gold);
+  }
+  .de-draft code { font-size: 0.66rem; }
+  .de { padding-block: clamp(2rem, 5vw, 3.5rem) var(--section-y); }
+  .de-crumb { font-family: var(--sans); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 2.5rem; }
+  .de-crumb a { color: var(--ink-mute); text-decoration: none; }
+  .de-crumb a:hover { color: var(--ink); }
+  .de-crumb span { margin: 0 0.35em; }
+  .de-muted { color: var(--ink-mute); font-size: 0.82rem; }
+  .de-eyebrow, .de-era__years {
+    font-family: var(--sans); font-size: 0.62rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-mute); margin: 0;
+  }
+
+  /* Hero */
+  .de-hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: start; margin-bottom: clamp(3rem, 7vw, 5.5rem); }
+  .de-hero h1 { font-family: var(--display); font-size: clamp(3.2rem, 8vw, 6.5rem); line-height: 0.92; letter-spacing: 0.005em; margin: 0.35rem 0 1.4rem; text-transform: uppercase; }
+  .de-lead { font-family: var(--serif); font-size: clamp(1.2rem, 2vw, 1.5rem); line-height: 1.45; margin: 0 0 1.5rem; max-width: 34ch; }
+  .de-stats { display: flex; flex-wrap: wrap; gap: 1.25rem 2.25rem; margin: 1.75rem 0 0; }
+  .de-stats dt { font-family: var(--sans); font-size: 0.58rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-mute); }
+  .de-stats dd { margin: 0.25rem 0 0; font-family: var(--display); font-size: 1.7rem; line-height: 1; }
+  .de-hero__media { margin: 0; max-width: 560px; justify-self: end; width: 100%; }
+  .de-hero__media :global(.pm) { max-height: 78vh; }
+  .de-hero__media figcaption { display: flex; flex-direction: column; gap: 0.15rem; margin-top: 0.7rem; font-family: var(--serif); font-size: 0.95rem; }
+
+  /* Sections */
+  .de section { margin-bottom: clamp(3rem, 7vw, 5rem); }
+  .de-h2 { font-family: var(--sans); font-size: 0.66rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 1.1rem; }
+  .de-h2--big { font-family: var(--display); font-size: clamp(2rem, 4vw, 3rem); letter-spacing: 0.01em; color: var(--ink); margin-bottom: 2rem; }
+  .de-sechead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 1.5rem; margin-bottom: 1.1rem; }
+  .de-sechead .de-h2 { margin: 0; }
+  .de-prose { font-family: var(--serif); font-size: 1.08rem; line-height: 1.65; max-width: 62ch; margin: 0 0 1em; }
+  .de-about { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 4rem); }
+
+  /* Subjects */
+  .de-subjects { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 1.4rem 1rem; }
+  .de-subject { display: block; text-decoration: none; color: inherit; }
+  .de-subject__img { display: block; aspect-ratio: 1; overflow: hidden; background: var(--bg-raise); margin-bottom: 0.55rem; }
+  .de-subject__img img { width: 100%; height: 100%; object-fit: contain; display: block; filter: grayscale(0.35); transition: filter 0.3s, transform 0.4s; }
+  .de-subject:hover img { filter: none; transform: scale(1.04); }
+  .de-subject__name { display: block; font-family: var(--serif); font-size: 0.98rem; line-height: 1.25; }
+  .de-subject__meta { display: block; font-family: var(--sans); font-size: 0.66rem; color: var(--ink-mute); margin-top: 0.15rem; }
+
+  /* Eras + cards */
+  .de-era { border-top: 1px solid var(--line); padding-top: 1.5rem; }
+  .de-era__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 1.25rem; margin-bottom: 0.9rem; }
+  .de-era__head h3 { font-family: var(--display); font-size: clamp(1.6rem, 3vw, 2.2rem); margin: 0; letter-spacing: 0.01em; }
+  .de-era__text { margin-bottom: 1.6rem; }
+  .de-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 2.25rem 1.25rem; margin-top: 1.4rem; align-items: start; }
+  .de-card { min-width: 0; scroll-margin-top: 110px; }
+  .de-card__meta { padding-top: 0.65rem; }
+  .de-card__date { font-family: var(--sans); font-size: 0.6rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); margin: 0 0 0.3rem; }
+  .de-card__title { font-family: var(--serif); font-weight: 400; font-size: 1rem; line-height: 1.3; margin: 0; }
+  .de-card__badge { font-family: var(--sans); font-size: 0.66rem; color: var(--gold); margin: 0.25rem 0 0; }
+  .de-card__owner { font-size: 0.78rem; color: var(--ink-mute); margin: 0.4rem 0 0; }
+  .de-card__owner a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line); }
+  .de-card__owner a:hover { color: var(--ink); border-color: var(--ink); }
+  .de-card__market { display: flex; flex-wrap: wrap; gap: 0 0.8rem; font-size: 0.76rem; color: var(--ink-soft); margin: 0.3rem 0 0; font-variant-numeric: tabular-nums; }
+  .de-card__ask { color: var(--cyan); }
+  .de-card__link { display: inline-block; margin-top: 0.45rem; font-family: var(--sans); font-size: 0.6rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-mute); text-decoration: none; }
+  .de-card__link:hover { color: var(--ink); }
+
+  /* Collectors */
+  .de-collectorlist { list-style: none; margin: 0; padding: 0; columns: 3 220px; column-gap: 2rem; }
+  .de-collectorlist li { break-inside: avoid; display: flex; justify-content: space-between; gap: 1rem; padding: 0.45rem 0; border-bottom: 1px solid var(--line-soft); font-size: 0.86rem; }
+  .de-collectorlist a { color: var(--gold); text-decoration: none; overflow-wrap: anywhere; }
+  .de-collectorlist a:hover { color: var(--ink); }
+  .de-collectorlist .de-muted { font-size: 0.74rem; text-align: right; }
+
+  /* FAQ + press */
+  .de-faq__item { border-top: 1px solid var(--line-soft); padding-top: 1.1rem; margin-bottom: 1.4rem; max-width: 760px; }
+  .de-faq__item h3 { font-family: var(--serif); font-weight: 400; font-size: 1.15rem; margin: 0 0 0.6rem; }
+  .de-press { list-style: none; padding: 0; margin: 0; }
+  .de-press li { padding: 0.45rem 0; border-bottom: 1px solid var(--line-soft); }
+  .de-next { border-top: 1px solid var(--line); padding-top: 1.5rem; }
+
+  @media (max-width: 860px) {
+    .de-hero, .de-about { grid-template-columns: 1fr; }
+    .de-hero__media { order: -1; }
+  }
+  @media (max-width: 520px) {
+    .de-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 0.9rem; }
+    .de-subjects { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+</style>

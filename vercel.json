@@ -1,0 +1,5 @@
+{
+  "redirects": [
+    { "source": "/work/decentral-eyes-portrait", "destination": "/releases", "permanent": true }
+  ]
+}

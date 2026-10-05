@@ -2,26 +2,104 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../data/site';
 import { personLd, breadcrumbLd } from '../data/jsonld';
-import { releases, releaseSeries, releaseChains, releaseStatuses } from '../data/releases';
+import {
+  sortedReleases,
+  releaseYear,
+  formatReleaseDate,
+  CONTRACT_LABEL,
+  KIND_LABEL,
+  releasePlatforms,
+  releaseChains,
+  releaseSeries,
+  releaseKinds,
+  type Release,
+} from '../data/releases';
 
 const desc =
-  'A searchable database of Coldie’s on-chain releases — available pieces, edition sizes, and floor prices across series and marketplaces.';
+  'A searchable timeline of every Coldie digital release since 2018 — 1/1s, editions, generative collections and wearables, with descriptions, last sales, current prices and marketplace links.';
 
 const datasetLd = {
   '@context': 'https://schema.org',
   '@type': 'Dataset',
-  name: 'Coldie — releases database',
+  name: 'Coldie — digital releases database',
   description: desc,
   url: `${site.url}/releases`,
   creator: { '@id': `${site.url}/#person` },
-  variableMeasured: ['availability', 'edition size', 'floor price'],
+  temporalCoverage: `2018/${new Date().getFullYear()}`,
+  variableMeasured: ['release date', 'edition size', 'platform', 'chain', 'last sale', 'listing price'],
 };
 
-const fmtFloor = (r: (typeof releases)[number]) =>
-  r.floor == null ? '—' : `${r.floor} ${r.currency}`;
+// Continuous run of years 2018 → this year, so gaps stay visible.
+const FIRST_YEAR = 2018;
+const thisYear = new Date().getFullYear();
+const years = Array.from({ length: thisYear - FIRST_YEAR + 1 }, (_, i) => FIRST_YEAR + i);
+const byYear = new Map<number | null, Release[]>();
+for (const r of sortedReleases) {
+  const y = releaseYear(r);
+  byYear.set(y, [...(byYear.get(y) ?? []), r]);
+}
+const groups: { key: string; label: string; items: Release[] }[] = [
+  ...years.map((y) => ({ key: String(y), label: String(y), items: byYear.get(y) ?? [] })),
+  ...(byYear.get(null)?.length ? [{ key: 'tbc', label: 'Date tbc', items: byYear.get(null)! }] : []),
+];
+const maxCount = Math.max(...groups.map((g) => g.items.length), 1);
+
+const totalTokens = sortedReleases.reduce((n, r) => n + (r.supply ?? 0), 0);
+const dated = sortedReleases.filter((r) => r.date);
+import thumbsJson from '../data/thumbs.json';
+import marketJson from '../data/market.json';
+import { works } from '../data/works';
+const thumbs: Record<string, string> = thumbsJson;
+
+type Price = { amount: number; symbol: string; usd: number | null };
+type Owner = { address: string; name: string | null; username: string | null; ens: string | null; artist: boolean };
+type Market = {
+  owner?: Owner | null;
+  description: string | null;
+  lastSale: (Price & { date?: string | null }) | null;
+  listing: (Price & { kind: 'buy' | 'floor' | 'reserve' | 'auction' }) | null;
+};
+const market = marketJson.releases as Record<string, Market>;
+const marketAsOf = formatReleaseDate(marketJson.fetchedAt);
+const captions = new Map(works.map((w) => [w.slug, w.caption]));
+const description = (r: Release) =>
+  market[r.id]?.description ?? (r.slug ? captions.get(r.slug) : undefined) ?? null;
+
+const fmtEth = (p: Price) =>
+  `${p.amount.toLocaleString('en-US', { maximumFractionDigits: p.amount < 1 ? 4 : 2 })} ${p.symbol}`;
+const fmtUsd = (usd: number | null) => (usd ? `≈ $${usd.toLocaleString('en-US')}` : '');
+const LISTING_LABEL = { buy: 'For sale', floor: 'Floor', reserve: 'Reserve auction', auction: 'Live auction' };
+const shortAddr = (a: string) => `${a.slice(0, 6)}…${a.slice(-4)}`;
+/** Collector profile: SuperRare for SuperRare pieces with a username, else OpenSea. */
+const ownerUrl = (r: Release, o: Owner) =>
+  r.source === 'superrare' && o.username ? `https://superrare.com/${o.username}` : `https://opensea.io/${o.address}`;
+const ownerLabel = (o: Owner) => o.ens ?? (o.name && !o.name.startsWith('0x') ? o.name : shortAddr(o.address));
+const collectorCount = new Set(
+  Object.values(market).flatMap((m) => (m.owner && !m.owner.artist ? [m.owner.address] : []))
+).size;
+const forSaleCount = sortedReleases.filter((r) => market[r.id]?.listing).length;
+
+/** Marketplace name for a listing URL. */
+const marketName = (url: string) =>
+  url.includes('superrare.com') ? 'SuperRare'
+  : url.includes('opensea.io') ? 'OpenSea'
+  : url.includes('deca.art') ? 'Deca'
+  : new URL(url).hostname.replace(/^www\./, '');
+
+const searchText = (r: Release) =>
+  [
+    r.title, r.series, r.platform, r.chain, KIND_LABEL[r.kind], r.kindNote, r.notes, r.badge,
+    r.date, formatReleaseDate(r.date), r.contract, r.contract && CONTRACT_LABEL[r.contract.toLowerCase()], r.tokenId,
+    ...(r.variants ?? []).flatMap((v) => [v.title, v.tokenId]),
+    description(r),
+    market[r.id]?.owner?.ens, market[r.id]?.owner?.name, market[r.id]?.owner?.address,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
 ---
 <BaseLayout
-  title="Releases"
+  title="Digital Releases"
   description={desc}
   path="/releases"
   jsonld={[personLd(), datasetLd, breadcrumbLd([
@@ -33,105 +111,220 @@ const fmtFloor = (r: (typeof releases)[number]) =>
     <div class="wrap">
       <nav class="small muted rel__crumb" aria-label="Breadcrumb"><a href="/">Home</a> · <span>Releases</span></nav>
       <header class="rel__head">
-        <p class="eyebrow">Database</p>
-        <h1>Releases</h1>
+        <p class="eyebrow">Archive · {FIRST_YEAR}–{thisYear}</p>
+        <h1>Digital Releases</h1>
         <p class="lede">
-          A searchable index of Coldie’s on-chain releases — what’s available, edition sizes, and floor
-          prices. Search, filter, and sort.
+          Every on-chain release, in order — from the first stereoscopic artwork minted on a blockchain
+          in 2018 to today. Search by title, series, platform, collector, contract or token ID.
         </p>
       </header>
 
-      <div class="rel__controls" role="search">
-        <label class="rel__search">
-          <span class="sr-only">Search releases</span>
-          <input type="search" id="rel-q" placeholder="Search title, series, marketplace…" autocomplete="off" />
-        </label>
-        <label class="rel__filter">
-          <span>Series</span>
-          <select id="rel-series">
-            <option value="">All</option>
-            {releaseSeries.map((s) => <option value={s}>{s}</option>)}
-          </select>
-        </label>
-        <label class="rel__filter">
-          <span>Status</span>
-          <select id="rel-status">
-            <option value="">All</option>
-            {releaseStatuses.map((s) => <option value={s}>{s}</option>)}
-          </select>
-        </label>
-        <label class="rel__filter">
-          <span>Chain</span>
-          <select id="rel-chain">
-            <option value="">All</option>
-            {releaseChains.map((c) => <option value={c}>{c}</option>)}
-          </select>
-        </label>
-        <label class="rel__filter rel__check">
-          <input type="checkbox" id="rel-avail" />
-          <span>Available only</span>
-        </label>
-      </div>
+      <dl class="rel__stats">
+        <div><dt>Releases</dt><dd>{sortedReleases.length}</dd></div>
+        <div><dt>Tokens logged</dt><dd>{totalTokens.toLocaleString('en-US')}</dd></div>
+        <div><dt>First</dt><dd>{formatReleaseDate(dated[0]?.date)}</dd></div>
+        <div><dt>Latest</dt><dd>{formatReleaseDate(dated.at(-1)?.date)}</dd></div>
+        <div><dt>Platforms</dt><dd>{releasePlatforms.length}</dd></div>
+        <div><dt>1/1 collectors</dt><dd>{collectorCount}</dd></div>
+      </dl>
 
-      <div class="rel__tablewrap">
-        <table class="rel__table" id="rel-table">
-          <thead>
-            <tr>
-              <th><button type="button" data-sort="title" aria-label="Sort by title">Release</button></th>
-              <th><button type="button" data-sort="series">Series</button></th>
-              <th class="num"><button type="button" data-sort="year">Year</button></th>
-              <th class="num"><button type="button" data-sort="available">Available</button></th>
-              <th><button type="button" data-sort="status">Status</button></th>
-              <th class="num"><button type="button" data-sort="floor">Floor</button></th>
-              <th>Chain</th>
-              <th>Where</th>
-            </tr>
-          </thead>
-          <tbody>
-            {releases.map((r) => (
-              <tr
-                data-title={r.title.toLowerCase()}
-                data-series={r.series}
-                data-status={r.status}
-                data-chain={r.chain}
-                data-year={r.year ?? 0}
-                data-available={r.available ?? -1}
-                data-floor={r.floor ?? -1}
-                data-platform={r.platform.toLowerCase()}
-              >
-                <th scope="row">
-                  {r.slug ? <a href={`/work/${r.slug}`}>{r.title}</a> : r.title}
-                  {r.badge && <span class="rel__badge">{r.badge}</span>}
-                </th>
-                <td>{r.series}</td>
-                <td class="num">{r.year ?? '—'}</td>
-                <td class="num">{
-                  r.editionSize == null
-                    ? '—'
-                    : r.editionSize === 1
-                      ? '1/1'
-                      : `${r.available ?? '?'}/${r.editionSize}`
-                }</td>
-                <td><span class={`rel__status rel__status--${r.status.replace(/\s+/g, '-')}`}>{r.status}</span></td>
-                <td class="num">{fmtFloor(r)}</td>
-                <td>{r.chain}</td>
-                <td>
-                  {r.url
-                    ? <a href={r.url} target="_blank" rel="noopener" aria-label={`${r.title} on ${r.platform}`}>{r.platform} ↗</a>
-                    : <span class="muted">{r.platform}</span>}
-                </td>
-              </tr>
+
+
+      <div class="rel__layout">
+        <aside class="rel__side" aria-label="Filter releases">
+          <div class="rel__controls" role="search">
+            <label class="rel__search">
+              <span class="sr-only">Search releases</span>
+              <input type="search" id="rel-q" placeholder="Search" title="Title, series, collector, contract or token ID" autocomplete="off" />
+            </label>
+            <label class="rel__filter">
+              <span>Type</span>
+              <select id="rel-kind">
+                <option value="">All</option>
+                {releaseKinds.map((k) => <option value={k}>{KIND_LABEL[k]}</option>)}
+              </select>
+            </label>
+            <label class="rel__filter">
+              <span>Series</span>
+              <select id="rel-series">
+                <option value="">All</option>
+                {releaseSeries.map((s) => <option value={s}>{s}</option>)}
+              </select>
+            </label>
+            <label class="rel__filter">
+              <span>Platform</span>
+              <select id="rel-platform">
+                <option value="">All</option>
+                {releasePlatforms.map((p) => <option value={p}>{p}</option>)}
+              </select>
+            </label>
+            <label class="rel__filter">
+              <span>Chain</span>
+              <select id="rel-chain">
+                <option value="">All</option>
+                {releaseChains.map((c) => <option value={c}>{c}</option>)}
+              </select>
+            </label>
+            <label class="rel__filter rel__check">
+              <input type="checkbox" id="rel-forsale" />
+              <span>For sale only ({forSaleCount})</span>
+            </label>
+            <label class="rel__filter">
+              <span>Sort</span>
+              <select id="rel-sort">
+                <option value="oldest">Oldest first</option>
+                <option value="newest">Newest first</option>
+                <option value="price-asc" disabled data-price-sort>Price: low → high</option>
+                <option value="price-desc" disabled data-price-sort>Price: high → low</option>
+              </select>
+              <small class="rel__hint" id="rel-sort-hint">Check “For sale only” to sort by price.</small>
+            </label>
+          </div>
+          <p class="rel__count small muted" aria-live="polite">
+            <span id="rel-shown">{sortedReleases.length}</span> of {sortedReleases.length} releases
+            <button type="button" id="rel-reset" class="rel__reset" hidden>Clear filters</button>
+          </p>
+        </aside>
+        <div class="rel__main">
+          <nav class="rel__rail" aria-label="Jump to year">
+            {groups.map((g) => (
+              <a href={`#y-${g.key}`} class="rel__railyear" data-rail={g.key} aria-label={`${g.label}: ${g.items.length} releases`}>
+                <span class="rel__bar" style={`--h:${(g.items.length / maxCount) * 100}%`}></span>
+                <span class="rel__railcount" data-rail-count>{g.items.length}</span>
+                <span class="rel__raillabel">{g.key === 'tbc' ? 'tbc' : `’${g.label.slice(2)}`}</span>
+              </a>
             ))}
-          </tbody>
-        </table>
-        <p class="rel__empty muted" id="rel-empty" hidden>No releases match your search.</p>
-      </div>
+          </nav>
 
-      <p class="rel__count small muted"><span id="rel-shown">{releases.length}</span> of {releases.length} releases</p>
+          <ol class="rel__timeline" id="rel-timeline">
+            {groups.map((g) => (
+              <li class="rel__year" id={`y-${g.key}`} data-year={g.key}>
+                <h2 class="rel__yearlabel">
+                  {g.label}
+                  <span class="rel__yearcount"><span data-year-count>{g.items.length}</span> {g.items.length === 1 ? 'release' : 'releases'}</span>
+                </h2>
+                {g.items.length === 0 && <p class="rel__gap muted small" data-gap>Nothing logged for {g.label} yet.</p>}
+                <ol class="rel__entries">
+                  {g.items.map((r) => (
+                    <li
+                      class="rel__entry"
+                      data-entry
+                      data-search={searchText(r)}
+                      data-kind={r.kind}
+                      data-series={r.series ?? ''}
+                      data-platform={r.platform}
+                      data-chain={r.chain}
+                      data-forsale={market[r.id]?.listing ? '1' : undefined}
+                      data-price={market[r.id]?.listing?.amount}
+                      data-year={g.key}
+                    >
+                      <time class="rel__date" datetime={r.date ?? undefined}>{formatReleaseDate(r.date)}</time>
+                      <div class="rel__card">
+                        {thumbs[r.id]
+                          ? (
+                            <a class="rel__thumb" href={r.url ?? (r.slug && `/work/${r.slug}`)} target={r.url ? '_blank' : undefined} rel="noopener" tabindex="-1" aria-hidden="true">
+                              <img src={thumbs[r.id]} alt="" loading="lazy" decoding="async" width="112" height="112" />
+                            </a>
+                          )
+                          : <span class="rel__thumb rel__thumb--empty" aria-hidden="true">No image</span>}
+                        <div class="rel__body">
+                        <h3 class="rel__title">
+                          {r.slug ? <a href={`/work/${r.slug}`}>{r.title}</a> : r.title}
+                        </h3>
+                        {r.badge && <p class="rel__badge">{r.badge}</p>}
+                        <ul class="rel__chips">
+                          <li class={`rel__chip rel__chip--${r.kind === '1/1' ? 'one' : r.kind}`}>
+                            {KIND_LABEL[r.kind]}{r.kindNote && r.kindNote !== r.kind ? ` · ${r.kindNote}` : ''}
+                          </li>
+                          {r.supply != null && r.kind !== '1/1' && <li class="rel__chip">Supply {r.supply.toLocaleString('en-US')}</li>}
+                          {r.series && <li class="rel__chip">{r.series}</li>}
+                          <li class="rel__chip">{r.platform}</li>
+                          <li class="rel__chip">{r.chain}</li>
+                          {r.confirm && <li class="rel__chip rel__chip--confirm">Details to confirm</li>}
+                        </ul>
+                        {market[r.id]?.owner && (
+                      <p class="rel__collector">
+                        <span class="rel__collectorlabel">{market[r.id].owner!.artist ? 'Held by the artist' : 'Collector'}</span>
+                        <a href={ownerUrl(r, market[r.id].owner!)} target="_blank" rel="noopener" title={market[r.id].owner!.address}>
+                          {ownerLabel(market[r.id].owner!)}
+                        </a>
+                        {ownerLabel(market[r.id].owner!) !== shortAddr(market[r.id].owner!.address) && (
+                          <span class="rel__addr">{shortAddr(market[r.id].owner!.address)}</span>
+                        )}
+                      </p>
+                    )}
+                    {r.notes && <p class="rel__notes small muted">{r.notes}</p>}
+                    {(r.url || r.links?.length) && (
+                      <p class="rel__links small">
+                        {r.url && <a class="rel__market" href={r.url} target="_blank" rel="noopener">View on {marketName(r.url)} ↗</a>}
+                        {r.links?.map((l) => <a href={l.url} target="_blank" rel="noopener">{l.label} ↗</a>)}
+                      </p>
+                    )}
+                    {r.variants?.length && (
+                      <details class="rel__variants">
+                        <summary>{r.variants.length} {r.variants.length === 1 ? 'piece' : 'pieces'} in this release</summary>
+                        <ul>
+                          {r.variants.map((v) => (
+                            <li>
+                              <span class="rel__vtitle">
+                                {v.url ? <a href={v.url} target="_blank" rel="noopener">{v.title} ↗</a> : v.title}
+                              </span>
+                              <span class="rel__vmeta muted">
+                                {[
+                                  v.kind && (v.kind === '1/1' ? '1/1' : KIND_LABEL[v.kind]),
+                                  v.supply != null && v.supply !== 1 ? `×${v.supply}` : null,
+                                  v.date && v.date !== r.date ? formatReleaseDate(v.date) : null,
+                                  v.tokenId && v.tokenId.length < 14 ? `#${v.tokenId}` : null,
+                                ].filter(Boolean).join(' · ')}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </details>
+                    )}
+                    </div>
+                    <div class="rel__desc">
+                      {description(r)
+                        ? (
+                          <>
+                            <p class="rel__desctext" data-desc>{description(r)}</p>
+                            <button type="button" class="rel__more" data-more hidden>More</button>
+                          </>
+                        )
+                        : <p class="rel__desctext muted">No description.</p>}
+                    </div>
+                    <dl class="rel__marketcol">
+                      <div class="rel__stat">
+                        <dt>Last sale</dt>
+                        {market[r.id]?.lastSale
+                          ? <dd>{fmtEth(market[r.id].lastSale!)}{market[r.id].lastSale!.date && <span>{formatReleaseDate(market[r.id].lastSale!.date)}</span>}</dd>
+                          : <dd class="muted">—</dd>}
+                      </div>
+                      <div class="rel__stat">
+                        <dt>{market[r.id]?.listing ? LISTING_LABEL[market[r.id].listing!.kind] : 'For sale'}</dt>
+                        {market[r.id]?.listing
+                          ? <dd class="rel__price">{fmtEth(market[r.id].listing!)}<span>{fmtUsd(market[r.id].listing!.usd)}</span></dd>
+                          : <dd class="muted">Not listed</dd>}
+                      </div>
+                    </dl>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </li>
+        ))}
+      </ol>
+      <ol class="rel__entries rel__flat" id="rel-flat" hidden aria-label="For sale, sorted by price"></ol>
+      <p class="rel__empty muted" id="rel-empty" hidden>No releases match your search.</p>
+
       <p class="rel__note small muted">
-        Floor prices and availability are maintained from the studio’s release sheet. Figures shown are
-        placeholders until the live sheet is imported.
+        Compiled from the studio’s release tracking sheet, SuperRare and OpenSea. Sale and listing
+        prices as of {marketAsOf}; for collections, “Floor” is the cheapest current listing and the last
+        sale is the most recent one found on the collection page. Entries marked “details to confirm” are
+        missing a date, supply or other detail in the source.
       </p>
+        </div>
+      </div>
     </div>
   </section>
 </BaseLayout>
@@ -140,104 +333,339 @@ const fmtFloor = (r: (typeof releases)[number]) =>
   .rel { padding-block: clamp(2.5rem, 6vw, 4.5rem) var(--section-y); }
   .rel__crumb { margin-bottom: 2rem; }
   .rel__crumb a { text-decoration: none; }
-  .rel__head { max-width: 60ch; margin-bottom: clamp(2rem, 5vw, 3rem); }
+  .rel__head { max-width: 60ch; margin-bottom: clamp(1.75rem, 4vw, 2.5rem); }
   .rel__head h1 { margin: 0.2em 0; }
 
-  .rel__controls {
-    display: flex; flex-wrap: wrap; gap: 1rem 1.25rem; align-items: end;
-    margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--line-soft);
+  /* Stats */
+  .rel__stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 1px; margin: 0 0 2rem; background: var(--line-soft); border: 1px solid var(--line-soft);
   }
-  .rel__search { flex: 1 1 280px; }
-  .rel__search input {
-    width: 100%; padding: 0.7em 0.9em; background: var(--bg); color: var(--ink);
-    border: 1px solid var(--line); border-radius: var(--radius); font: inherit;
-  }
-  .rel__filter { display: flex; flex-direction: column; gap: 0.35em; }
-  .rel__filter > span { font-family: var(--type); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); }
-  .rel__filter select { padding: 0.55em 0.7em; background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: var(--radius); font: inherit; }
-  .rel__check { flex-direction: row; align-items: center; gap: 0.5em; }
-  .rel__check span { font-family: var(--type); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
-  input:focus, select:focus { outline: none; border-color: var(--red); }
+  .rel__stats div { background: var(--bg); padding: 0.9rem 1rem; }
+  .rel__stats dt { font-family: var(--type); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); }
+  .rel__stats dd { margin: 0.2em 0 0; font-family: var(--display); font-size: clamp(1.3rem, 2.4vw, 1.8rem); letter-spacing: 0.01em; line-height: 1.1; }
 
-  .rel__tablewrap { overflow-x: auto; }
-  .rel__table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
-  .rel__table th, .rel__table td { text-align: left; padding: 0.85em 1em; border-bottom: 1px solid var(--line-soft); white-space: nowrap; }
-  .rel__table .num { text-align: right; font-variant-numeric: tabular-nums; }
-  .rel__table thead th { border-bottom: 2px solid var(--line); }
-  .rel__table thead button {
-    font-family: var(--type); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--ink-mute); background: none; border: 0; cursor: pointer; padding: 0;
+  /* Year rail */
+  .rel__rail {
+    display: flex; gap: 0.35rem; align-items: stretch; height: 92px;
+    margin-bottom: 2rem; overflow-x: auto; scrollbar-width: none;
   }
-  .rel__table thead button:hover, .rel__table thead button[data-active] { color: var(--red); }
-  .rel__table tbody th { font-weight: 400; font-family: var(--serif); font-size: 1.02rem; }
-  .rel__table tbody th a { text-decoration: none; }
-  .rel__table tbody th a:hover { color: var(--red); }
-  .rel__badge { display: block; font-family: var(--type); font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-mute); margin-top: 0.2em; }
+  .rel__railyear {
+    flex: 1 0 44px; display: grid; grid-template-rows: 1fr auto auto; justify-items: center;
+    text-decoration: none; color: var(--ink-mute); padding-top: 4px;
+  }
+  .rel__bar {
+    align-self: end; width: 100%; height: max(var(--h), 3px);
+    background: var(--line); border-radius: var(--radius); transition: background 0.2s, height 0.25s;
+  }
+  .rel__railyear:hover .rel__bar, .rel__railyear:focus-visible .rel__bar { background: var(--red); }
+  .rel__railyear[data-empty] { opacity: 0.4; }
+  .rel__railyear[hidden] { display: none; }
+  .rel__railcount { font-family: var(--type); font-size: 0.7rem; margin-top: 0.3em; color: var(--ink-soft); }
+  .rel__raillabel { font-family: var(--display); font-size: 0.95rem; letter-spacing: 0.02em; }
+  .rel__railyear:hover .rel__raillabel { color: var(--ink); }
 
-  .rel__status { font-family: var(--type); font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; }
-  .rel__status--available { color: var(--cyan); }
-  .rel__status--reserved { color: var(--gold); }
-  .rel__status--sold-out, .rel__status--secondary-only { color: var(--ink-mute); }
-  .rel__status--tbc { color: var(--ink-mute); font-style: italic; }
+  /* Layout: sticky filter sidebar + timeline */
+  .rel__layout { display: grid; grid-template-columns: 154px minmax(0, 1fr); gap: 0 clamp(1.25rem, 2.5vw, 2.25rem); align-items: start; }
+  .rel__side {
+    position: sticky; top: 84px; max-height: calc(100vh - 100px); overflow-y: auto;
+    padding: 0.25rem 0.25rem 1rem 0; scrollbar-width: none;
+  }
+  .rel__main { min-width: 0; }
+
+  /* Controls — gallery-wall minimal: hairline underlines, small tracked caps */
+  .rel__controls { display: flex; flex-direction: column; gap: 1.15rem; }
+  .rel__search { display: block; }
+  .rel__filter { display: flex; flex-direction: column; gap: 0.2em; }
+  .rel__filter > span {
+    font-family: var(--sans); font-size: 0.58rem; font-weight: 500; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-mute);
+  }
+  .rel__search input,
+  .rel__filter select {
+    width: 100%; padding: 0.4em 0; background: transparent; color: var(--ink);
+    border: 0; border-bottom: 1px solid var(--line); border-radius: 0;
+    font-family: var(--sans); font-size: 0.74rem; letter-spacing: 0.01em;
+    transition: border-color 0.2s;
+  }
+  .rel__search input::placeholder { color: var(--ink-mute); font-size: 0.7rem; letter-spacing: 0.02em; }
+  .rel__filter select {
+    appearance: none; cursor: pointer; padding-right: 1rem;
+    background: no-repeat right 0.1rem center / 7px 4px
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 4'%3E%3Cpath d='M0 0l3.5 4L7 0' fill='none' stroke='%238a8782'/%3E%3C/svg%3E");
+  }
+  .rel__filter select option { background: var(--bg-raise); color: var(--ink); }
+  .rel__search input:hover, .rel__filter select:hover { border-bottom-color: var(--ink-mute); }
+  input:focus, select:focus { outline: none; border-bottom-color: var(--ink); }
+  .rel__check { flex-direction: row; align-items: center; gap: 0.55em; cursor: pointer; }
+  .rel__check input {
+    appearance: none; width: 9px; height: 9px; margin: 0; flex: none; cursor: pointer;
+    border: 1px solid var(--ink-mute); border-radius: 0; transition: background 0.15s, border-color 0.15s;
+  }
+  .rel__check input:checked { background: var(--ink); border-color: var(--ink); }
+  .rel__check span {
+    font-family: var(--sans); font-size: 0.58rem; font-weight: 500; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-soft);
+  }
+  .rel__reset {
+    display: block; margin: 0.45rem 0 0; padding: 0; background: none; border: 0; cursor: pointer;
+    font-family: var(--sans); font-size: 0.58rem; font-weight: 500; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-soft);
+    text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px;
+  }
+  .rel__reset:hover { color: var(--ink); }
+  .rel__reset[hidden] { display: none; }
+  .rel__count {
+    margin: 1.6rem 0 0; font-family: var(--sans); font-size: 0.64rem; letter-spacing: 0.04em; color: var(--ink-mute);
+  }
+  .rel__count #rel-shown { color: var(--ink); }
+  .rel__rail { margin-top: 0.25rem; }
+
+  /* Timeline */
+  .rel__timeline, .rel__entries { list-style: none; margin: 0; padding: 0; }
+  .rel__timeline { display: flex; flex-direction: column; }
+  .rel__timeline[data-newest] { flex-direction: column-reverse; }
+  .rel__timeline[data-newest] .rel__entries { flex-direction: column-reverse; }
+  .rel__timeline[hidden], .rel__flat[hidden], .rel__rail[hidden] { display: none; }
+  .rel__flat { margin-left: calc(6.5rem + clamp(0.75rem, 2vw, 1.75rem)); }
+  .rel__hint { font-family: var(--sans); font-size: 0.58rem; color: var(--ink-mute); line-height: 1.4; margin-top: 0.3rem; }
+  .rel__hint[hidden] { display: none; }
+  /* undated stays last in either direction */
+  .rel__timeline[data-newest] .rel__year[data-year='tbc'] { order: -1; }
+  .rel__year {
+    display: grid; grid-template-columns: 6.5rem 1fr; gap: 0 clamp(0.75rem, 2vw, 1.75rem);
+    padding-bottom: clamp(1.5rem, 4vw, 2.5rem); scroll-margin-top: 90px;
+  }
+  .rel__yearlabel {
+    grid-column: 1; align-self: start; position: sticky; top: 90px; margin: 0;
+    font-family: var(--display); font-size: clamp(2rem, 3.4vw, 3rem); line-height: 0.95; letter-spacing: 0.01em;
+  }
+  .rel__year[hidden], .rel__entry[hidden] { display: none; }
+  .rel__year[data-year='tbc'] .rel__yearlabel { font-size: clamp(1.4rem, 3vw, 2rem); color: var(--ink-mute); }
+  .rel__yearcount { display: block; font-family: var(--type); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); margin-top: 0.6em; }
+  .rel__gap, .rel__entries { grid-column: 2; }
+  .rel__gap { margin: 0.6rem 0 0; padding-left: 1.6rem; border-left: 1px dashed var(--line); }
+  .rel__entries { display: flex; flex-direction: column; border-left: 1px solid var(--line); }
+
+  .rel__entry { position: relative; padding: 0 0 1.35rem 1.6rem; }
+  .rel__entry::before {
+    content: ''; position: absolute; left: -5px; top: 0.45em; width: 9px; height: 9px;
+    border-radius: 50%; background: var(--bg); border: 2px solid var(--ink-mute);
+  }
+  .rel__entry:hover::before { border-color: var(--red); background: var(--red); }
+  .rel__date { display: block; font-family: var(--type); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 0.35em; }
+  .rel__card {
+    display: grid; align-items: start; gap: 0.9rem 1.1rem;
+    grid-template-columns: 112px minmax(0, 1fr) minmax(0, 1.2fr) 9.5rem;
+  }
+  .rel__desc { min-width: 0; }
+  .rel__desctext {
+    margin: 0; font-size: 0.86rem; line-height: 1.55; color: var(--ink-soft); white-space: pre-line;
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; overflow: hidden;
+  }
+  .rel__desc[data-open] .rel__desctext { -webkit-line-clamp: unset; display: block; }
+  .rel__more {
+    margin-top: 0.3rem; padding: 0; background: none; border: 0; cursor: pointer; color: var(--ink-mute);
+    font-family: var(--type); font-size: 0.66rem; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .rel__more:hover { color: var(--red); }
+  .rel__marketcol { margin: 0; display: grid; gap: 0.7rem; }
+  .rel__stat dt { font-family: var(--type); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); }
+  .rel__stat dd { margin: 0.1em 0 0; font-variant-numeric: tabular-nums; font-size: 0.95rem; }
+  .rel__stat dd span { display: block; font-size: 0.72rem; color: var(--ink-mute); }
+  .rel__price { color: var(--cyan); }
+  .rel__collector { margin: 0.55rem 0 0; font-size: 0.86rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.15rem 0.5rem; }
+  .rel__collectorlabel { font-family: var(--type); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); }
+  .rel__collector a { color: var(--gold); text-decoration: none; overflow-wrap: anywhere; }
+  .rel__collector a:hover { color: var(--red); }
+  .rel__addr { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.72rem; color: var(--ink-mute); }
+  .rel__body { min-width: 0; }
+  .rel__thumb {
+    display: block; width: 112px; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius);
+    background: var(--bg-raise); border: 1px solid var(--line-soft);
+  }
+  .rel__thumb img { width: 100%; height: 100%; object-fit: contain; display: block; transition: transform 0.35s ease; }
+  a.rel__thumb:hover img { transform: scale(1.04); }
+  .rel__thumb--empty {
+    display: grid; place-items: center; font-family: var(--type); font-size: 0.6rem;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-mute);
+  }
+  .rel__title { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(1.15rem, 1.6vw, 1.35rem); line-height: 1.25; }
+  .rel__title a { text-decoration: none; }
+  .rel__title a:hover { color: var(--red); }
+  .rel__badge { margin: 0.25em 0 0; font-family: var(--type); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); }
+
+  .rel__chips { list-style: none; display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0.6rem 0 0; padding: 0; }
+  .rel__chip {
+    font-family: var(--type); font-size: 0.66rem; letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 0.2em 0.55em; border: 1px solid var(--line); border-radius: var(--radius); color: var(--ink-soft);
+  }
+  .rel__chip--one { color: var(--gold); border-color: color-mix(in srgb, var(--gold) 45%, transparent); }
+  .rel__chip--generative { color: var(--cyan); border-color: color-mix(in srgb, var(--cyan) 45%, transparent); }
+  .rel__chip--edition { color: var(--ink); }
+  .rel__chip--wearable, .rel__chip--programmable { color: var(--red); border-color: color-mix(in srgb, var(--red) 45%, transparent); }
+  .rel__chip--tbc, .rel__chip--confirm { color: var(--ink-mute); border-style: dashed; }
+
+  .rel__notes { margin: 0.55rem 0 0; }
+  .rel__links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; margin: 0.55rem 0 0; }
+  .rel__links a { text-decoration: none; color: var(--ink-soft); }
+  .rel__links a:hover { color: var(--red); }
+  .rel__market { font-family: var(--type); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  .rel__variants { margin-top: 0.6rem; font-size: 0.88rem; }
+  .rel__variants summary { cursor: pointer; font-family: var(--type); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-mute); }
+  .rel__variants summary:hover { color: var(--ink); }
+  .rel__variants ul { list-style: none; margin: 0.5rem 0 0; padding: 0 0 0 0.9rem; border-left: 1px solid var(--line-soft); }
+  .rel__variants li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.2rem 1rem; padding: 0.3em 0; border-bottom: 1px solid var(--line-soft); }
+  .rel__variants a { text-decoration: none; }
+  .rel__variants a:hover { color: var(--red); }
+  .rel__vmeta { font-family: var(--type); font-size: 0.7rem; letter-spacing: 0.04em; }
 
   .rel__empty { padding: 2rem 0; }
-  .rel__count { margin-top: 1.2rem; }
-  .rel__note { margin-top: 0.4rem; }
+  .rel__note { margin-top: 1.5rem; }
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+  @media (max-width: 1280px) {
+    .rel__card { grid-template-columns: 112px minmax(0, 1fr) 9.5rem; }
+    .rel__body { grid-column: 2; }
+    .rel__marketcol { grid-column: 3; grid-row: 1; }
+    .rel__desc { grid-column: 2 / -1; }
+  }
+
+  @media (max-width: 900px) {
+    .rel__layout { grid-template-columns: 1fr; }
+    .rel__side { position: static; max-height: none; overflow: visible; padding: 0 0 1.25rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--line-soft); }
+    .rel__controls { flex-direction: row; flex-wrap: wrap; align-items: end; }
+    .rel__search { flex: 1 1 100%; }
+    .rel__filter { flex: 1 1 40%; }
+    .rel__search input, .rel__filter select { font-size: 16px; }
+  }
+
+  @media (max-width: 640px) {
+    .rel__year { grid-template-columns: 1fr; }
+    .rel__yearlabel { position: static; margin-bottom: 0.9rem; }
+    .rel__yearcount { display: inline; margin-left: 0.6em; }
+    .rel__gap, .rel__entries { grid-column: 1; }
+    .rel__flat { margin-left: 0; }
+    .rel__filter { flex: 1 1 40%; }
+    .rel__card { grid-template-columns: 76px 1fr; gap: 0.7rem 0.85rem; }
+    .rel__desc { grid-column: 1 / -1; }
+    .rel__marketcol { grid-column: 1 / -1; grid-row: auto; grid-template-columns: 1fr 1fr; }
+    .rel__thumb { width: 76px; }
+    .rel__filter select { max-width: none; width: 100%; }
+  }
 </style>
 
 <script>
-  const q = document.getElementById('rel-q') as HTMLInputElement;
-  const fSeries = document.getElementById('rel-series') as HTMLSelectElement;
-  const fStatus = document.getElementById('rel-status') as HTMLSelectElement;
-  const fChain = document.getElementById('rel-chain') as HTMLSelectElement;
-  const fAvail = document.getElementById('rel-avail') as HTMLInputElement;
-  const tbody = document.querySelector('#rel-table tbody') as HTMLTableSectionElement;
-  const empty = document.getElementById('rel-empty') as HTMLElement;
-  const shown = document.getElementById('rel-shown') as HTMLElement;
-  const rows = Array.from(tbody.querySelectorAll('tr'));
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const q = $<HTMLInputElement>('rel-q');
+  const selects = ['kind', 'series', 'platform', 'chain'].map((k) => [k, $<HTMLSelectElement>(`rel-${k}`)] as const);
+  const forSale = $<HTMLInputElement>('rel-forsale');
+  const sort = $<HTMLSelectElement>('rel-sort');
+  const sortHint = $('rel-sort-hint');
+  const priceOptions = Array.from(sort.querySelectorAll<HTMLOptionElement>('[data-price-sort]'));
+  const reset = $<HTMLButtonElement>('rel-reset');
+  const timeline = $<HTMLOListElement>('rel-timeline');
+  const flat = $<HTMLOListElement>('rel-flat');
+  const rail = document.querySelector<HTMLElement>('.rel__rail')!;
+  const empty = $('rel-empty');
+  const shown = $('rel-shown');
+  const years = Array.from(timeline.querySelectorAll<HTMLElement>('.rel__year'));
+  const entries = Array.from(timeline.querySelectorAll<HTMLElement>('[data-entry]'));
+  const home = new Map(entries.map((e) => [e, e.parentElement!]));
 
   function apply() {
-    const term = q.value.trim().toLowerCase();
-    const s = fSeries.value, st = fStatus.value, ch = fChain.value, av = fAvail.checked;
-    let count = 0;
-    for (const row of rows) {
-      const d = row.dataset;
-      const hay = `${d.title} ${d.series} ${d.platform}`.toLowerCase();
+    const terms = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    const active = selects.filter(([, el]) => el.value);
+    const filtering = terms.length > 0 || active.length > 0 || forSale.checked;
+    const perYear = new Map<string, number>();
+    let total = 0;
+
+    for (const entry of entries) {
+      const d = entry.dataset;
       const ok =
-        (!term || hay.includes(term)) &&
-        (!s || d.series === s) &&
-        (!st || d.status === st) &&
-        (!ch || d.chain === ch) &&
-        (!av || Number(d.available) > 0);
-      row.hidden = !ok;
-      if (ok) count++;
+        terms.every((t) => d.search!.includes(t)) &&
+        active.every(([k, el]) => d[k] === el.value) &&
+        (!forSale.checked || d.forsale === '1');
+      entry.hidden = !ok;
+      if (ok) {
+        total++;
+        perYear.set(d.year!, (perYear.get(d.year!) ?? 0) + 1);
+      }
     }
-    shown.textContent = String(count);
-    empty.hidden = count > 0;
+
+    for (const year of years) {
+      const n = perYear.get(year.dataset.year!) ?? 0;
+      // While filtering, hide years with no matches; otherwise keep empty years as visible gaps.
+      year.hidden = filtering && n === 0;
+      year.querySelector('[data-year-count]')!.textContent = String(n);
+      const bar = rail.querySelector<HTMLElement>(`[data-rail="${year.dataset.year}"]`);
+      if (bar) {
+        bar.querySelector('[data-rail-count]')!.textContent = String(n);
+        bar.toggleAttribute('data-empty', n === 0);
+        bar.hidden = filtering && n === 0;
+      }
+    }
+    shown.textContent = String(total);
+    empty.hidden = total > 0;
+    reset.hidden = !filtering && sort.value === 'oldest';
   }
 
-  [q, fSeries, fStatus, fChain, fAvail].forEach((el) =>
-    el.addEventListener('input', apply)
-  );
+  /** Timeline by date, or one flat list by listing price (price sorts need "For sale only"). */
+  function layout() {
+    priceOptions.forEach((o) => (o.disabled = !forSale.checked));
+    sortHint.hidden = forSale.checked;
+    if (!forSale.checked && sort.value.startsWith('price')) sort.value = 'oldest';
 
-  // Column sort
-  let sortKey = '', dir = 1;
-  document.querySelectorAll<HTMLButtonElement>('thead [data-sort]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const key = btn.dataset.sort!;
-      dir = sortKey === key ? -dir : 1;
-      sortKey = key;
-      document.querySelectorAll('thead [data-sort]').forEach((b) => b.removeAttribute('data-active'));
-      btn.setAttribute('data-active', '');
-      const numeric = ['year', 'available', 'floor'].includes(key);
-      const sorted = rows.slice().sort((a, b) => {
-        let av: string | number = a.dataset[key] ?? '';
-        let bv: string | number = b.dataset[key] ?? '';
-        if (numeric) { av = Number(av); bv = Number(bv); }
-        return av < bv ? -dir : av > bv ? dir : 0;
-      });
-      sorted.forEach((r) => tbody.appendChild(r));
-    });
+    const byPrice = sort.value.startsWith('price');
+    timeline.toggleAttribute('data-newest', sort.value === 'newest');
+    if (byPrice) {
+      const dir = sort.value === 'price-asc' ? 1 : -1;
+      const price = (e: HTMLElement) => Number(e.dataset.price);
+      entries
+        .filter((e) => e.dataset.price)
+        .sort((a, b) => dir * (price(a) - price(b)))
+        .forEach((e) => flat.append(e));
+    } else {
+      entries.forEach((e) => home.get(e)!.append(e)); // back into their years, original order
+    }
+    timeline.hidden = byPrice;
+    flat.hidden = !byPrice;
+    rail.hidden = byPrice;
+  }
+
+  const update = () => {
+    layout();
+    apply();
+  };
+  q.addEventListener('input', apply);
+  selects.forEach(([, el]) => el.addEventListener('change', apply));
+  forSale.addEventListener('change', update);
+  sort.addEventListener('change', update);
+  reset.addEventListener('click', () => {
+    q.value = '';
+    selects.forEach(([, el]) => (el.value = ''));
+    forSale.checked = false;
+    sort.value = 'oldest';
+    update();
   });
+
+  // Deep links: /releases?q=Snowden pre-fills the search (used by series and subject pages).
+  const initial = new URLSearchParams(location.search).get('q');
+  if (initial) q.value = initial;
+
+  update();
+
+  // Descriptions clamp to five lines; offer "More" only where text is actually cut off.
+  for (const text of document.querySelectorAll<HTMLElement>('[data-desc]')) {
+    const btn = text.nextElementSibling as HTMLButtonElement;
+    const wrap = text.parentElement!;
+    const check = () => (btn.hidden = !wrap.hasAttribute('data-open') && text.scrollHeight <= text.clientHeight + 1);
+    btn.addEventListener('click', () => {
+      const open = wrap.toggleAttribute('data-open');
+      btn.textContent = open ? 'Less' : 'More';
+      check();
+    });
+    new ResizeObserver(check).observe(text);
+  }
 </script>

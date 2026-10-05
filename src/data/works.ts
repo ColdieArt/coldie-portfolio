@@ -129,33 +129,9 @@ export const works: Work[] = [
 
   // ───────────────────────── Stereoscopic ─────────────────────────
   {
-    slug: 'decentral-eyes-portrait',
-    title: 'Decentral Eyes — Portrait', // [CONFIRM] subject (e.g. Satoshi Nakamoto)
-    year: 2021,
-    pillar: 'stereoscopic',
-    medium: 'Stereoscopic lenticular print & on-chain edition',
-    artform: 'Portrait',
-    caption:
-      'A Decentral Eyes portrait built by recombining many source images into one — the way a person is built from many influences. Real depth holds in the surface: the image shifts as you move, the way a lenticular print changes with viewing angle.',
-    layers: [
-      { src: '/works/decentral-eyes/far.svg', depth: 0.0, alt: 'Field of tiled source images' },
-      { src: '/works/decentral-eyes/mid.svg', depth: 0.5, alt: 'Portrait face mass' },
-      { src: '/works/decentral-eyes/near.svg', depth: 1.0, alt: 'Eyes and facial features' },
-    ],
-    imageAlt: 'Decentral Eyes stereoscopic portrait',
-    interaction: 'parallax',
-    featured: true,
-    curated: false,
-    ownership: 'both',
-    edition: 'Open edition', // [CONFIRM]
-    collectionRow: 'decentral-eyes',
-    collectUrl: '', // TODO: Transient Labs collect URL
-    marketplace: { name: 'SuperRare', url: '' }, // TODO: listing URL
-  },
-  {
     slug: '3d-light-painting-03',
     title: '3D Light Painting 03',
-    year: 2022,
+    year: 2018,
     pillar: 'stereoscopic',
     medium: 'Stereoscopic 3D, on-chain edition',
     artform: 'Stereoscopic work',
@@ -182,7 +158,7 @@ export const works: Work[] = [
   {
     slug: 'uap-unidentified-art-phenomenon',
     title: 'UAP — Unidentified Art Phenomenon',
-    year: 2022,
+    year: 2020,
     pillar: 'stereoscopic',
     medium: 'Stereoscopic 3D, on-chain edition',
     artform: 'Collaborative stereoscopic work',
@@ -349,8 +325,8 @@ export const works: Work[] = [
   },
   {
     slug: 'choose-your-own-adventure',
-    title: 'Choose Your Own Adventure', // [CONFIRM] year & details
-    year: 2021,
+    title: 'Choose Your Own Adventure',
+    year: 2020,
     pillar: 'stereoscopic',
     medium: 'Stereoscopic 3D landscape, on-chain edition',
     artform: 'Stereoscopic landscape',

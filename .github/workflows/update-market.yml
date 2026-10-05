@@ -1,0 +1,43 @@
+# Weekly refresh of /releases market data: last sales, current listings, and 1/1
+# collectors (with ENS). Commits src/data/market.json to main; Vercel redeploys on push.
+# Run it by hand from the Actions tab ("Run workflow").
+
+name: Update release prices & owners
+
+on:
+  schedule:
+    - cron: '0 15 * * 1' # Mondays 15:00 UTC (8am PT)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-market
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24 # runs scripts that import .ts directly
+
+      - name: Fetch prices and owners
+        run: node scripts/fetch-market.mjs
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/market.json
+          if git diff --staged --quiet; then
+            echo "No changes."
+          else
+            git commit -m "Weekly market refresh: prices & owners"
+            git push
+          fi

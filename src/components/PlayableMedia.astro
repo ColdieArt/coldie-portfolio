@@ -1,0 +1,122 @@
+---
+// Still thumbnail that swaps in the animated original (video or GIF) only when clicked,
+// so pages stay light: nothing heavy downloads until a viewer asks for it.
+interface Props {
+  poster?: string;
+  media?: { src: string; type: 'video' | 'gif' } | null;
+  title: string;
+  /**
+   * 'natural' (default): the box takes the artwork's own proportions — nothing cropped.
+   * 'contain': a square box with the whole artwork fitted inside (for even rows).
+   */
+  fit?: 'natural' | 'contain';
+  /** poster's intrinsic [width, height] — sets the box's aspect ratio before the image loads */
+  size?: [number, number];
+  eager?: boolean;
+}
+const { poster, media, title, fit = 'natural', size, eager = false } = Astro.props;
+const ratio = fit === 'natural' && size ? `aspect-ratio: ${size[0]} / ${size[1]}` : undefined;
+const dims = size ? { width: size[0], height: size[1] } : {};
+---
+{media
+  ? (
+    <button
+      type="button"
+      class:list={['pm', `pm--${fit}`]}
+      style={ratio}
+      data-pm-src={media.src}
+      data-pm-type={media.type}
+      aria-label={`Play animation: ${title}`}
+    >
+      {poster && <img src={poster} alt={`${title} by Coldie`} {...dims} loading={eager ? 'eager' : 'lazy'} decoding="async" />}
+      <span class="pm__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg></span>
+      <span class="pm__badge">{media.type === 'video' ? 'Play' : 'Animate'}</span>
+    </button>
+  )
+  : (
+    <span class:list={['pm', `pm--${fit}`, 'pm--still']} style={ratio}>
+      {poster
+        ? <img src={poster} alt={`${title} by Coldie`} {...dims} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+        : <span class="pm__none">No image</span>}
+    </span>
+  )}
+
+<style>
+  .pm {
+    position: relative; display: block; width: 100%; padding: 0; border: 0; overflow: hidden;
+    background: var(--bg-raise); color: inherit; cursor: pointer; border-radius: var(--radius);
+  }
+  .pm--still { cursor: default; }
+  .pm--contain { aspect-ratio: 1; }
+  /* never crop the artwork: fill the box, keep proportions */
+  .pm > img, .pm :global(video), .pm :global(.pm__full) {
+    display: block; width: 100%; height: 100%; object-fit: contain;
+  }
+  .pm--natural:not([style]) > img { height: auto; }
+  .pm__play {
+    position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; translate: -50% -50%;
+    display: grid; place-items: center; border-radius: 50%;
+    background: rgb(20 20 20 / 0.62); backdrop-filter: blur(4px);
+    border: 1px solid rgb(236 234 227 / 0.35); transition: transform 0.2s, background 0.2s;
+  }
+  .pm__play svg { width: 18px; height: 18px; fill: var(--ink); margin-left: 2px; }
+  .pm:hover .pm__play, .pm:focus-visible .pm__play { transform: scale(1.08); background: rgb(20 20 20 / 0.8); }
+  .pm__badge {
+    position: absolute; left: 0.5rem; bottom: 0.5rem; padding: 0.15em 0.45em;
+    font-family: var(--sans); font-size: 0.56rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink); background: rgb(20 20 20 / 0.6);
+  }
+  .pm:focus-visible { outline: 1px solid var(--ink); outline-offset: 2px; }
+  .pm[data-pm-state='loading']::after {
+    content: ''; position: absolute; inset: auto 0 0 0; height: 2px; background: var(--ink);
+    animation: pm-load 1.1s ease-in-out infinite; transform-origin: left;
+  }
+  .pm[data-pm-state='playing'] { cursor: default; }
+  .pm[data-pm-state='playing'] .pm__play, .pm[data-pm-state] .pm__badge { display: none; }
+  .pm__none {
+    display: grid; place-items: center; height: 100%; font-family: var(--sans); font-size: 0.6rem;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-mute);
+  }
+  @keyframes pm-load { from { transform: scaleX(0); } 50% { transform: scaleX(1); } to { transform: scaleX(0); transform-origin: right; } }
+</style>
+
+<script>
+  // One delegated listener for every PlayableMedia on the page.
+  document.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-pm-src]');
+    if (!btn || btn.dataset.pmState) return;
+    const { pmSrc: src, pmType: type } = btn.dataset;
+    const poster = btn.querySelector('img');
+    btn.dataset.pmState = 'loading';
+
+    let el: HTMLVideoElement | HTMLImageElement;
+    if (type === 'video') {
+      const video = document.createElement('video');
+      // Muted must be an attribute (not just the property) for browsers to allow autoplay.
+      for (const attr of ['muted', 'autoplay', 'loop', 'playsinline', 'controls']) video.setAttribute(attr, '');
+      video.muted = true;
+      video.poster = poster?.currentSrc ?? '';
+      video.src = src!;
+      el = video;
+    } else {
+      el = Object.assign(document.createElement('img'), { src: src!, alt: poster?.alt ?? '', className: 'pm__full' });
+    }
+
+    // Swap the whole button for a plain container so video controls aren't nested in a button.
+    const ready = () => {
+      const frame = document.createElement('div');
+      frame.className = btn.className;
+      const style = btn.getAttribute('style');
+      if (style) frame.setAttribute('style', style);
+      // keep Astro's scoped-style attribute so the frame keeps its size and crop
+      for (const { name, value } of btn.attributes) if (name.startsWith('data-astro-cid')) frame.setAttribute(name, value);
+      frame.dataset.pmState = 'playing';
+      frame.append(el);
+      btn.replaceWith(frame);
+      if (el instanceof HTMLVideoElement) el.play().catch(() => {});
+    };
+    el.addEventListener(type === 'video' ? 'loadeddata' : 'load', ready, { once: true });
+    el.addEventListener('error', () => delete btn.dataset.pmState, { once: true });
+    if (type === 'video') (el as HTMLVideoElement).load();
+  });
+</script>
