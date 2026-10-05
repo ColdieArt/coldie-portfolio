@@ -12,7 +12,8 @@
     "astro": "astro",
     "import:superrare": "node scripts/import-superrare.mjs",
     "thumbs:releases": "node scripts/fetch-thumbnails.mjs",
-    "market:releases": "node scripts/fetch-market.mjs"
+    "market:releases": "node scripts/fetch-market.mjs",
+    "og:build": "node scripts/build-og.mjs"
   },
   "dependencies": {
     "astro": "^5.6.1",

@@ -1,4 +1,5 @@
 {
+  "trailingSlash": false,
   "redirects": [
     { "source": "/releases", "destination": "/archive", "permanent": true },
     { "source": "/work/decentral-eyes-portrait", "destination": "/archive", "permanent": true }

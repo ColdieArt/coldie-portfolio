@@ -56,6 +56,8 @@ export type Work = {
   /** Single flat image (galleries, non-layered works). */
   image?: string;
   imageAlt?: string;
+  /** Placeholder content: the page still renders, but is noindexed and left out of the sitemap. */
+  draft?: boolean;
   /** Shown as the pillar's large featured piece. */
   featured?: boolean;
   /** Shown in the pillar's small curated set on the home page. */
@@ -145,8 +147,8 @@ export const works: Work[] = [
         ariaLabel: "3D Light Painting 03 at Sotheby's, Inside the World of MaxStealth",
       },
     ],
-    image: '/works/placeholder/portrait.svg',
-    imageAlt: '3D Light Painting 03 (placeholder image)',
+    image: '/works/3d-light-painting-03/hero.jpg',
+    imageAlt: '3D Light Painting 03 — stereoscopic 3D light painting by Coldie with Bucket T (2018)',
     interaction: 'none',
     curated: true,
     ownership: 'edition',
@@ -175,8 +177,8 @@ export const works: Work[] = [
       },
       { label: 'With Hackatao' },
     ],
-    image: '/works/placeholder/landscape.svg',
-    imageAlt: 'UAP — Unidentified Art Phenomenon (placeholder image)',
+    image: '/works/uap-unidentified-art-phenomenon/hero.jpg',
+    imageAlt: 'UAP — Unidentified Art Phenomenon, 3D collaboration by Coldie and Hackatao (2020)',
     interaction: 'none',
     curated: true,
     ownership: 'edition',
@@ -202,8 +204,8 @@ export const works: Work[] = [
         ariaLabel: 'Proof of Work – Genesis at Bonhams, Bonhams & SuperRare: CryptOGs',
       },
     ],
-    image: '/works/placeholder/portrait.svg',
-    imageAlt: 'Proof of Work — Genesis (placeholder image)',
+    image: '/works/proof-of-work-genesis/hero.jpg',
+    imageAlt: 'Proof of Work — Genesis by Coldie: a miner panning for gold, an allegory of crypto mining (2021)',
     interaction: 'none',
     curated: true,
     ownership: 'edition',
@@ -308,8 +310,8 @@ export const works: Work[] = [
     artform: 'Stereoscopic landscape',
     caption:
       'Trust Your Intuition is a stereoscopic 3D landscape — depth captured in a flat frame, released on-chain.',
-    image: '/works/placeholder/landscape.svg',
-    imageAlt: 'Trust Your Intuition — stereoscopic 3D landscape (placeholder image)',
+    image: '/works/trust-your-intuition/hero.jpg',
+    imageAlt: 'Trust Your Intuition — stereoscopic 3D artwork by Coldie (2021)',
     interaction: 'none',
     ownership: 'edition',
     edition: 'Edition', // [CONFIRM]
@@ -333,8 +335,8 @@ export const works: Work[] = [
     artform: 'Stereoscopic landscape',
     caption:
       'Choose Your Own Adventure is a stereoscopic 3D landscape that holds real depth — a way of seeing 170 years old, released on-chain.',
-    image: '/works/placeholder/landscape.svg',
-    imageAlt: 'Choose Your Own Adventure — stereoscopic 3D landscape (placeholder image)',
+    image: '/works/choose-your-own-adventure/hero.jpg',
+    imageAlt: 'Choose Your Own Adventure — programmable stereoscopic 3D landscape by Coldie on ASYNC (2020)',
     interaction: 'none',
     ownership: 'edition',
     edition: 'Edition', // [CONFIRM]
@@ -347,6 +349,7 @@ export const works: Work[] = [
   // TODO: replace titles, years, and images with the real early works (Coldie to supply).
   {
     slug: 'foundations-anaglyph-canvas-2010',
+    draft: true, // placeholder — hidden from search until the real title and image are in
     title: 'Anaglyph 3D Landscape on Canvas', // [TO ADD] real title
     year: 2010,
     pillar: 'stereoscopic',
@@ -363,6 +366,7 @@ export const works: Work[] = [
   },
   {
     slug: 'foundations-anaglyph-canvas-2016',
+    draft: true, // placeholder — hidden from search until the real title and image are in
     title: 'Anaglyph 3D Landscape on Canvas', // [TO ADD] real title
     year: 2016,
     pillar: 'stereoscopic',
@@ -380,6 +384,7 @@ export const works: Work[] = [
   },
   {
     slug: 'foundations-anaglyph-canvas-2018',
+    draft: true, // placeholder — hidden from search until the real title and image are in
     title: 'Anaglyph 3D Landscape on Canvas', // [TO ADD] real title
     year: 2018,
     pillar: 'stereoscopic',

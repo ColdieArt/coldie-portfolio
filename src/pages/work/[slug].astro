@@ -18,6 +18,9 @@ const { work } = Astro.props;
 const pillar = pillars[work.pillar];
 const pillarHasPage = PILLAR_PAGES.includes(work.pillar);
 const heroImg = work.image ?? work.layers?.[work.layers.length - 1]?.src;
+// Share card from scripts/build-og.mjs; works without a real image fall back to the default card.
+const ogCards = import.meta.glob('/public/og/work/*.png');
+const ogImage = ogCards[`/public/og/work/${work.slug}.png`] ? `/og/work/${work.slug}.png` : undefined;
 
 const ld = [
   artworkLd(work),
@@ -29,14 +32,15 @@ const ld = [
   ]),
 ];
 // First sentence of the caption = the answer-first description / OG text.
-const desc = work.caption.split('. ')[0] + '.';
+const desc = work.caption.split('. ')[0].replace(/\.?$/, '.');
 ---
 <BaseLayout
   title={work.title}
   description={desc}
   path={`/work/${work.slug}`}
   ogType="article"
-  ogImage={heroImg}
+  ogImage={ogImage}
+  noindex={work.draft}
   jsonld={ld}
 >
   <article class="work">
