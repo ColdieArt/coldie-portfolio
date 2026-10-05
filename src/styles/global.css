@@ -21,7 +21,7 @@
   --gold: #111111;
   --accent: #111111; /* black — hard CTAs */
   --on-accent: #f4f2ec; /* light text that sits on solid black accents */
-  --red: #e6362a; /* anaglyph red — the aggressive mark */
+  --red: #f4f2ec; /* was anaglyph red — now white for accents + text hover */
   --cyan: #45c7d0; /* anaglyph cyan */
   --accent-cyan: #45c7d0;
 
@@ -103,7 +103,7 @@ img, svg, video { max-width: 100%; height: auto; display: block; }
 
 img { background: var(--bg-raise); }
 
-::selection { background: var(--red); color: #fff; }
+::selection { background: #141414; color: #f4f2ec; }
 
 /* ---------- layout helpers ---------- */
 .wrap { max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
@@ -191,7 +191,7 @@ img { background: var(--bg-raise); }
 /* ---------- skip link ---------- */
 .skip {
   position: absolute; left: -9999px; top: 0; z-index: 200;
-  background: var(--red); color: #fff; padding: 0.6em 1em; border-radius: var(--radius);
+  background: #141414; color: #f4f2ec; padding: 0.6em 1em; border-radius: var(--radius);
 }
 .skip:focus { left: 1rem; top: 1rem; }
 
