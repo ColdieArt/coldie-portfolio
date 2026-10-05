@@ -19,8 +19,11 @@ export function personLd(): Record<string, unknown> {
       'Anaglyph 3D',
       'Kinetic art',
       'Blockchain provenance',
+      'Crypto art',
+      'Non-fungible tokens (NFTs)',
+      'Digital art',
     ],
-    sameAs: [site.social.instagram, site.social.x],
+    sameAs: [site.social.instagram, site.social.x, ...Object.values(site.profiles)],
   };
 }
 

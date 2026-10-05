@@ -31,7 +31,7 @@
     color: inherit; cursor: pointer; will-change: transform, opacity; transform-origin: 50% 50%;
     backface-visibility: hidden;
   }
-  .arc-world :global(.arc-piece__art) { display: block; position: relative; background: #000; box-shadow: 0 30px 80px rgb(0 0 0 / 0.65); }
+  .arc-world :global(.arc-piece__art) { display: block; position: relative; container-type: inline-size; background: #000; box-shadow: 0 30px 80px rgb(0 0 0 / 0.65); }
   .arc-world :global(.arc-piece__art > img),
   .arc-world :global(.arc-piece__art > video) {
     display: block; width: 100%; height: 100%; object-fit: contain;
@@ -87,6 +87,7 @@
   type Item = {
     id: string; title: string; date: string; year: string; img: string | null; size: [number, number] | null;
     media: { src: string; type: 'video' | 'gif' } | null; price: number | null; listing: { price: string } | null;
+    burned?: boolean; alt?: string;
   };
 
   const root = document.getElementById('arc-corridor')!;
@@ -150,9 +151,10 @@
     const art = document.createElement('span');
     art.className = 'arc-piece__art';
     const img = document.createElement('img');
-    img.alt = '';
+    img.alt = it.alt ?? '';
     img.decoding = 'async';
     art.append(img);
+    if (it.burned) art.insertAdjacentHTML('beforeend', '<span class="burn-stamp">Burned</span>');
     const cap = document.createElement('span');
     cap.className = 'arc-piece__cap';
     cap.innerHTML = '<span class="arc-piece__title"></span><span class="arc-piece__date"></span>';

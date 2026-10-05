@@ -208,3 +208,14 @@ img { background: var(--bg-raise); }
     scroll-behavior: auto !important;
   }
 }
+
+/* "BURNED" stamp over an artwork whose tokens no longer exist. The parent sets
+   position: relative and container-type: inline-size so the stamp scales with it. */
+.burn-stamp {
+  position: absolute; left: 50%; top: 50%; z-index: 2; pointer-events: none;
+  transform: translate(-50%, -50%) rotate(-14deg);
+  padding: 0.12em 0.38em 0.06em; border: 0.09em solid #e8322b; border-radius: 0.06em;
+  font-family: var(--display); font-size: 16cqw; line-height: 1; letter-spacing: 0.06em; text-transform: uppercase;
+  color: #e8322b; background: rgb(10 10 10 / 0.35); mix-blend-mode: normal; opacity: 0.92;
+  text-shadow: 0 0 0.02em rgb(0 0 0 / 0.4);
+}

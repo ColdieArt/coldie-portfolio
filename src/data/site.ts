@@ -21,6 +21,13 @@ export const site = {
     instagram: 'https://instagram.com/coldie3dart',
     x: 'https://x.com/Coldie',
   },
+  // Artist profiles on the platforms where the work was minted and is collected.
+  // Listed as sameAs so search and AI engines connect them to the same artist.
+  profiles: {
+    superrare: 'https://superrare.com/coldie',
+    opensea: 'https://opensea.io/Coldie',
+    rareArtLabs: 'https://www.rareart.io/artist/coldie',
+  },
 } as const;
 
 // Provenance strip — true sales & exhibitions only (SFMOMA credit lives in the

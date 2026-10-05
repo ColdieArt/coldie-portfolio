@@ -101,3 +101,9 @@ be promoted later once you write something for it.
 - **Structured data:** `VisualArtwork` with artist, date, medium, image, collection and provenance, plus `ItemList` on hubs.
 - **Links:** breadcrumbs, links between series, subject and work pages, and a "View on SuperRare / OpenSea" link.
 - **Discovery files:** sitemap entries and `llms.txt` entries, so AI crawlers get a clean index of key works.
+
+## To create — outside authority (strongest signal for "pioneer" searches)
+
+- [ ] **Wikidata entry for Coldie.** A structured record (artist, first on-chain work May 7, 2018, platforms, auction sales) with references. Faster than Wikipedia and read directly by Google's Knowledge Graph and AI tools. Link it from `site.profiles` once it exists.
+- [ ] **Wikipedia article.** Needs several independent, reliable sources (press coverage, auction catalogues such as the Bonhams "CryptOGs" lot). It can't be self-sourced, so collect the press first.
+- [ ] **Press list.** Gather every article, interview and catalogue that mentions Coldie, for the series pages' "Exhibitions & press" sections and as Wikipedia sources.

@@ -8,6 +8,7 @@
 //   • 'superrare'      — every 1/1 Coldie created on SuperRare, imported into
 //                        superrare.json by `node scripts/import-superrare.mjs`
 //   • 'opensea'        — read straight off an OpenSea collection page
+//   • 'rare'           — R.A.R.E. Art Labs (rareart.io/artist/coldie), original ERC-20 art tokens
 //   • 'site'           — landmark works already documented in works.ts
 //   https://docs.google.com/spreadsheets/d/15eo7roRXvw80IFG2726LxaNdWyPxTeVH39zmI_8m1fQ
 //   https://superrare.com/coldie
@@ -27,7 +28,7 @@
 import superrare from './superrare.json' with { type: 'json' };
 
 export type ReleaseKind = '1/1' | 'edition' | 'generative' | 'wearable' | 'programmable' | 'tbc';
-export type ReleaseSource = 'sheet:editions' | 'sheet:1of1s' | 'superrare' | 'opensea' | 'site';
+export type ReleaseSource = 'sheet:editions' | 'sheet:1of1s' | 'superrare' | 'opensea' | 'rare' | 'site';
 
 export type ReleaseVariant = {
   title: string;
@@ -65,14 +66,24 @@ export type Release = {
   thumbSrc?: string;
   /** token to take the thumbnail from when the release has no single tokenId */
   thumbToken?: string;
+  /** animated original (video/GIF URL) when it can't be discovered from SuperRare or OpenSea */
+  animation?: string;
   /** skip scripts/fetch-market.mjs — the listing page isn't Coldie-only, so its prices would mislead */
   noMarket?: boolean;
   confirm?: boolean;
   /** kept in the data but left off the site (remove the flag to show it again) */
   hidden?: boolean;
+  /** the tokens no longer exist (e.g. unsold R.A.R.E. editions burned in 2019) — shown with a BURNED stamp */
+  burned?: boolean;
+  /** a related release to point to, e.g. a later re-release of the same artwork */
+  related?: { id: string; label: string };
+  /** written description, for works with no marketplace page to read one from */
+  description?: string;
   source: ReleaseSource;
 };
 
+const RARE_ARWEAVE = 'https://arweave.net/DLwcEja10vWjRuAqDf4Gwvo_IeJMFytxNo_4FOCJknM'; // R.A.R.E. Art Labs archive
+const rareArt = (contract: string) => `https://www.rareart.io/artwork/${contract}`;
 const VOXELS = '0xa58b5224e2FD94020cb2837231B2B0E4247301A6';
 const NG_BUFFETT = '0xa81E0193f30bbd6E83366a88b4570e8766Ca2131';
 const NG_ASSANGE = '0xe750D24Cb2fEB19B0cd4AF45427E6066a293d836';
@@ -91,15 +102,101 @@ const allReleases: Release[] = [
     id: 'the-day',
     title: "The Day We've All Been Waiting For",
     date: '2018-05-07',
-    kind: '1/1',
-    supply: 1,
+    kind: 'edition',
+    supply: 2, // on-chain supply per R.A.R.E. Art Labs
     series: 'Landmark',
     platform: 'R.A.R.E. Art Labs',
     chain: 'Ethereum',
+    url: rareArt('0xac293c5c2eca9c623c156d120e53b2a3650c173f'),
+    contract: '0xac293c5c2eca9c623c156d120e53b2a3650c173f',
     slug: 'the-day-weve-all-been-waiting-for',
     badge: 'First stereoscopic artwork on a blockchain',
     thumbSrc: '/works/the-day/the-day.jpg',
+    notes: 'Edition of 2. One is held by Coinbase and was on display in its lobby from 2018 to 2020.',
     source: 'site',
+  },
+  {
+    id: 'rare-proof-of-work-2018',
+    title: 'Proof of Work',
+    date: '2018-09-26',
+    kind: 'edition',
+    supply: 10,
+    series: 'Proof of Work',
+    platform: 'R.A.R.E. Art Labs',
+    chain: 'Ethereum',
+    burned: true,
+    badge: 'Burned · unsold edition of 10',
+    thumbSrc: '/releases/thumbs/sr-b932a7-25441.webp',
+    related: { id: 'sr-b932a7-25441', label: 'Proof of Work – Genesis (2021, Bonhams)' },
+    description:
+      'The original Proof of Work: the animated artwork that draws parallels between computers mining proof-of-work cryptocurrency and gold miners panning the rivers of the California gold rush, where Coldie grew up. ' +
+      'It was tokenized on R.A.R.E. Art Labs on September 26, 2018 as an ERC-20 edition of 10. The edition went unsold for over a year, and on October 30, 2019, when ERC-721 had become the standard for NFTs, Coldie burned all his unsold tokens. ' +
+      'He re-minted the work in its original size as a 1/1 on June 16, 2021: Proof of Work – Genesis, which became Lot 1 of the Bonhams & SuperRare sale “CryptOGs: The Pioneers of NFT Art”.',
+    source: 'rare',
+  },
+  {
+    id: 'rare-lost-vitalik-2018',
+    title: 'The Lost Vitalik',
+    date: '2018-05-09',
+    kind: 'edition',
+    supply: 25,
+    series: 'Decentral Eyes',
+    platform: 'R.A.R.E. Art Labs',
+    chain: 'Ethereum',
+    burned: true,
+    badge: 'Burned · unsold edition of 25',
+    thumbSrc: '/releases/thumbs/sr-b932a7-12380.webp',
+    related: { id: 'sr-b932a7-12380', label: 'The Lost Vitalik – Decentral Eyes Genesis (2020)' },
+    description:
+      'The original Lost Vitalik: a true stereoscopic 3D portrait of Vitalik Buterin, made to be seen in depth through red/blue glasses, and the artwork Coldie calls the genesis of the Decentral Eyes series. ' +
+      'It was minted on R.A.R.E. Art Labs on May 9, 2018, two days after The Day We’ve All Been Waiting For, as an ERC-20 edition of 25. The crypto art space was so new that no one bought it, and on October 30, 2019, when ERC-721 NFTs had become the standard, Coldie burned his unsold R.A.R.E. tokens, rewarding early collectors with scarcity. ' +
+      'The artwork stayed in his archive until 2020, when he released it as a 1/1 on SuperRare: The Lost Vitalik – Decentral Eyes Genesis.',
+    source: 'rare',
+  },
+  {
+    id: 'rare-pyramid-on-mars',
+    title: 'Pyramid on Mars',
+    date: '2018-07-17',
+    kind: '1/1',
+    supply: 1,
+    platform: 'R.A.R.E. Art Labs',
+    chain: 'Ethereum',
+    url: rareArt('0x5ef7935e4a431e9a517e12490c5c0563f19c72cc'),
+    contract: '0x5ef7935e4a431e9a517e12490c5c0563f19c72cc',
+    thumbSrc: `${RARE_ARWEAVE}/previews/0x5ef7935e4a431e9a517e12490c5c0563f19c72cc.jpg`,
+    animation: `${RARE_ARWEAVE}/0x5ef7935e4a431e9a517e12490c5c0563f19c72cc.mp4`,
+    notes: 'Original ERC-20 artwork token on R.A.R.E. Art Labs.',
+    source: 'rare',
+  },
+  {
+    id: 'rare-sol-puerto-rico',
+    title: 'SOL - Puerto Rico',
+    date: '2018-07-17',
+    kind: 'edition',
+    supply: 2,
+    platform: 'R.A.R.E. Art Labs',
+    chain: 'Ethereum',
+    url: rareArt('0x8288af85c44e5d5752510418ec6003eafa13488d'),
+    contract: '0x8288af85c44e5d5752510418ec6003eafa13488d',
+    thumbSrc: `${RARE_ARWEAVE}/previews/0x8288af85c44e5d5752510418ec6003eafa13488d.jpg`,
+    animation: `${RARE_ARWEAVE}/0x8288af85c44e5d5752510418ec6003eafa13488d.mp4`,
+    notes: 'Original ERC-20 artwork token on R.A.R.E. Art Labs.',
+    source: 'rare',
+  },
+  {
+    id: 'rare-underground-energy',
+    title: 'Underground Energy',
+    date: '2018-07-17',
+    kind: '1/1',
+    supply: 1,
+    platform: 'R.A.R.E. Art Labs',
+    chain: 'Ethereum',
+    url: rareArt('0xa9f3d184caf0fc3b26d35e2a8d87625c129b668f'),
+    contract: '0xa9f3d184caf0fc3b26d35e2a8d87625c129b668f',
+    thumbSrc: `${RARE_ARWEAVE}/previews/0xa9f3d184caf0fc3b26d35e2a8d87625c129b668f.jpg`,
+    animation: `${RARE_ARWEAVE}/0xa9f3d184caf0fc3b26d35e2a8d87625c129b668f.mp4`,
+    notes: 'Original ERC-20 artwork token on R.A.R.E. Art Labs.',
+    source: 'rare',
   },
 
   // ─────────────────────────── 2019 ───────────────────────────
@@ -170,6 +267,37 @@ const allReleases: Release[] = [
     tokenId: '3',
     thumbSrc: 'https://i2c.seadn.io/ethereum/0xd2eca00493ea1218a7ad20009ac0a4602839ca2b/526a97a23c6105e7ed003bb8acaa72d2.webp',
     source: 'opensea',
+  },
+
+  {
+    id: 'rare-ethereum-split-cut',
+    title: 'Ethereum Split-Cut Shirt & Artwork Combo - 001',
+    date: '2019-06-19',
+    kind: 'edition',
+    supply: 2,
+    platform: 'R.A.R.E. Art Labs',
+    chain: 'Ethereum',
+    url: rareArt('0x46a9193f4b332c959b15d4034fe9527b796a87f5'),
+    contract: '0x46a9193f4b332c959b15d4034fe9527b796a87f5',
+    badge: 'Physical shirt + artwork',
+    thumbSrc: `${RARE_ARWEAVE}/previews/0x46a9193f4b332c959b15d4034fe9527b796a87f5.jpg`,
+    notes: 'Original ERC-20 artwork token on R.A.R.E. Art Labs.',
+    source: 'rare',
+  },
+  {
+    id: 'rare-bitcoin-split-cut',
+    title: 'Bitcoin Split-Cut Shirt & Artwork Combo - 001',
+    date: '2019-06-24',
+    kind: '1/1',
+    supply: 1,
+    platform: 'R.A.R.E. Art Labs',
+    chain: 'Ethereum',
+    url: rareArt('0x520d9d5d61c70f577933d508db08b8c4f70f4160'),
+    contract: '0x520d9d5d61c70f577933d508db08b8c4f70f4160',
+    badge: 'Physical shirt + artwork',
+    thumbSrc: `${RARE_ARWEAVE}/previews/0x520d9d5d61c70f577933d508db08b8c4f70f4160.jpg`,
+    notes: 'Original ERC-20 artwork token on R.A.R.E. Art Labs.',
+    source: 'rare',
   },
 
   // ─────────────────────────── 2020 ───────────────────────────
@@ -823,11 +951,15 @@ const SR_EXTRAS: Record<string, Partial<Release>> = {
     badge: 'Bonhams',
     links: [{ label: 'Bonhams lot', url: BONHAMS_POW }],
     notes: 'Conceived 2018, minted June 16, 2021.',
+    related: { id: 'rare-proof-of-work-2018', label: 'The burned 2018 original on R.A.R.E. Art Labs' },
   },
   '0xb932a70a57673d89f4acffbe830e8ed7f75fb9e0:9343': {
     series: 'Collaborations',
     slug: 'uap-unidentified-art-phenomenon',
     badge: "with Hackatao · Sotheby's",
+  },
+  '0xb932a70a57673d89f4acffbe830e8ed7f75fb9e0:12380': {
+    related: { id: 'rare-lost-vitalik-2018', label: 'The burned 2018 original on R.A.R.E. Art Labs' },
   },
   '0xb932a70a57673d89f4acffbe830e8ed7f75fb9e0:30778': {
     badge: 'Official collaboration with Snoop Dogg',

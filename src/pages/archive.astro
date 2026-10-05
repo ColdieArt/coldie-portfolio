@@ -20,8 +20,7 @@ import {
   type Release,
 } from '../data/releases';
 
-const desc =
-  'A searchable timeline of every Coldie digital release since 2018 — 1/1s, editions, generative collections and wearables, with descriptions, last sales, current prices and marketplace links.';
+const desc = `Coldie has minted crypto art on Ethereum since May 2018, starting with the first stereoscopic artwork on a blockchain. Explore all ${sortedReleases.length} releases, their collectors and sales.`;
 
 const datasetLd = {
   '@context': 'https://schema.org',
@@ -68,7 +67,7 @@ const market = marketJson.releases as Record<string, Market>;
 const marketAsOf = formatReleaseDate(marketJson.fetchedAt);
 const captions = new Map(works.map((w) => [w.slug, w.caption]));
 const description = (r: Release) =>
-  market[r.id]?.description ?? (r.slug ? captions.get(r.slug) : undefined) ?? null;
+  r.description ?? market[r.id]?.description ?? (r.slug ? captions.get(r.slug) : undefined) ?? null;
 
 const fmtEth = (p: Price) =>
   `${p.amount.toLocaleString('en-US', { maximumFractionDigits: p.amount < 1 ? 4 : 2 })} ${p.symbol}`;
@@ -82,6 +81,12 @@ const ownerLabel = (o: Owner) => o.ens ?? (o.name && !o.name.startsWith('0x') ? 
 const collectorCount = new Set(
   Object.values(market).flatMap((m) => (m.owner && !m.owner.artist ? [m.owner.address] : []))
 ).size;
+// "On the record" facts, computed from the data so they stay accurate
+const BONHAMS_LOT =
+  'https://www.bonhams.com/auction/27285/lot/1/coldie-b-1982-proof-of-work-genesis-conceived-2018-minted-june-16-2021/';
+const sales = sortedReleases.flatMap((r) => (market[r.id]?.lastSale ? [{ r, amount: market[r.id].lastSale!.amount }] : []));
+const bigSales = sales.filter((x) => x.amount >= 10).length;
+const topSale = sales.sort((a, b) => b.amount - a.amount)[0];
 const forSaleCount = sortedReleases.filter((r) => market[r.id]?.listing).length;
 
 /** Marketplace name for a listing URL. */
@@ -89,7 +94,21 @@ const marketName = (url: string) =>
   url.includes('superrare.com') ? 'SuperRare'
   : url.includes('opensea.io') ? 'OpenSea'
   : url.includes('deca.art') ? 'Deca'
+  : url.includes('rareart.io') ? 'R.A.R.E. Art Labs'
   : new URL(url).hostname.replace(/^www\./, '');
+
+/** Descriptive alt text: what the work is, by whom, when — read by image search and AI. */
+const KIND_PHRASE: Record<string, string> = {
+  '1/1': '1/1 digital artwork',
+  edition: 'digital edition',
+  generative: 'generative art collection',
+  wearable: 'digital wearable',
+  programmable: 'programmable artwork',
+  tbc: 'digital artwork',
+};
+const altText = (r: Release) =>
+  `${r.title} — ${r.burned ? 'burned ' : ''}${KIND_PHRASE[r.kind] ?? 'digital artwork'} by Coldie` +
+  `${r.date ? ` (${r.date.slice(0, 4)})` : ''}${r.series && r.series !== 'Landmark' ? `, ${r.series} series` : ''}`;
 
 // One record per work for the corridor, grid and detail panel (description is read
 // from the list view's DOM instead of being duplicated here).
@@ -101,6 +120,7 @@ const archiveItems = sortedReleases.map((r) => {
   return {
     id: r.id,
     title: r.title,
+    alt: altText(r),
     date: formatReleaseDate(r.date),
     year: String(releaseYear(r) ?? 'tbc'),
     img: thumbs[r.id] ?? null,
@@ -114,12 +134,50 @@ const archiveItems = sortedReleases.map((r) => {
     url: r.url ?? null,
     market: r.url ? marketName(r.url) : null,
     slug: r.slug ?? null,
-    owner: o ? { label: ownerLabel(o), href: ownerUrl(r, o), artist: o.artist, addr: shortAddr(o.address) } : null,
+    owner: o ? { label: ownerLabel(o), href: ownerUrl(r, o), artist: o.artist, addr: shortAddr(o.address), address: o.address } : null,
     sale: mk?.lastSale ? `${fmtEth(mk.lastSale)}${mk.lastSale.date ? ` · ${formatReleaseDate(mk.lastSale.date)}` : ''}` : null,
     listing: mk?.listing ? { label: LISTING_LABEL[mk.listing.kind], price: fmtEth(mk.listing), usd: fmtUsd(mk.listing.usd) } : null,
     price: mk?.listing?.amount ?? null,
+    burned: !!r.burned,
+    related: r.related ?? null,
   };
 });
+
+// ── Structured data: every work as a VisualArtwork by Coldie ──
+const absolute = (p: string) => new URL(p, site.url).href;
+const clip = (t: string, n = 300) => (t.length > n ? `${t.slice(0, n).replace(/\s+\S*$/, '')}…` : t);
+const itemListLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Coldie — complete archive of digital releases, 2018 to today',
+  description: desc,
+  url: `${site.url}/archive`,
+  itemListOrder: 'https://schema.org/ItemListOrderAscending',
+  numberOfItems: sortedReleases.length,
+  itemListElement: sortedReleases.map((r, i) => {
+    const mk = market[r.id];
+    const d = description(r);
+    const art: Record<string, unknown> = {
+      '@type': 'VisualArtwork',
+      '@id': `${site.url}/archive#w-${r.id}`,
+      name: r.title,
+      creator: { '@id': `${site.url}/#person` },
+      artform: 'Digital art (NFT)',
+      artMedium: `${KIND_PHRASE[r.kind] ?? 'digital artwork'} on ${r.chain}`,
+      url: `${site.url}/archive#w-${r.id}`,
+    };
+    if (r.date) art.dateCreated = r.date;
+    if (thumbs[r.id]) art.image = absolute(thumbs[r.id]);
+    if (r.supply) art.artEdition = r.supply;
+    if (r.series && r.series !== 'Landmark') art.isPartOf = { '@type': 'CreativeWorkSeries', name: r.series, creator: { '@id': `${site.url}/#person` } };
+    if (d) art.description = clip(d);
+    if (r.url) art.sameAs = r.url;
+    if (r.slug) art.mainEntityOfPage = `${site.url}/work/${r.slug}`;
+    if (mk?.listing && r.url)
+      art.offers = { '@type': 'Offer', price: mk.listing.amount, priceCurrency: 'ETH', availability: 'https://schema.org/InStock', url: r.url };
+    return { '@type': 'ListItem', position: i + 1, item: art };
+  }),
+};
 
 const searchText = (r: Release) =>
   [
@@ -134,10 +192,10 @@ const searchText = (r: Release) =>
     .toLowerCase();
 ---
 <BaseLayout
-  title="Archive"
+  title="Crypto Art Pioneer Since 2018 — Complete NFT Archive"
   description={desc}
   path="/archive"
-  jsonld={[personLd(), datasetLd, breadcrumbLd([
+  jsonld={[personLd(), datasetLd, itemListLd, breadcrumbLd([
     { name: 'Home', path: '/' },
     { name: 'Archive', path: '/archive' },
   ])]}
@@ -155,12 +213,15 @@ const searchText = (r: Release) =>
     <script type="application/json" id="arc-data" set:html={JSON.stringify(archiveItems)} />
     <div class="wrap">
       <nav class="small muted rel__crumb" aria-label="Breadcrumb"><a href="/">Home</a> · <span>Archive</span></nav>
+      <div class="rel__top">
       <header class="rel__head">
         <p class="eyebrow">Digital releases · {FIRST_YEAR}–{thisYear}</p>
         <RansomHeading as="h1" text="Archive" />
         <p class="lede">
-          Every on-chain release, in order — from the first stereoscopic artwork minted on a blockchain
-          in 2018 to today. Search by title, series, platform, collector, contract or token ID.
+          Coldie has minted art on the blockchain since May 7, 2018, when
+          <a href="/work/the-day-weve-all-been-waiting-for"><em>The Day We’ve All Been Waiting For</em></a> became the first
+          stereoscopic artwork recorded on-chain. This is the complete record: every release from R.A.R.E. Art Labs and
+          early SuperRare to today, with its collectors and sales.
         </p>
       </header>
 
@@ -172,6 +233,7 @@ const searchText = (r: Release) =>
         <div><dt>Platforms</dt><dd>{releasePlatforms.length}</dd></div>
         <div><dt>1/1 collectors</dt><dd>{collectorCount}</dd></div>
       </dl>
+      </div>
 
 
 
@@ -225,6 +287,11 @@ const searchText = (r: Release) =>
               <small class="rel__hint" id="rel-sort-hint">Check “For sale only” to sort by price.</small>
             </label>
           </div>
+          <p class="rel__colltag" id="rel-collector" hidden>
+            <span>Collector</span>
+            <strong data-label></strong>
+            <button type="button" data-clear aria-label="Clear collector filter">×</button>
+          </p>
           <p class="rel__count small muted" aria-live="polite">
             <span id="rel-shown">{sortedReleases.length}</span> of {sortedReleases.length} releases
             <button type="button" id="rel-reset" class="rel__reset" hidden>Clear filters</button>
@@ -243,6 +310,44 @@ const searchText = (r: Release) =>
 
           <ArchiveCorridor />
 
+          <section class="arc-record" aria-labelledby="arc-record-title">
+            <h2 id="arc-record-title">A crypto art pioneer, on the record</h2>
+            <ul>
+              <li>
+                <strong>First on-chain, May 7, 2018.</strong>
+                <a href="/work/the-day-weve-all-been-waiting-for"><em>The Day We’ve All Been Waiting For</em></a> is the first
+                stereoscopic artwork recorded on a blockchain. One of its two editions is held by Coinbase and was on display in
+                its lobby from 2018 to 2020.
+              </li>
+              <li>
+                <strong>On SuperRare since July 24, 2018.</strong>
+                <a href="#w-sr-41a322-501" class="rel__related-plain"><em>Decentral Eyes — Vitalik Buterin — Variant 01</em></a> is
+                token #501 on SuperRare’s original contract.
+              </li>
+              <li>
+                <strong>Pioneers at auction.</strong>
+                <a href="/work/proof-of-work-genesis"><em>Proof of Work — Genesis</em></a>, first tokenized in 2018, was
+                <a href={BONHAMS_LOT} target="_blank" rel="noopener">Lot 1</a> of the Bonhams × SuperRare sale
+                <em>CryptOGs: The Pioneers of NFT Art</em> (2021). Works have also sold at
+                <a href="/work/3d-light-painting-03">Sotheby’s</a> (2022) and
+                <a href="/work/warren-buffett-filthy-fiat">Christie’s</a> (2024).
+              </li>
+              <li>
+                <strong>Collected.</strong> {collectorCount} collectors hold Coldie’s 1/1s, including the 6529 Fund and
+                whalevault.eth. {bigSales} works last sold for 10 ETH or more, the highest at
+                {topSale ? fmtEth(market[topSale.r.id].lastSale!) : ''} for
+                <a href={`#w-${topSale?.r.id}`} class="rel__related-plain"><em>{topSale?.r.title}</em></a>{
+                  /snoop dogg/i.test(topSale?.r.badge ?? '') ? ', an official collaboration with Snoop Dogg' : ''
+                }.
+              </li>
+              <li>
+                <strong>{sortedReleases.length} releases, {FIRST_YEAR} to today,</strong> across R.A.R.E. Art Labs, SuperRare,
+                Nifty Gateway, ASYNC, MakersPlace, The Memes by 6529 and OpenSea.
+              </li>
+            </ul>
+          </section>
+
+
           <div class="arc-list" id="rel-list">
           <ol class="rel__timeline" id="rel-timeline">
             {groups.map((g) => (
@@ -256,6 +361,7 @@ const searchText = (r: Release) =>
                   {g.items.map((r) => (
                     <li
                       class="rel__entry"
+                      id={`w-${r.id}`}
                       data-entry
                       data-id={r.id}
                       data-search={searchText(r)}
@@ -264,6 +370,7 @@ const searchText = (r: Release) =>
                       data-platform={r.platform}
                       data-chain={r.chain}
                       data-forsale={market[r.id]?.listing ? '1' : undefined}
+                      data-owner={market[r.id]?.owner?.address}
                       data-price={market[r.id]?.listing?.amount}
                       data-year={g.key}
                     >
@@ -272,7 +379,8 @@ const searchText = (r: Release) =>
                         {thumbs[r.id]
                           ? (
                             <a class="rel__thumb" href={r.url ?? (r.slug && `/work/${r.slug}`)} target={r.url ? '_blank' : undefined} rel="noopener" tabindex="-1" aria-hidden="true">
-                              <img src={thumbs[r.id]} alt="" loading="lazy" decoding="async" width="112" height="112" />
+                              <img src={thumbs[r.id]} alt={altText(r)} loading="lazy" decoding="async" width="112" height="112" />
+                              {r.burned && <span class="burn-stamp">Burned</span>}
                             </a>
                           )
                           : <span class="rel__thumb rel__thumb--empty" aria-hidden="true">No image</span>}
@@ -294,19 +402,21 @@ const searchText = (r: Release) =>
                         {market[r.id]?.owner && (
                       <p class="rel__collector">
                         <span class="rel__collectorlabel">{market[r.id].owner!.artist ? 'Held by the artist' : 'Collector'}</span>
-                        <a href={ownerUrl(r, market[r.id].owner!)} target="_blank" rel="noopener" title={market[r.id].owner!.address}>
+                        <button type="button" class="rel__collectorbtn" data-collector={market[r.id].owner!.address} data-collector-label={ownerLabel(market[r.id].owner!)} title={`Show everything held by ${ownerLabel(market[r.id].owner!)}`}>
                           {ownerLabel(market[r.id].owner!)}
-                        </a>
+                        </button>
+                        <a class="rel__collectorext" href={ownerUrl(r, market[r.id].owner!)} target="_blank" rel="noopener" aria-label={`${ownerLabel(market[r.id].owner!)} profile`} title={market[r.id].owner!.address}>↗</a>
                         {ownerLabel(market[r.id].owner!) !== shortAddr(market[r.id].owner!.address) && (
                           <span class="rel__addr">{shortAddr(market[r.id].owner!.address)}</span>
                         )}
                       </p>
                     )}
                     {r.notes && <p class="rel__notes small muted">{r.notes}</p>}
-                    {(r.url || r.links?.length) && (
+                    {(r.url || r.links?.length || r.related) && (
                       <p class="rel__links small">
                         {r.url && <a class="rel__market" href={r.url} target="_blank" rel="noopener">View on {marketName(r.url)} ↗</a>}
                         {r.links?.map((l) => <a href={l.url} target="_blank" rel="noopener">{l.label} ↗</a>)}
+                        {r.related && <a class="rel__related" href={`#w-${r.related.id}`}>See {r.related.label} →</a>}
                       </p>
                     )}
                     {r.variants?.length && (
@@ -392,6 +502,16 @@ const searchText = (r: Release) =>
   /* :global — the corridor lives in its own component, outside this page's style scope */
   .rel:not([data-view='corridor']) :global([data-view-pane='corridor']) { display: none; }
   .arc-list { scroll-margin-top: 80px; }
+
+  /* "On the record": the facts behind the pioneer claim, between corridor and list */
+  .arc-record { margin: clamp(3rem, 7vw, 5rem) 0 0; padding: clamp(1.75rem, 4vw, 2.75rem) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .arc-record h2 { font-family: var(--display); font-size: clamp(1.6rem, 3.2vw, 2.4rem); letter-spacing: 0.01em; margin: 0 0 1.4rem; color: var(--ink); text-transform: uppercase; }
+  .arc-record ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem 2.25rem; }
+  .arc-record li { font-family: var(--serif); font-size: 1rem; line-height: 1.6; color: var(--ink-soft); }
+  .arc-record strong { display: block; font-family: var(--sans); font-size: 0.66rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink); margin-bottom: 0.35rem; }
+  .arc-record a { color: var(--ink); text-decoration: none; border-bottom: 1px dotted var(--ink-mute); }
+  .arc-record a:hover { border-bottom-color: var(--ink); }
+  .rel__head .lede a { color: inherit; text-decoration: none; border-bottom: 1px dotted currentColor; }
   /* year jump list for the detailed list — fixed to the right edge while the list is in view */
   .arc-listyears {
     position: fixed; right: 1rem; top: 50%; transform: translateY(-50%); z-index: 40;
@@ -414,7 +534,7 @@ const searchText = (r: Release) =>
 
   /* the corridor redraws constantly; scroll anchoring would fight it and jump the page */
   :global(html:has(.rel[data-view='corridor'])) { overflow-anchor: none; }
-  .rel[data-view='corridor'] .arc-list { margin-top: clamp(3rem, 7vw, 5rem); }
+  .rel[data-view='corridor'] .arc-list { margin-top: clamp(2.5rem, 6vw, 4rem); }
 
   /* The archive sits in a dark void so the art is the only light. */
   .rel {
@@ -427,13 +547,18 @@ const searchText = (r: Release) =>
 
   .rel__crumb { margin-bottom: 2rem; }
   .rel__crumb a { text-decoration: none; }
-  .rel__head { max-width: 60ch; margin-bottom: clamp(1.75rem, 4vw, 2.5rem); }
+  /* Title + intro on the left, stats in the space to the right */
+  .rel__top {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: end; margin-bottom: clamp(1.75rem, 4vw, 2.5rem);
+  }
+  .rel__head { max-width: 60ch; }
   .rel__head h1 { margin: 0.2em 0; }
 
   /* Stats */
   .rel__stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 1px; margin: 0 0 2rem; background: var(--line-soft); border: 1px solid var(--line-soft);
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px; margin: 0; background: var(--line-soft); border: 1px solid var(--line-soft);
   }
   .rel__stats div { background: var(--bg); padding: 0.9rem 1rem; }
   .rel__stats dt { font-family: var(--type); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); }
@@ -462,7 +587,9 @@ const searchText = (r: Release) =>
   /* Layout: sticky filter sidebar + timeline */
   .rel__layout { display: grid; grid-template-columns: 154px minmax(0, 1fr); gap: 0 clamp(1.25rem, 2.5vw, 2.25rem); align-items: start; }
   .rel__side {
-    position: sticky; top: 84px; max-height: calc(100vh - 100px); overflow-y: auto;
+    /* pinned below the nav logo, which hangs ~110px into the page and would otherwise
+       sit over the search box and catch its clicks */
+    position: sticky; top: 132px; max-height: calc(100vh - 148px); overflow-y: auto;
     padding: 0.25rem 0.25rem 1rem 0; scrollbar-width: none;
   }
   .rel__main { min-width: 0; }
@@ -570,11 +697,26 @@ const searchText = (r: Release) =>
   .rel__price { color: var(--cyan); }
   .rel__collector { margin: 0.55rem 0 0; font-size: 0.86rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.15rem 0.5rem; }
   .rel__collectorlabel { font-family: var(--type); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); }
-  .rel__collector a { color: var(--gold); text-decoration: none; overflow-wrap: anywhere; }
-  .rel__collector a:hover { color: var(--red); }
+  .rel__collectorbtn {
+    padding: 0; background: none; border: 0; cursor: pointer; font: inherit; text-align: left;
+    color: var(--gold); overflow-wrap: anywhere; border-bottom: 1px dotted currentColor;
+  }
+  .rel__collectorbtn:hover { color: var(--red); }
+  .rel__collectorext { color: var(--ink-mute); text-decoration: none; font-size: 0.8rem; }
+  .rel__collectorext:hover { color: var(--red); }
+  .rel__colltag {
+    margin: 1.4rem 0 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.45rem;
+    font-family: var(--sans); font-size: 0.72rem;
+  }
+  .rel__colltag[hidden] { display: none; }
+  .rel__colltag span { font-size: 0.58rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-mute); width: 100%; }
+  .rel__colltag strong { font-weight: 500; color: var(--ink); overflow-wrap: anywhere; }
+  .rel__colltag button { padding: 0 0.2rem; background: none; border: 0; cursor: pointer; color: var(--ink-mute); font-size: 1rem; line-height: 1; }
+  .rel__colltag button:hover { color: var(--ink); }
   .rel__addr { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.72rem; color: var(--ink-mute); }
   .rel__body { min-width: 0; }
   .rel__thumb {
+    position: relative; container-type: inline-size;
     display: block; width: 112px; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius);
     background: var(--bg-raise); border: 1px solid var(--line-soft);
   }
@@ -604,6 +746,9 @@ const searchText = (r: Release) =>
   .rel__links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; margin: 0.55rem 0 0; }
   .rel__links a { text-decoration: none; color: var(--ink-soft); }
   .rel__links a:hover { color: var(--red); }
+  .rel__related { font-family: var(--sans); font-size: 0.78rem; color: var(--ink) !important; border-bottom: 1px dotted var(--ink-mute); }
+  .rel__entry:target .rel__card, .rel__entry[data-flash] .rel__card { animation: rel-flash 2s ease-out; }
+  @keyframes rel-flash { from { background: rgb(236 233 226 / 0.12); } to { background: transparent; } }
   .rel__market { font-family: var(--type); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; }
 
   .rel__variants { margin-top: 0.6rem; font-size: 0.88rem; }
@@ -627,6 +772,7 @@ const searchText = (r: Release) =>
   }
 
   @media (max-width: 900px) {
+    .rel__top { grid-template-columns: 1fr; align-items: start; }
     .rel__layout { grid-template-columns: 1fr; }
     .rel__side { position: static; max-height: none; overflow: visible; padding: 0 0 1.25rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--line-soft); }
     .rel__controls { flex-direction: row; flex-wrap: wrap; align-items: end; }
@@ -636,6 +782,7 @@ const searchText = (r: Release) =>
   }
 
   @media (max-width: 640px) {
+    .rel__stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .rel__year { grid-template-columns: 1fr; }
     .rel__yearlabel { position: static; margin-bottom: 0.9rem; }
     .rel__yearcount { display: inline; margin-left: 0.6em; }
@@ -668,10 +815,40 @@ const searchText = (r: Release) =>
   const entries = Array.from(timeline.querySelectorAll<HTMLElement>('[data-entry]'));
   const home = new Map(entries.map((e) => [e, e.parentElement!]));
 
+  // ── Collector filter: click a collector's name to see everything they hold ──
+  let collector = '';
+  const collTag = $('rel-collector');
+  function setCollector(address: string, label: string, from: 'list' | 'panel' | 'link' = 'list') {
+    collector = address.toLowerCase();
+    collTag.querySelector('[data-label]')!.textContent = label;
+    collTag.hidden = !collector;
+    const url = new URL(location.href);
+    if (collector) url.searchParams.set('collector', collector);
+    else url.searchParams.delete('collector');
+    history.replaceState(null, '', url);
+    apply();
+    // land at the start of the results: the corridor from the panel, the list from the list
+    if (from === 'list') listTop();
+    else if (from === 'panel') document.getElementById('arc-corridor')?.scrollIntoView({ behavior: 'instant' as ScrollBehavior });
+  }
+  const listTop = () => {
+    const l = document.getElementById('rel-list');
+    if (l) scrollTo({ top: l.getBoundingClientRect().top + scrollY - 80, behavior: 'instant' as ScrollBehavior });
+  };
+  document.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-collector]');
+    if (!btn) return;
+    e.preventDefault();
+    const fromPanel = !!btn.closest('dialog');
+    (btn.closest('dialog') as HTMLDialogElement | null)?.close();
+    setCollector(btn.dataset.collector!, btn.dataset.collectorLabel ?? btn.textContent!.trim(), fromPanel ? 'panel' : 'list');
+  });
+  collTag.querySelector('[data-clear]')!.addEventListener('click', () => setCollector('', ''));
+
   function apply() {
     const terms = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
     const active = selects.filter(([, el]) => el.value);
-    const filtering = terms.length > 0 || active.length > 0 || forSale.checked;
+    const filtering = terms.length > 0 || active.length > 0 || forSale.checked || !!collector;
     const perYear = new Map<string, number>();
     let total = 0;
 
@@ -680,7 +857,8 @@ const searchText = (r: Release) =>
       const ok =
         terms.every((t) => d.search!.includes(t)) &&
         active.every(([k, el]) => d[k] === el.value) &&
-        (!forSale.checked || d.forsale === '1');
+        (!forSale.checked || d.forsale === '1') &&
+        (!collector || d.owner === collector);
       entry.hidden = !ok;
       if (ok) {
         total++;
@@ -757,12 +935,22 @@ const searchText = (r: Release) =>
     selects.forEach(([, el]) => (el.value = ''));
     forSale.checked = false;
     sort.value = 'oldest';
+    setCollector('', '');
     update();
   });
 
-  // Deep links: /archive?q=Snowden pre-fills the search (used by series and subject pages).
-  const initial = new URLSearchParams(location.search).get('q');
+  // Deep links: /archive?q=Snowden pre-fills the search (used by series and subject pages);
+  // /archive?collector=0x… shows one collector's works.
+  const params = new URLSearchParams(location.search);
+  const initial = params.get('q');
   if (initial) q.value = initial;
+  const initialCollector = params.get('collector')?.toLowerCase();
+  if (initialCollector) {
+    const btn = document.querySelector<HTMLElement>(`[data-collector="${CSS.escape(initialCollector)}"]`);
+    collector = initialCollector;
+    collTag.querySelector('[data-label]')!.textContent = btn?.dataset.collectorLabel ?? `${initialCollector.slice(0, 6)}…`;
+    collTag.hidden = false;
+  }
 
   // Year bar: in the corridor, jump straight to that year; otherwise anchor into the list.
   const section = document.querySelector<HTMLElement>('.rel')!;
@@ -771,6 +959,19 @@ const searchText = (r: Release) =>
     if (!bar || section.dataset.view !== 'corridor') return;
     e.preventDefault();
     document.dispatchEvent(new CustomEvent('archive:jump-year', { detail: bar.dataset.rail! }));
+  });
+
+  // "See …" links between related works jump straight to that entry in the list.
+  document.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a.rel__related');
+    if (!a) return;
+    const el = document.querySelector<HTMLElement>(a.getAttribute('href')!);
+    if (!el) return;
+    e.preventDefault();
+    scrollTo({ top: el.getBoundingClientRect().top + scrollY - 120, behavior: 'instant' as ScrollBehavior });
+    el.removeAttribute('data-flash');
+    void el.offsetWidth;
+    el.setAttribute('data-flash', '');
   });
 
   // ── Year jump list for the detailed list ─────────────────

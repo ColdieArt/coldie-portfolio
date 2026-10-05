@@ -92,6 +92,7 @@ export const works: Work[] = [
     provenance: [
       { label: 'Minted May 7, 2018 · R.A.R.E. Art Labs · Ethereum' },
       { label: 'First stereoscopic artwork recorded on a blockchain' },
+      { label: 'Edition of 2 · one held by Coinbase, on display in its lobby 2018–2020' },
     ],
     onchain: {
       minted: 'May 7, 2018',
@@ -118,7 +119,7 @@ export const works: Work[] = [
     interaction: 'anaglyph',
     featured: false,
     ownership: 'edition',
-    edition: '1/1',
+    edition: 'Edition of 2',
     collectionRow: 'landmark',
     badge: 'Historic first · 2018',
     // TODO: insert Coldie's Transient Labs (artist contract) collect URL for this work

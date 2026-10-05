@@ -64,6 +64,10 @@ async function fromItem(item) {
 }
 
 async function mediaFor(r) {
+  if (r.animation) {
+    const type = await animatedType(r.animation);
+    return type ? { src: r.animation, type } : null;
+  }
   const sr = r.contract && r.tokenId && srToken.get(`${r.contract.toLowerCase()}:${r.tokenId}`);
   if (sr) {
     if (sr.video) return { src: sr.video, type: 'video' };
