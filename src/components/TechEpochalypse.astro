@@ -4,6 +4,7 @@
 // The right half of the top block embeds the live Elon Musk kinetic 3D artwork so
 // visitors can try it inline. It uses a click-to-load facade (like the YouTube
 // embeds) so the heavy WebGL experience only loads when someone opts in.
+import RansomHeading from './RansomHeading.astro';
 const SITE = 'https://www.knowyouroverlord.art/';
 const ELON_ART = 'https://www.knowyouroverlord.art/artworks/elon-musk';
 const overlords = [
@@ -19,7 +20,7 @@ const overlords = [
     <div class="te__top">
       <div class="te__intro">
         <p class="eyebrow">AGI has arrived</p>
-        <h2 id="te-h">Tech Epochalypse</h2>
+        <RansomHeading as="h2" id="te-h" text="Tech Epochalypse" />
         <p class="lede te__lede">
           Interactive kinetic 3D portraits of the figures shaping the age of AI — five overlords, one
           network. Tear a living portrait apart, push the pieces into depth, and rebuild it in your own

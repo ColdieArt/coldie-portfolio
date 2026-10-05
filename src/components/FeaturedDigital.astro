@@ -1,6 +1,7 @@
 ---
 // Featured Digital Works — on-chain editions, each linking to its OpenSea page
 // where the full animation lives. Posters are self-hosted, optimized stills.
+import RansomHeading from './RansomHeading.astro';
 const works = [
   {
     title: 'Michael Saylor',
@@ -32,7 +33,7 @@ const works = [
   <div class="wrap">
     <header class="fd__head">
       <p class="eyebrow">Collect · on-chain</p>
-      <h2 id="fd-h">Featured digital works</h2>
+      <RansomHeading as="h2" id="fd-h" text="Featured digital works" />
       <p class="lede fd__lede">
         Living, dimensional editions — part of an ongoing body of on-chain art. Open any piece on OpenSea to
         see it move.

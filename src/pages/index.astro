@@ -8,6 +8,7 @@ import Story from '../components/Story.astro';
 import Documentary from '../components/Documentary.astro';
 import Pioneer from '../components/Pioneer.astro';
 import FeaturedDigital from '../components/FeaturedDigital.astro';
+import RansomHeading from '../components/RansomHeading.astro';
 import FilthyFiat from '../components/FilthyFiat.astro';
 import Acquire from '../components/Acquire.astro';
 import { site } from '../data/site';
@@ -38,7 +39,7 @@ import { personLd, websiteLd } from '../data/jsonld';
   <div id="work">
     <div class="wrap work__intro">
       <p class="eyebrow">The Thesis</p>
-      <h2 class="work__h">Touch the art.<br />Feel something.</h2>
+      <RansomHeading as="h2" class="work__h" lines={["Touch the art.", "Feel something."]} />
       <p class="lede work__lede">
         For years, I would bring my son to art museums and galleries. After years of continually saying
         “DON’T TOUCH THE ART,” this phrase stopped me in my tracks while in a gallery. Why am I keeping my

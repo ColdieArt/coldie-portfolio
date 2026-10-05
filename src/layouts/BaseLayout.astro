@@ -3,7 +3,6 @@ import '../styles/global.css';
 import { site } from '../data/site';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import InquireDock from '../components/InquireDock.astro';
 
 export interface Props {
   title: string;
@@ -15,8 +14,8 @@ export interface Props {
   ogType?: 'website' | 'article';
   /** JSON-LD objects to embed (already schema.org-shaped). */
   jsonld?: Record<string, unknown>[];
-  /** Hide the floating Inquire dock (e.g. on the inquire section itself). */
-  hideDock?: boolean;
+  /** Keep a draft page out of search results (also excluded from the sitemap in astro.config). */
+  noindex?: boolean;
 }
 
 const {
@@ -26,7 +25,7 @@ const {
   ogImage = '/og/default.svg',
   ogType = 'website',
   jsonld = [],
-  hideDock = false,
+  noindex = false,
 } = Astro.props;
 
 const canonical = new URL(path, site.url).href;
@@ -40,6 +39,7 @@ const fullTitle = title === site.name ? `${site.name} — ${site.tagline}` : `${
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
 
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
@@ -63,12 +63,13 @@ const fullTitle = title === site.name ? `${site.name} — ${site.tagline}` : `${
     <meta name="theme-color" content="#141414" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
-    {/* Punk display (Anton) + DIY typewriter (Special Elite). swap-display, hard fallbacks in CSS. */}
+    {/* Punk display (Anton) + DIY typewriter (Special Elite), plus a ransom-note
+        mix of serif/sans/slab faces for the collage headlines. swap-display. */}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Anton&family=Special+Elite&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Oswald:wght@500;700&family=DM+Serif+Display&family=Playfair+Display:wght@900&family=Rye&family=Special+Elite&display=swap"
     />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
@@ -83,6 +84,5 @@ const fullTitle = title === site.name ? `${site.name} — ${site.tagline}` : `${
       <slot />
     </main>
     <Footer />
-    {!hideDock && <InquireDock />}
   </body>
 </html>
