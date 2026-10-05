@@ -32,13 +32,12 @@ const seriesGrid = filthyFiatWorks.filter((w) => w.slug !== 'warren-buffett-filt
     <div class="ff__scrim" aria-hidden="true"></div>
     <img
       class="ff__bill"
-      src="/works/filthy-fiat/bill-front.webp"
-      alt="A buried, decayed US dollar bill — Filthy Fiat"
-      width="459"
-      height="1040"
+      src="/works/filthy-fiat/anatomy.webp"
+      alt="The anatomy of a Filthy Fiat bill — a mold-ruined dollar labeled with its extraction artifacts"
+      width="1300"
+      height="528"
       loading="lazy"
       decoding="async"
-      aria-hidden="true"
     />
     <div class="wrap ff__backstory-inner">
       <header class="ff__head">
@@ -124,17 +123,16 @@ const seriesGrid = filthyFiatWorks.filter((w) => w.slug !== 'warren-buffett-filt
   .ff__bill {
     position: absolute;
     z-index: 1;
-    right: clamp(1.5rem, 7vw, 7rem);
+    right: clamp(0.5rem, 2vw, 2.5rem);
     top: 50%;
-    height: 86%;
-    max-height: 560px;
-    width: auto;
-    transform: translateY(-50%) rotate(3deg);
-    filter: drop-shadow(0 18px 42px rgba(0, 0, 0, 0.6));
+    width: clamp(320px, 46vw, 640px);
+    height: auto;
+    transform: translateY(-50%);
+    filter: drop-shadow(0 14px 34px rgba(0, 0, 0, 0.5));
     pointer-events: none;
     background: transparent;
   }
-  @media (max-width: 820px) { .ff__bill { display: none; } }
+  @media (max-width: 900px) { .ff__bill { display: none; } }
 
   .ff__backstory-inner { width: 100%; }
   .ff__head { max-width: 56ch; }
