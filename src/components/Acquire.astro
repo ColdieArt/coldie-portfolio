@@ -1,5 +1,6 @@
 ---
 import { site } from '../data/site';
+import RansomHeading from './RansomHeading.astro';
 export interface Props { preselect?: string; }
 const { preselect } = Astro.props;
 const subject = preselect ? `Inquiry: ${preselect}` : 'coldie3d.com — inquiry';
@@ -9,7 +10,7 @@ const mailto = `mailto:${site.inquiryEmail}?subject=${encodeURIComponent(subject
   <div class="wrap">
     <header class="acq__head">
       <p class="eyebrow">Acquire / inquire</p>
-      <h2 id="acq-h">Two ways to own the work.</h2>
+      <RansomHeading as="h2" id="acq-h" text="Own the work" />
       <p class="lede acq__lede">
         Blockchain here is a provenance feature — verifiable authenticity and permanent, public record —
         not a gimmick.
