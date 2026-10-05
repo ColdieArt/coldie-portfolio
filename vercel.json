@@ -1,7 +1,20 @@
 {
   "trailingSlash": false,
   "redirects": [
-    { "source": "/releases", "destination": "/archive", "permanent": true },
-    { "source": "/work/decentral-eyes-portrait", "destination": "/archive", "permanent": true }
+    {
+      "source": "/Filthy-Fiat",
+      "destination": "/filthy-fiat",
+      "permanent": true
+    },
+    {
+      "source": "/releases",
+      "destination": "/archive",
+      "permanent": true
+    },
+    {
+      "source": "/work/decentral-eyes-portrait",
+      "destination": "/archive",
+      "permanent": true
+    }
   ]
 }
