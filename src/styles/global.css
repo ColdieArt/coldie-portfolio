@@ -7,19 +7,20 @@
    ============================================================ */
 
 :root {
-  /* Palette — neutral dark grey (no blue cast) */
-  --bg: #141414;
-  --bg-raise: #1c1c1c;
-  --bg-flat: #0e0e0e;
-  --ink: #eceae3;
-  --ink-soft: #b3aea2;
-  --ink-mute: #8a8782;
-  --line: #2e2e2e;
-  --line-soft: #1f1f1f;
+  /* Palette — 50% grey concrete field, dark ink, black accents (punk poster) */
+  --bg: #808080;
+  --bg-raise: #8d8d8d;
+  --bg-flat: #6f6f6f;
+  --ink: #141414;
+  --ink-soft: #262626;
+  --ink-mute: #3c3c3c;
+  --line: #565656;
+  --line-soft: #6b6b6b;
 
-  /* Accents: brass = collector luxury; red/cyan = the anaglyph punk energy */
-  --gold: #d8b25a;
-  --accent: #d8b25a; /* brass — refined CTAs */
+  /* Accents: black = the hard mark; red/cyan = the anaglyph punk energy */
+  --gold: #111111;
+  --accent: #111111; /* black — hard CTAs */
+  --on-accent: #f4f2ec; /* light text that sits on solid black accents */
   --red: #e6362a; /* anaglyph red — the aggressive mark */
   --cyan: #45c7d0; /* anaglyph cyan */
   --accent-cyan: #45c7d0;
@@ -171,8 +172,8 @@ img { background: var(--bg-raise); }
 }
 .btn:active { transform: translate(0, 0); box-shadow: 0 0 0 var(--red); }
 
-.btn--solid { background: var(--accent); color: #15110a; border-color: var(--accent); font-weight: 400; }
-.btn--solid:hover { background: var(--gold); box-shadow: 4px 4px 0 var(--red); }
+.btn--solid { background: var(--accent); color: var(--on-accent); border-color: var(--accent); font-weight: 400; }
+.btn--solid:hover { background: #000; box-shadow: 4px 4px 0 var(--red); }
 
 .btn--ghost { border-color: transparent; padding-inline: 0.2em; box-shadow: none; }
 .btn--ghost:hover { color: var(--red); transform: none; box-shadow: none; }

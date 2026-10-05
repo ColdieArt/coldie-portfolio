@@ -78,7 +78,8 @@ function spec() {
   const oy = (rnd() * 0.12 - 0.06).toFixed(3);
   const depth = pick(DEPTHS);
   const z = ((depth - 0.5) * 32).toFixed(1);
-  const fs = (0.86 + rnd() * 0.3).toFixed(3);     // ~30% size variation
+  const fs = (0.78 + rnd() * 0.5).toFixed(3);     // ~60% size variation (0.78–1.28)
+  const ml = (-(0.03 + rnd() * 0.12)).toFixed(3); // overlap previous letter up to ~15%
   const cut = pick(CUTS);
   const px = (0.06 + rnd() * 0.06).toFixed(3);
   const py = (0.0 + rnd() * 0.05).toFixed(3);
@@ -87,7 +88,7 @@ function spec() {
   const style =
     `font-family:${font};--bg:${paper.bg};color:${ink};` +
     `--rot:${rot}deg;--rz:${rot}deg;--rx:${rx}deg;--ry:${ry}deg;` +
-    `--oy:${oy}em;--z:${z}px;--fs:${fs};--cut:${cut};--px2:${px}em;--py2:${py}em;` +
+    `--oy:${oy}em;--z:${z}px;--fs:${fs};--ml:${ml}em;--cut:${cut};--px2:${px}em;--py2:${py}em;` +
     `--htc:${paper.dot};--hts:${hts}px;`;
   return { style, depth, rot, halftone };
 }
@@ -118,7 +119,7 @@ const model = srcLines.map((line) =>
 <style>
   .ransom {
     text-transform: uppercase;
-    line-height: 1.04;
+    line-height: 0.9;
     letter-spacing: 0;
     perspective: 620px;
     font-size: clamp(2.6rem, 6.4vw, 5.4rem);
@@ -133,7 +134,7 @@ const model = srcLines.map((line) =>
     font-size: calc(1em * var(--fs, 1));
     background: var(--bg, #f2f2f0);
     padding: var(--py2, 0.02em) var(--px2, 0.09em);
-    margin: 0.05em 0.014em;
+    margin: 0.02em 0 0.02em var(--ml, -0.06em);
     border-radius: 1px;
     clip-path: var(--cut, none);
     filter: drop-shadow(1px 2px 0 rgba(0, 0, 0, 0.42));
