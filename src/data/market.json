@@ -13,7 +13,7 @@
         "kind": "floor",
         "amount": 0.5,
         "symbol": "ETH",
-        "usd": 1354
+        "usd": 1358
       }
     },
     "gandinsky-3d-1": {
@@ -104,7 +104,7 @@
         "kind": "floor",
         "amount": 2.1,
         "symbol": "ETH",
-        "usd": 5689
+        "usd": 5702
       }
     },
     "trust-your-intuition": {
@@ -119,7 +119,7 @@
         "kind": "floor",
         "amount": 0.1,
         "symbol": "ETH",
-        "usd": 271
+        "usd": 272
       }
     },
     "decentral-eyes-vr-og-collage": {
@@ -162,9 +162,9 @@
       },
       "listing": {
         "kind": "floor",
-        "amount": 0.132247,
+        "amount": 0.132223,
         "symbol": "ETH",
-        "usd": 358
+        "usd": 359
       }
     },
     "filthy-fiat": {
@@ -244,7 +244,7 @@
         "kind": "floor",
         "amount": 0.99,
         "symbol": "ETH",
-        "usd": 2682
+        "usd": 2688
       }
     },
     "chronicles-2019": {
@@ -279,7 +279,7 @@
         "kind": "floor",
         "amount": 0.05884,
         "symbol": "ETH",
-        "usd": 159
+        "usd": 160
       }
     },
     "deyes-assembled": {
@@ -294,7 +294,7 @@
         "kind": "floor",
         "amount": 6,
         "symbol": "ETH",
-        "usd": 16252
+        "usd": 16292
       }
     },
     "talking-heads": {
@@ -307,9 +307,9 @@
       },
       "listing": {
         "kind": "floor",
-        "amount": 0.176498,
+        "amount": 0.172197,
         "symbol": "ETH",
-        "usd": 478
+        "usd": 468
       }
     },
     "uae-first-immersion": {
@@ -334,7 +334,7 @@
         "kind": "floor",
         "amount": 0.0666,
         "symbol": "ETH",
-        "usd": 180
+        "usd": 181
       }
     },
     "async-energetic-body": {
@@ -411,7 +411,7 @@
         "kind": "buy",
         "amount": 0.25,
         "symbol": "ETH",
-        "usd": 677
+        "usd": 679
       }
     },
     "sin-king-ship": {
@@ -436,7 +436,7 @@
         "kind": "floor",
         "amount": 5,
         "symbol": "ETH",
-        "usd": 13547
+        "usd": 13578
       }
     },
     "tech-epochalypse-moments": {
@@ -451,7 +451,7 @@
         "kind": "floor",
         "amount": 0.0999999,
         "symbol": "ETH",
-        "usd": 271
+        "usd": 272
       }
     },
     "not-one-satoshi": {
