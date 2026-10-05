@@ -33,7 +33,7 @@ const works = [
   <div class="wrap">
     <header class="fd__head">
       <p class="eyebrow">Collect · on-chain</p>
-      <RansomHeading as="h2" id="fd-h" text="Featured digital works" />
+      <RansomHeading as="h2" id="fd-h" text="Featured digital works" size="clamp(2.6rem, 11vw, 10rem)" />
       <p class="lede fd__lede">
         Living, dimensional editions — part of an ongoing body of on-chain art. Open any piece on OpenSea to
         see it move.
@@ -61,9 +61,9 @@ const works = [
 
 <style>
   .fd { padding-block: clamp(4rem, 9vw, 8rem); border-top: 1px solid var(--line-soft); }
-  .fd__head { max-width: 60ch; margin-bottom: clamp(2.5rem, 6vw, 4rem); }
+  .fd__head { max-width: none; margin-bottom: clamp(2.5rem, 6vw, 4rem); }
   .fd__head h2 { margin: 0 0 0.4em; }
-  .fd__lede { margin: 0; }
+  .fd__lede { margin: 0; max-width: 52ch; }
 
   .fd__grid {
     list-style: none; margin: 0; padding: 0;
@@ -73,12 +73,12 @@ const works = [
   .fd__card a { text-decoration: none; display: block; color: inherit; }
   .fd__frame {
     display: block; overflow: hidden; border-radius: var(--radius);
-    border: 1px solid var(--line-soft); background: var(--bg-raise);
+    border: 1px solid var(--line-soft); background: #141414;
     box-shadow: 5px 5px 0 color-mix(in srgb, var(--cyan) 20%, transparent);
     transition: box-shadow 0.25s ease;
   }
   .fd__frame img {
-    width: 100%; aspect-ratio: 1; object-fit: cover; display: block;
+    width: 100%; aspect-ratio: 1; object-fit: contain; display: block;
     transition: transform 0.6s cubic-bezier(0.22,0.61,0.36,1);
   }
   .fd__card a:hover .fd__frame { box-shadow: 5px 5px 0 color-mix(in srgb, var(--red) 28%, transparent); }
