@@ -17,7 +17,7 @@ const num = String(index).padStart(2, '0');
 <section class="pillar" aria-labelledby={`pillar-${pillar}`}>
   <div class="wrap">
     <header class="pillar__head">
-      <RansomHeading as="h3" id={`pillar-${pillar}`} text="3D Kinetic magnetic portraits" size="clamp(1.9rem, 4.2vw, 3.4rem)" />
+      <RansomHeading as="h3" id={`pillar-${pillar}`} text="3D Kinetic magnetic portraits" size="clamp(2.6rem, 11vw, 10rem)" />
       {'statement' in meta && meta.statement && <p class="pillar__statement">{meta.statement}</p>}
     </header>
 
@@ -61,7 +61,7 @@ const num = String(index).padStart(2, '0');
 
 <style>
   .pillar { padding-block: clamp(3.5rem, 8vw, 7rem); border-top: 1px solid var(--line-soft); }
-  .pillar__head { max-width: 60ch; margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+  .pillar__head { max-width: none; text-align: center; margin-bottom: clamp(2rem, 5vw, 3.5rem); }
   .pillar__concept {
     font-family: var(--display); text-transform: uppercase;
     font-size: clamp(1.4rem, 3vw, 2.2rem); line-height: 1; letter-spacing: 0.01em;
