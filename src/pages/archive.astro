@@ -21,9 +21,9 @@ const desc =
 const datasetLd = {
   '@context': 'https://schema.org',
   '@type': 'Dataset',
-  name: 'Coldie — digital releases database',
+  name: 'Coldie — digital archive',
   description: desc,
-  url: `${site.url}/releases`,
+  url: `${site.url}/archive`,
   creator: { '@id': `${site.url}/#person` },
   temporalCoverage: `2018/${new Date().getFullYear()}`,
   variableMeasured: ['release date', 'edition size', 'platform', 'chain', 'last sale', 'listing price'],
@@ -99,20 +99,20 @@ const searchText = (r: Release) =>
     .toLowerCase();
 ---
 <BaseLayout
-  title="Digital Releases"
+  title="Archive"
   description={desc}
-  path="/releases"
+  path="/archive"
   jsonld={[personLd(), datasetLd, breadcrumbLd([
     { name: 'Home', path: '/' },
-    { name: 'Releases', path: '/releases' },
+    { name: 'Archive', path: '/archive' },
   ])]}
 >
   <section class="rel">
     <div class="wrap">
-      <nav class="small muted rel__crumb" aria-label="Breadcrumb"><a href="/">Home</a> · <span>Releases</span></nav>
+      <nav class="small muted rel__crumb" aria-label="Breadcrumb"><a href="/">Home</a> · <span>Archive</span></nav>
       <header class="rel__head">
-        <p class="eyebrow">Archive · {FIRST_YEAR}–{thisYear}</p>
-        <h1>Digital Releases</h1>
+        <p class="eyebrow">Digital releases · {FIRST_YEAR}–{thisYear}</p>
+        <h1>Archive</h1>
         <p class="lede">
           Every on-chain release, in order — from the first stereoscopic artwork minted on a blockchain
           in 2018 to today. Search by title, series, platform, collector, contract or token ID.
@@ -650,7 +650,7 @@ const searchText = (r: Release) =>
     update();
   });
 
-  // Deep links: /releases?q=Snowden pre-fills the search (used by series and subject pages).
+  // Deep links: /archive?q=Snowden pre-fills the search (used by series and subject pages).
   const initial = new URLSearchParams(location.search).get('q');
   if (initial) q.value = initial;
 

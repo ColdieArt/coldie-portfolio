@@ -1,4 +1,4 @@
-# Weekly refresh of /releases market data: last sales, current listings, and 1/1
+# Weekly refresh of /archive market data: last sales, current listings, and 1/1
 # collectors (with ENS). Commits src/data/market.json to main; Vercel redeploys on push.
 # Run it by hand from the Actions tab ("Run workflow").
 

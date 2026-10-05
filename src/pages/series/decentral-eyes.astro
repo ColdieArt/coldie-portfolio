@@ -155,7 +155,7 @@ const FILE = 'src/data/copy/decentral-eyes.ts';
     ...(faqLd ? [faqLd] : []),
     breadcrumbLd([
       { name: 'Home', path: '/' },
-      { name: 'Releases', path: '/releases' },
+      { name: 'Archive', path: '/archive' },
       { name: 'Decentral Eyes', path: PATH },
     ]),
   ]}
@@ -169,7 +169,7 @@ const FILE = 'src/data/copy/decentral-eyes.ts';
   <article class="de">
     <div class="wrap">
       <nav class="de-crumb" aria-label="Breadcrumb">
-        <a href="/">Home</a> <span>/</span> <a href="/releases">Releases</a> <span>/</span> <span>Decentral Eyes</span>
+        <a href="/">Home</a> <span>/</span> <a href="/archive">Archive</a> <span>/</span> <span>Decentral Eyes</span>
       </nav>
 
       <!-- ── Hero ─────────────────────────────────────── -->
@@ -238,7 +238,7 @@ const FILE = 'src/data/copy/decentral-eyes.ts';
         <ul class="de-subjects">
           {subjects.map((s) => (
             <li>
-              <a href={`/releases?q=${encodeURIComponent(s.name === 'Tech overlords' ? 'Tech Epochalypse' : s.name.split(' ').at(-1)!)}`} class="de-subject">
+              <a href={`/archive?q=${encodeURIComponent(s.name === 'Tech overlords' ? 'Tech Epochalypse' : s.name.split(' ').at(-1)!)}`} class="de-subject">
                 <span class="de-subject__img">{thumbs[s.best.id] && <img src={thumbs[s.best.id]} alt="" loading="lazy" decoding="async" />}</span>
                 <span class="de-subject__name">{s.name}</span>
                 <span class="de-subject__meta">
@@ -339,7 +339,7 @@ const FILE = 'src/data/copy/decentral-eyes.ts';
       </section>
 
       <nav class="de-next" aria-label="More">
-        <a class="link-arrow" href="/releases">All {sortedReleases.length} releases</a>
+        <a class="link-arrow" href="/archive">The full archive: all {sortedReleases.length} releases</a>
       </nav>
     </div>
   </article>

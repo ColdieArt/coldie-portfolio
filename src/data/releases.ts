@@ -1,6 +1,6 @@
 // ============================================================
 // Releases database — the searchable timeline of Coldie's digital releases,
-// 2018 → today. Rendered at /releases.
+// 2018 → today. Rendered at /archive.
 //
 // SOURCES
 //   • 'sheet:editions' — Coldie's tracking sheet, "Editions" tab

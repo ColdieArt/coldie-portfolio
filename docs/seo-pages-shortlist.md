@@ -1,7 +1,7 @@
 # Pages shortlist — search & AI visibility
 
 Draft, Oct 2026. 168 releases are in the database; **47 get their own page**, the rest stay on the
-`/releases` timeline (each with a linkable anchor). Picked for: historic firsts and auction works,
+`/archive` timeline (each with a linkable anchor). Picked for: historic firsts and auction works,
 famous subjects people actually search for, top sales, notable collectors, and enough substance to
 say something original.
 
@@ -84,7 +84,7 @@ holds every variant of that person, and each page links back to the Decentral Ey
 ## Stays on the timeline only (121)
 
 Lower sales or no story yet. This includes most mid-tier 1/1s and the small editions (Fake News, Get
-Weird, Alotta Money, Ash, Trompepe and others). They're still indexed on `/releases`. Any of them can
+Weird, Alotta Money, Ash, Trompepe and others). They're still indexed on `/archive`. Any of them can
 be promoted later once you write something for it.
 
 ---
@@ -92,7 +92,7 @@ be promoted later once you write something for it.
 ## Data fixes (done)
 
 - **Years corrected on `/work` pages:** UAP is now 2020, 3D Light Painting 03 is 2018 (Sotheby's sale stays 2022), and Choose Your Own Adventure is 2020. `llms.txt` is updated to match.
-- **Placeholder page removed:** `decentral-eyes-portrait` is gone, and its old address redirects permanently to `/releases`. Point that redirect at the Decentral Eyes series page once it's built.
+- **Placeholder page removed:** `decentral-eyes-portrait` is gone, and its old address redirects permanently to `/archive`. Point that redirect at the Decentral Eyes series page once it's built.
 - **Still open — The Day We've All Been Waiting For:** the 2018 R.A.R.E. original and the 2019 SuperRare tokens should be explained together on one page.
 
 ## Built for every page (no writing needed from you)

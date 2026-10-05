@@ -1,5 +1,6 @@
 {
   "redirects": [
-    { "source": "/work/decentral-eyes-portrait", "destination": "/releases", "permanent": true }
+    { "source": "/releases", "destination": "/archive", "permanent": true },
+    { "source": "/work/decentral-eyes-portrait", "destination": "/archive", "permanent": true }
   ]
 }

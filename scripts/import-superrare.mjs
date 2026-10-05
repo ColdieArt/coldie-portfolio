@@ -1,5 +1,5 @@
 // Pulls every artwork Coldie created on SuperRare and writes src/data/superrare.json,
-// which src/data/releases.ts merges into the /releases timeline.
+// which src/data/releases.ts merges into the /archive timeline.
 //
 //   node scripts/import-superrare.mjs
 //

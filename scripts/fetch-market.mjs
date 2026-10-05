@@ -1,5 +1,5 @@
 // Snapshot of description, last sale and current listing for every release,
-// written to src/data/market.json and shown in the /releases columns.
+// written to src/data/market.json and shown in the /archive columns.
 //
 //   node scripts/fetch-market.mjs
 //
