@@ -43,17 +43,25 @@ const links: { label: string; href: string; external?: boolean }[] = [
   .nav__row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    min-height: 64px;
+    justify-content: flex-end; /* links/CTA sit right; the logo is positioned */
+    min-height: 64px;          /* nav keeps its original height */
+    position: relative;
   }
+  /* Logo is pulled out of the flow so it can hang over the bar and bleed off the
+     top edge without making the nav taller. */
   .nav__brand {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6em;
+    position: absolute;
+    left: var(--gutter);       /* align with the content gutter */
+    top: -14px;                /* slightly off the top of the screen */
+    z-index: 3;
+    line-height: 0;
     text-decoration: none;
   }
-  .nav__logo { height: 126px; width: auto; display: block; background: transparent; }
-  @media (max-width: 480px) { .nav__logo { height: 102px; } }
+  .nav__logo { height: 124px; width: auto; display: block; background: transparent; }
+  @media (max-width: 600px) {
+    .nav__brand { top: -8px; }
+    .nav__logo { height: 92px; }
+  }
   .nav__sub { font-family: var(--type); font-size: 0.72rem; color: var(--ink-mute); letter-spacing: 0.06em; text-transform: uppercase; }
   .nav__links { display: flex; align-items: center; gap: clamp(1rem, 2.5vw, 2rem); }
   .nav__links > a:not(.btn) {
