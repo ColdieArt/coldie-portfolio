@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <!-- 3D glasses: red lens left, cyan lens right -->
-  <rect width="32" height="64" fill="#ff1f2d"/>
-  <rect x="32" width="32" height="64" fill="#00d2e6"/>
+  <!-- 3D glasses: blue lens left, red lens right -->
+  <rect width="32" height="64" fill="#00d2e6"/>
+  <rect x="32" width="32" height="64" fill="#ff1f2d"/>
 </svg>
