@@ -79,7 +79,14 @@ const oc = heroWork.onchain!;
     font-family: var(--sans); letter-spacing: 0.02em;
   }
   .pioneer__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-cyan); }
-  .pioneer__copy h2 { margin: 0 0 0.6em; }
+  /* typewriter (top-UI) face for this headline */
+  .pioneer__copy h2 {
+    margin: 0 0 0.6em;
+    font-family: var(--type);
+    font-size: clamp(1.9rem, 3.6vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: 0.01em;
+  }
   @media (max-width: 880px) {
     .pioneer__grid { grid-template-columns: 1fr; }
   }
