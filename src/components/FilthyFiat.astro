@@ -108,15 +108,16 @@ const seriesGrid = filthyFiatWorks.filter((w) => w.slug !== 'warren-buffett-filt
     transform: translate3d(-50%, -50%, 0);
     will-change: transform;
     z-index: -2;
+    filter: brightness(1.45) contrast(0.9);
   }
   .ff__scrim {
     position: absolute;
     inset: 0;
     z-index: -1;
-    /* warm dark overlay (echoes the filthyfiat.money backstory), fading to the page */
+    /* light wash over the backdrop so the dark text stays readable; fades right
+       to reveal the backdrop + the bill overlay */
     background:
-      linear-gradient(to right, var(--bg-flat) 6%, rgba(10, 10, 10, 0.72) 55%, rgba(10, 10, 10, 0.5) 100%),
-      linear-gradient(to top, var(--bg-flat), transparent 55%);
+      linear-gradient(to right, rgba(216, 216, 212, 0.92) 0%, rgba(216, 216, 212, 0.58) 44%, rgba(216, 216, 212, 0.08) 100%);
   }
   /* decayed bill standing on the right, on top of the backdrop */
   .ff__bill {
