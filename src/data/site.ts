@@ -85,7 +85,7 @@ export const provenance: {
     href: 'https://gazelliarthouse.com/exhibitions/156-front-row-3d-stereoscopic-concert-photography-coldie/',
     aria: 'Front Row 3D at Gazelli Art House, London',
     note: 'Front Row 3D Concert Photography',
-    type: 'Stereoscopic 3D Lenticular, Digital',
+    type: 'Stereoscopic 3D Lenticular, VR, Digital',
   },
 ];
 
