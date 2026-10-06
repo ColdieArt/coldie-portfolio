@@ -7,7 +7,7 @@ const works = [
     title: 'Michael Saylor',
     collection: 'Decentral Eyes · Not One Satoshi',
     img: '/works/digital/saylor.webp',
-    url: 'https://opensea.io/item/ethereum/0x383788c0a5a6f4cc8f1bcd3993742db6b3332850/211',
+    url: 'https://www.transient.xyz/nfts/ethereum/0x383788c0a5a6f4cc8f1bcd3993742db6b3332850/211',
   },
   {
     title: 'Jeff Bezos',
@@ -35,22 +35,22 @@ const works = [
       <p class="eyebrow">Collect · on-chain</p>
       <RansomHeading as="h2" id="fd-h" text="Featured digital works" size="clamp(2.6rem, 11vw, 10rem)" />
       <p class="lede fd__lede">
-        Living, dimensional editions — part of an ongoing body of on-chain art. Open any piece on OpenSea to
-        see it move.
+        Living, dimensional editions — part of an ongoing body of on-chain art. Open any piece to experience
+        its movement and depth.
       </p>
     </header>
 
     <ul class="fd__grid" aria-label="Featured digital works">
       {works.map((w) => (
         <li class="fd__card">
-          <a href={w.url} target="_blank" rel="noopener" aria-label={`${w.title} — ${w.collection}. Collect on OpenSea`}>
+          <a href={w.url} target="_blank" rel="noopener" aria-label={`${w.title} — ${w.collection}. Collect`}>
             <span class="fd__frame">
               <img src={w.img} alt={`${w.title} — ${w.collection}, digital work by Coldie`} loading="lazy" decoding="async" width="900" height="900" />
             </span>
             <span class="fd__meta">
               <span class="fd__title">{w.title}</span>
               <span class="fd__coll">{w.collection}</span>
-              <span class="fd__cta">Collect on OpenSea ↗</span>
+              <span class="fd__cta">Collect ↗</span>
             </span>
           </a>
         </li>
