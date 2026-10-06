@@ -126,15 +126,14 @@ const seriesGrid = filthyFiatWorks.filter((w) => w.slug !== 'warren-buffett-filt
     z-index: 1;
     right: clamp(1rem, 5vw, 5rem);
     top: 50%;
-    height: 88%;
-    max-height: 580px;
+    height: 92%;              /* scale to the section height */
     width: auto;
     transform: translateY(-50%);
     filter: drop-shadow(0 14px 34px rgba(0, 0, 0, 0.5));
     pointer-events: none;
     background: transparent;
   }
-  @media (max-width: 820px) { .ff__bill { display: none; } }
+  @media (max-width: 1100px) { .ff__bill { display: none; } }
 
   .ff__backstory-inner { width: 100%; }
   .ff__head { max-width: 56ch; }
