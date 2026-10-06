@@ -27,7 +27,7 @@
 
   /* Type */
   --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
-  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --sans: 'Google Sans', 'Inter', system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
   /* punk display + DIY typewriter — loaded in BaseLayout, with hard fallbacks */
   --display: 'Anton', 'Archivo Black', 'Arial Narrow', Impact, var(--sans);
   --type: 'Special Elite', 'Courier New', ui-monospace, monospace;
@@ -131,7 +131,7 @@ img { background: var(--bg-raise); }
   flex: none;
 }
 
-.lede { font-family: var(--serif); font-size: clamp(0.96rem, 1.6vw, 1.28rem); color: var(--ink-soft); line-height: 1.45; }
+.lede { font-family: var(--sans); font-size: clamp(0.96rem, 1.6vw, 1.28rem); color: var(--ink-soft); line-height: 1.45; }
 
 .quote {
   font-family: var(--serif);
