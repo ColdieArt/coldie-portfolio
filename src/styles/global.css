@@ -30,7 +30,7 @@
   --sans: 'Google Sans', 'Inter', system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
   /* punk display + DIY typewriter — loaded in BaseLayout, with hard fallbacks */
   --display: 'Anton', 'Archivo Black', 'Arial Narrow', Impact, var(--sans);
-  --type: 'Special Elite', 'Courier New', ui-monospace, monospace;
+  --type: 'Google Sans', 'Inter', system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
 
   /* Rhythm */
   --measure: 64ch;
