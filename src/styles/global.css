@@ -41,7 +41,7 @@
   --maxw: 1280px;
 }
 
-/* Wide pages (homepage, archive): on large screens the art gets the room, framed by
+/* Wide layout (all pages by default): on large screens the art gets the room, framed by
    roughly 10% margins, while running text keeps its readable measure (p max-width).
    Above 1600px, type and spacing (everything in rem) grow gently with the screen:
    ~112% at 1920px, ~129% at 2560px. */

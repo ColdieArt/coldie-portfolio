@@ -86,7 +86,7 @@ person.image = new URL(headshot.src, site.url).href;
 
 <style>
   .about { padding-block: clamp(2.5rem, 6vw, 4.5rem) var(--section-y); }
-  .about__wrap { max-width: 72ch; }
+  .about__wrap { max-width: calc(72ch + 2 * var(--gutter)); }
   .about__intro {
     display: grid; grid-template-columns: 320px 1fr;
     gap: clamp(1.5rem, 5vw, 3rem); align-items: center;

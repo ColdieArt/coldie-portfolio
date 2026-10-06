@@ -16,7 +16,7 @@ export interface Props {
   jsonld?: Record<string, unknown>[];
   /** Keep a draft page out of search results (also excluded from the sitemap in astro.config). */
   noindex?: boolean;
-  /** Use the wide layout on large screens (art gets the room; see global.css). */
+  /** Wide layout on large screens (art gets the room; see global.css). On by default; pass wide={false} to opt out. */
   wide?: boolean;
 }
 
@@ -28,7 +28,7 @@ const {
   ogType = 'website',
   jsonld = [],
   noindex = false,
-  wide = false,
+  wide = true,
 } = Astro.props;
 
 // One URL per page: no trailing slash (vercel.json trailingSlash: false redirects /x/ → /x).

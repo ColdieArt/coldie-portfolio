@@ -179,10 +179,13 @@ const desc = work.caption.split('. ')[0].replace(/\.?$/, '.');
     display: grid; grid-template-columns: 1.2fr 1fr;
     gap: clamp(2rem, 6vw, 5rem); align-items: start;
   }
-  .work__img { width: 100%; border-radius: var(--radius); }
+  /* fill the column, but never taller than the screen (tall portraits on wide monitors) */
+  .work__img { width: 100%; max-height: calc(100vh - 12rem); object-fit: contain; object-position: left top; background: none; border-radius: var(--radius); }
+  /* 3:4 gallery billboard: keep the whole frame on screen */
+  .work__grid :global(.bb) { max-width: calc((100vh - 12rem) * 3 / 4); }
   .work__video { width: 100%; border-radius: var(--radius); background: #000; display: block; aspect-ratio: 16/10; }
   .work__anaglyph { margin: 0; }
-  .work__anaglyph img { width: 100%; border-radius: var(--radius); background: #05070a; display: block; }
+  .work__anaglyph img { width: 100%; max-height: calc(100vh - 12rem); object-fit: contain; border-radius: var(--radius); background: #05070a; display: block; }
   .work__glasses {
     display: flex; align-items: center; gap: 0.55em; margin-top: 0.9em;
     font-family: var(--type, var(--sans)); font-size: 0.82rem;
