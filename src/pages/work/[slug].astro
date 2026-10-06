@@ -59,7 +59,7 @@ const desc = work.caption.split('. ')[0].replace(/\.?$/, '.');
             <img src={work.anaglyphImage} alt={work.anaglyphAlt ?? work.imageAlt ?? work.title} width="2000" height="1605" decoding="async" />
             <figcaption class="work__glasses">
               <span class="work__glasses-icon" aria-hidden="true"></span>
-              Grab your red/blue 3D glasses
+              Grab your blue/red 3D glasses
             </figcaption>
           </figure>
         )}
@@ -191,7 +191,7 @@ const desc = work.caption.split('. ')[0].replace(/\.?$/, '.');
     font-family: var(--type, var(--sans)); font-size: 0.82rem;
     letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft);
   }
-  .work__glasses-icon { width: 26px; height: 13px; border-radius: 2px; flex: none; background: linear-gradient(90deg, #e23b2e 0 50%, #45c7d0 50% 100%); }
+  .work__glasses-icon { width: 26px; height: 13px; border-radius: 2px; flex: none; background: linear-gradient(90deg, #45c7d0 0 50%, #e23b2e 50% 100%); }
   .work__title { font-size: clamp(2rem, 4vw, 3.2rem); margin: 0 0 0.2em; }
   .work__year { margin: 0 0 1.4em; letter-spacing: 0.04em; }
   .work__caption { color: var(--ink-soft); font-size: 1.05rem; }
