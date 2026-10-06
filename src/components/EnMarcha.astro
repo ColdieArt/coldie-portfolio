@@ -1,0 +1,134 @@
+---
+// En Marcha — interactive kinetic 3D mural (Digital Encounters). Embedded as a
+// click-to-load facade (like the Elon embed): a poster + launch button that swaps
+// in the live Transient-hosted interactive on click, so the heavy WebGL loads only
+// when a visitor opts in. Transient's gateway serves the HTML with no framing
+// restriction, so it embeds directly.
+import RansomHeading from './RansomHeading.astro';
+const ART = 'https://ipfs.transientusercontent.xyz/ipfs/bafybeicslpqjrjdpiuu4usgw6tjyjxmwj7f5ypycbnwkjkbvwig5ghcyau/media';
+const TRANSIENT = 'https://www.transient.xyz/nfts/ethereum/0x034220c41322ff03db1c643da2ce991440a29bdd/1';
+---
+<section id="en-marcha-interactive" class="enm section--flat" aria-labelledby="enm-h">
+  <div class="wrap">
+    <header class="enm__head">
+      <p class="eyebrow">Interactive · Digital Encounters</p>
+      <RansomHeading as="h2" id="enm-h" text="En Marcha" />
+      <p class="lede enm__lede">
+        A kinetic 3D mural inspired by Diego Rivera and Museo Anahuacalli, built during the Digital Encounters
+        residency. Every element was photographed in Rivera’s collection, then hand-embellished — touch the
+        art, move the pieces, and step inside the collage.
+      </p>
+    </header>
+
+    <figure class="enm__stage">
+      <div class="enm__player" data-enm-player data-src={ART}>
+        <button class="enm__launch" type="button" aria-label="Launch the En Marcha interactive mural — loads inline">
+          <img
+            class="enm__poster"
+            src="/works/digital/en-marcha.webp"
+            alt="En Marcha — kinetic 3D mural by Coldie"
+            loading="lazy"
+            decoding="async"
+          />
+          <span class="enm__scrim" aria-hidden="true"></span>
+          <span class="enm__play" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </span>
+          <span class="enm__launch-label">
+            Launch the interactive mural
+            <small>Drag · explore · touch the art</small>
+          </span>
+        </button>
+      </div>
+      <figcaption class="enm__cap">
+        En Marcha #1 — Digital Encounters.
+        <a href={TRANSIENT} target="_blank" rel="noopener">Collect on Transient ↗</a>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .enm { padding-block: clamp(3rem, 7vw, 6rem); border-top: 1px solid var(--line-soft); }
+  .enm__head { max-width: 62ch; margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+  .enm__head h2 { margin: 0 0 0.4em; }
+  .enm__lede { margin: 0; }
+
+  .enm__stage { margin: 0; }
+  .enm__player {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    max-height: 80vh;
+    border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; background: var(--bg-raise);
+    box-shadow: 6px 6px 0 color-mix(in srgb, var(--cyan) 24%, transparent);
+  }
+  .enm__launch {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    display: block; padding: 0; border: 0; cursor: pointer;
+    background: none; color: var(--ink); text-align: left;
+  }
+  .enm__poster {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    transition: transform 0.6s cubic-bezier(0.22,0.61,0.36,1);
+  }
+  .enm__launch:hover .enm__poster,
+  .enm__launch:focus-visible .enm__poster { transform: scale(1.03); }
+  .enm__scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.12) 42%, rgba(0,0,0,0.22) 100%);
+  }
+  .enm__play {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 78px; height: 78px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--red); color: #141414;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.45);
+    transition: transform 0.25s ease;
+  }
+  .enm__play svg { margin-left: 3px; }
+  .enm__launch:hover .enm__play,
+  .enm__launch:focus-visible .enm__play { transform: translate(-50%, -50%) scale(1.08); }
+  .enm__launch-label {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: clamp(1rem, 2.5vw, 1.6rem);
+    font-family: var(--display); text-transform: uppercase; letter-spacing: 0.02em;
+    font-size: clamp(1.05rem, 2vw, 1.5rem); line-height: 1.1; color: #fff;
+  }
+  .enm__launch-label small {
+    display: block; margin-top: 0.5em;
+    font-family: var(--type); text-transform: uppercase; letter-spacing: 0.08em;
+    font-size: 0.72rem; color: rgba(255,255,255,0.74);
+  }
+  .enm__player[data-loaded] { box-shadow: 6px 6px 0 color-mix(in srgb, var(--red) 26%, transparent); }
+  .enm__cap {
+    margin: 0.9em 0 0; font-family: var(--type); font-size: 0.8rem;
+    letter-spacing: 0.04em; color: var(--ink-mute);
+  }
+  .enm__cap a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line); }
+  .enm__cap a:hover { color: var(--red); }
+
+  @media (max-width: 640px) { .enm__player { aspect-ratio: 4 / 3; } }
+  @media (prefers-reduced-motion: reduce) { .enm__poster, .enm__play { transition: none; } }
+</style>
+
+<script>
+  // Click-to-load facade: swap the poster for the live En Marcha interactive iframe.
+  document.querySelectorAll('[data-enm-player]').forEach((player) => {
+    const btn = player.querySelector('.enm__launch');
+    const src = player.getAttribute('data-src');
+    if (!btn || !src) return;
+    btn.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = src;
+      iframe.title = 'En Marcha — interactive kinetic 3D mural by Coldie';
+      iframe.loading = 'eager';
+      iframe.allow = 'accelerometer; gyroscope; fullscreen';
+      iframe.setAttribute('allowfullscreen', '');
+      iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;display:block;';
+      player.replaceChildren(iframe);
+      player.setAttribute('data-loaded', '');
+    }, { once: true });
+  });
+</script>
