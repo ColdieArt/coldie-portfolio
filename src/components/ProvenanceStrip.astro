@@ -18,6 +18,7 @@ import { provenance } from '../data/site';
             >
               <span class="prov__label">{p.label}{external && <span class="prov__ext" aria-hidden="true"> ↗</span>}</span>
               {p.note && <span class="prov__note">{p.note}</span>}
+              {p.type && <span class="prov__type">{p.type}</span>}
             </a>
           </li>
         );
@@ -45,6 +46,11 @@ import { provenance } from '../data/site';
   .prov__label { font-family: var(--serif); font-size: clamp(1.05rem, 1.6vw, 1.35rem); color: var(--ink); }
   .prov__main:hover .prov__label { color: var(--accent); }
   .prov__note { font-size: 0.75rem; color: var(--ink-mute); letter-spacing: 0.02em; }
+  .prov__type {
+    margin-top: 0.1em;
+    font-family: var(--type); font-size: 0.66rem; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink-soft);
+  }
   .prov__ext { font-size: 0.7em; color: var(--ink-mute); }
   .prov__main:hover .prov__ext { color: var(--accent); }
 </style>

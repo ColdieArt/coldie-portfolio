@@ -45,6 +45,8 @@ export const provenance: {
   /** Full descriptive accessible label / title attribute. */
   aria: string;
   note?: string;
+  /** Medium / art type(s) sold through this institution. */
+  type?: string;
   /** True when href is a placeholder awaiting the real direct URL. */
   todo?: boolean;
 }[] = [
@@ -53,18 +55,21 @@ export const provenance: {
     href: 'https://onlineonly.christies.com.cn/s/first-open-post-war-contemporary-art/coldie-b-1982-286/245196',
     aria: "Warren Buffett – Filthy Fiat at Christie's, First Open | Post-War and Contemporary Art",
     note: 'Warren Buffett – Filthy Fiat',
+    type: '3D Kinetic Magnetic Portrait / Digital',
   },
   {
     label: "Sotheby's",
     href: 'https://www.sothebys.com/en/buy/auction/2022/inside-the-world-of-maxstealth-a-timeless-collection/3d-light-painting-03',
     aria: "3D Light Painting 03 at Sotheby's, Inside the World of MaxStealth (Sept 14, 2022)",
     note: '3D Light Painting 03',
+    type: 'Digital',
   },
   {
     label: 'Bonhams',
     href: 'https://www.bonhams.com/auction/27285/lot/1/coldie-b-1982-proof-of-work-genesis-conceived-2018-minted-june-16-2021/',
     aria: 'Proof of Work – Genesis at Bonhams, Bonhams & SuperRare: CryptOGs',
     note: 'Proof of Work – Genesis',
+    type: 'Digital',
   },
   {
     label: 'Eterno Gallery, Lisbon',
@@ -72,13 +77,15 @@ export const provenance: {
     href: 'https://eternogallery.com/',
     aria: 'Unpermissioned Self at Eterno Gallery, Lisbon',
     note: 'Unpermissioned Self',
+    type: '3D Kinetic Magnetic Portrait / Prints / Digital',
     todo: true,
   },
   {
     label: 'Gazelli Art House, London',
     href: 'https://gazelliarthouse.com/exhibitions/156-front-row-3d-stereoscopic-concert-photography-coldie/',
     aria: 'Front Row 3D at Gazelli Art House, London',
-    note: 'Front Row 3D',
+    note: 'Front Row 3D Concert Photography',
+    type: 'Stereoscopic 3D Lenticular, Digital',
   },
 ];
 
