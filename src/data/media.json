@@ -74,6 +74,8 @@
   "pixelchain": null,
   "rare-bitcoin-split-cut": null,
   "rare-ethereum-split-cut": null,
+  "rare-lost-vitalik-2018": null,
+  "rare-proof-of-work-2018": null,
   "rare-pyramid-on-mars": {
     "src": "https://arweave.net/DLwcEja10vWjRuAqDf4Gwvo_IeJMFytxNo_4FOCJknM/0x5ef7935e4a431e9a517e12490c5c0563f19c72cc.mp4",
     "type": "video"
@@ -515,6 +517,7 @@
     "type": "video"
   },
   "undead-bauhaus": null,
+  "vitalik-variant-03": null,
   "voxels-3d-glasses": {
     "src": "https://i2c.seadn.io/ethereum/0xa58b5224e2fd94020cb2837231b2b0e4247301a6/393defbee297222f4a0ffab09a87c88d.gif",
     "type": "gif"

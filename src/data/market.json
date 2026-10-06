@@ -1,6 +1,18 @@
 {
-  "fetchedAt": "2026-10-05",
+  "fetchedAt": "2026-10-06",
   "releases": {
+    "vitalik-variant-03": {
+      "owner": {
+        "address": "0x7d72cb94b93ac5413364d25b3293a364879b31b1",
+        "name": "ColdieVault",
+        "username": null,
+        "ens": null,
+        "artist": true
+      },
+      "description": "Vitalik Buterin - Variant 03 by artist Coldie",
+      "lastSale": null,
+      "listing": null
+    },
     "voxels-3d-glasses": {
       "description": "Why wear regular 3D glasses when you can wear these wild custom designed frames that will get you laid.",
       "lastSale": {
@@ -13,7 +25,7 @@
         "kind": "floor",
         "amount": 0.5,
         "symbol": "ETH",
-        "usd": 1358
+        "usd": 1347
       }
     },
     "gandinsky-3d-1": {
@@ -104,7 +116,7 @@
         "kind": "floor",
         "amount": 2.1,
         "symbol": "ETH",
-        "usd": 5702
+        "usd": 5659
       }
     },
     "trust-your-intuition": {
@@ -119,7 +131,7 @@
         "kind": "floor",
         "amount": 0.1,
         "symbol": "ETH",
-        "usd": 272
+        "usd": 269
       }
     },
     "decentral-eyes-vr-og-collage": {
@@ -143,7 +155,7 @@
       "listing": null
     },
     "decentraland-wearables": {
-      "description": "DCL Wearable 41/100",
+      "description": "DCL Wearable 77/100",
       "lastSale": {
         "amount": 0.01,
         "symbol": "ETH",
@@ -162,9 +174,9 @@
       },
       "listing": {
         "kind": "floor",
-        "amount": 0.132223,
+        "amount": 0.131995,
         "symbol": "ETH",
-        "usd": 359
+        "usd": 356
       }
     },
     "filthy-fiat": {
@@ -244,7 +256,7 @@
         "kind": "floor",
         "amount": 0.99,
         "symbol": "ETH",
-        "usd": 2688
+        "usd": 2669
       }
     },
     "chronicles-2019": {
@@ -279,7 +291,7 @@
         "kind": "floor",
         "amount": 0.05884,
         "symbol": "ETH",
-        "usd": 160
+        "usd": 159
       }
     },
     "deyes-assembled": {
@@ -294,7 +306,7 @@
         "kind": "floor",
         "amount": 6,
         "symbol": "ETH",
-        "usd": 16292
+        "usd": 16175
       }
     },
     "talking-heads": {
@@ -307,9 +319,9 @@
       },
       "listing": {
         "kind": "floor",
-        "amount": 0.172197,
+        "amount": 0.130993,
         "symbol": "ETH",
-        "usd": 468
+        "usd": 353
       }
     },
     "uae-first-immersion": {
@@ -334,7 +346,7 @@
         "kind": "floor",
         "amount": 0.0666,
         "symbol": "ETH",
-        "usd": 181
+        "usd": 180
       }
     },
     "async-energetic-body": {
@@ -396,7 +408,7 @@
         "kind": "floor",
         "amount": 0.04197,
         "symbol": "ETH",
-        "usd": 114
+        "usd": 113
       }
     },
     "fake-rares-filthy-pepe": {
@@ -411,7 +423,7 @@
         "kind": "buy",
         "amount": 0.25,
         "symbol": "ETH",
-        "usd": 679
+        "usd": 674
       }
     },
     "sin-king-ship": {
@@ -426,7 +438,7 @@
         "kind": "buy",
         "amount": 0.0599999,
         "symbol": "ETH",
-        "usd": 163
+        "usd": 162
       }
     },
     "tech-epochalypse": {
@@ -436,7 +448,7 @@
         "kind": "floor",
         "amount": 5,
         "symbol": "ETH",
-        "usd": 13578
+        "usd": 13479
       }
     },
     "tech-epochalypse-moments": {
@@ -449,9 +461,9 @@
       },
       "listing": {
         "kind": "floor",
-        "amount": 0.0999999,
+        "amount": 0.0998999,
         "symbol": "ETH",
-        "usd": 272
+        "usd": 269
       }
     },
     "not-one-satoshi": {
@@ -466,7 +478,7 @@
         "kind": "floor",
         "amount": 0.059,
         "symbol": "ETH",
-        "usd": 160
+        "usd": 159
       }
     },
     "en-marcha": {

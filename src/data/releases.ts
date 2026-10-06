@@ -201,6 +201,22 @@ const allReleases: Release[] = [
 
   // ─────────────────────────── 2019 ───────────────────────────
   {
+    id: 'vitalik-variant-03',
+    title: 'Vitalik Buterin - Decentral Eyes - Variant 03',
+    date: '2019-01-05',
+    kind: '1/1',
+    supply: 1,
+    series: 'Decentral Eyes',
+    platform: 'Artist Unleashed',
+    chain: 'Ethereum',
+    url: osItem('0xaefa27a665d48e19c38437ba7135c8107bb5928f', '9'),
+    contract: '0xaefa27a665d48e19c38437ba7135c8107bb5928f',
+    tokenId: '9',
+    thumbSrc: 'https://i2c.seadn.io/ethereum/0xaefa27a665d48e19c38437ba7135c8107bb5928f/a56b09741872338d29ff32869ab25c73.jpeg?w=1000',
+    notes: 'Artist proof, minted January 5, 2019 on the Artist Unleashed contract. The third of six Vitalik Buterin variants; held in ColdieVault.',
+    source: 'opensea',
+  },
+  {
     id: 'voxels-3d-glasses',
     title: 'Cryptovoxels 3D Glasses Wearables',
     date: '2019-12-01',
@@ -976,6 +992,7 @@ export const CONTRACT_LABEL: Record<string, string> = {
   '0x41a322b28d0ff354040e2cbc676f0320d8c8850d': 'SuperRare original (v1) contract',
   '0x892a1e9856ae529b94aaa683fc558ee107d35258': "Coldie's own SuperRare contract",
   '0xb932a70a57673d89f4acffbe830e8ed7f75fb9e0': 'SuperRare v2 shared contract',
+  '0xaefa27a665d48e19c38437ba7135c8107bb5928f': 'Artist Unleashed shared contract',
 };
 
 /** Series from the title's naming pattern, most specific first. */
