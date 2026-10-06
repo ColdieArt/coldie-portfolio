@@ -64,7 +64,7 @@
 
 <script>
   type Item = {
-    id: string; title: string; date: string; img: string | null; size: [number, number] | null;
+    id: string; title: string; date: string; img: string | null; imgLg?: string | null; size: [number, number] | null;
     media: { src: string; type: 'video' | 'gif' } | null; kind: string; series: string | null;
     platform: string; chain: string; badge: string | null; url: string | null; market: string | null;
     slug: string | null; owner: { label: string; href: string; artist: boolean; addr: string; address: string } | null;
@@ -82,7 +82,7 @@
     if (!it) return;
     const art = q('[data-art]');
     art.replaceChildren();
-    const poster = Object.assign(document.createElement('img'), { src: it.img ?? '', alt: `${it.title} by Coldie` });
+    const poster = Object.assign(document.createElement('img'), { src: it.imgLg ?? it.img ?? '', alt: `${it.title} by Coldie` });
     if (it.size) Object.assign(poster, { width: it.size[0], height: it.size[1] });
     art.append(poster);
     if (it.burned) art.insertAdjacentHTML('beforeend', '<span class="burn-stamp">Burned</span>');

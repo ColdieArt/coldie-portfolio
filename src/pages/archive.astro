@@ -51,9 +51,12 @@ const maxCount = Math.max(...groups.map((g) => g.items.length), 1);
 const totalTokens = sortedReleases.reduce((n, r) => n + (r.supply ?? 0), 0);
 const dated = sortedReleases.filter((r) => r.date);
 import thumbsJson from '../data/thumbs.json';
+import thumbsLgJson from '../data/thumbs-lg.json';
 import marketJson from '../data/market.json';
 import { works } from '../data/works';
 const thumbs: Record<string, string> = thumbsJson;
+// 1200px versions for large screens (only where the source is bigger than the thumbnail)
+const thumbsLg: Record<string, string | null> = thumbsLgJson;
 
 type Price = { amount: number; symbol: string; usd: number | null };
 type Owner = { address: string; name: string | null; username: string | null; ens: string | null; artist: boolean };
@@ -124,6 +127,7 @@ const archiveItems = sortedReleases.map((r) => {
     date: formatReleaseDate(r.date),
     year: String(releaseYear(r) ?? 'tbc'),
     img: thumbs[r.id] ?? null,
+    imgLg: thumbsLg[r.id] ?? null,
     size: sizes[r.id] ?? null,
     media: media[r.id] ?? null,
     kind: `${KIND_LABEL[r.kind]}${r.supply != null && r.kind !== '1/1' ? ` · ${r.supply.toLocaleString('en-US')}` : ''}`,
@@ -195,6 +199,7 @@ const searchText = (r: Release) =>
   title="Crypto Art Pioneer Since 2018 — Complete NFT Archive"
   description={desc}
   path="/archive"
+  wide
   ogImage="/og/archive.png"
   jsonld={[personLd(), datasetLd, itemListLd, breadcrumbLd([
     { name: 'Home', path: '/' },
@@ -539,6 +544,8 @@ const searchText = (r: Release) =>
 
   /* The archive sits in a dark void so the art is the only light. */
   .rel {
+    /* list thumbnails: 112px on laptops, up to 240px on large screens */
+    --thumb-w: clamp(112px, 9vw, 240px);
     --bg: #0b0b0b; --bg-raise: #141414; --bg-flat: #070707;
     --ink: #ece9e2; --ink-soft: #c6c1b6; --ink-mute: #85817a;
     --line: #2e2e2e; --line-soft: #1c1c1c; --gold: #ece9e2; --red: #ffffff;
@@ -586,7 +593,7 @@ const searchText = (r: Release) =>
   .rel__railyear:hover .rel__raillabel { color: var(--ink); }
 
   /* Layout: sticky filter sidebar + timeline */
-  .rel__layout { display: grid; grid-template-columns: 154px minmax(0, 1fr); gap: 0 clamp(1.25rem, 2.5vw, 2.25rem); align-items: start; }
+  .rel__layout { display: grid; grid-template-columns: 9.625rem minmax(0, 1fr); gap: 0 clamp(1.25rem, 2.5vw, 2.25rem); align-items: start; }
   .rel__side {
     /* pinned below the nav logo, which hangs ~110px into the page and would otherwise
        sit over the search box and catch its clicks */
@@ -678,7 +685,7 @@ const searchText = (r: Release) =>
   .rel__date { display: block; font-family: var(--type); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 0.35em; }
   .rel__card {
     display: grid; align-items: start; gap: 0.9rem 1.1rem;
-    grid-template-columns: 112px minmax(0, 1fr) minmax(0, 1.2fr) 9.5rem;
+    grid-template-columns: var(--thumb-w) minmax(0, 1fr) minmax(0, 1.2fr) 9.5rem;
   }
   .rel__desc { min-width: 0; }
   .rel__desctext {
@@ -718,7 +725,7 @@ const searchText = (r: Release) =>
   .rel__body { min-width: 0; }
   .rel__thumb {
     position: relative; container-type: inline-size;
-    display: block; width: 112px; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius);
+    display: block; width: var(--thumb-w); aspect-ratio: 1; overflow: hidden; border-radius: var(--radius);
     background: var(--bg-raise); border: 1px solid var(--line-soft);
   }
   .rel__thumb img { width: 100%; height: 100%; object-fit: contain; display: block; transition: transform 0.35s ease; }
@@ -766,7 +773,7 @@ const searchText = (r: Release) =>
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
   @media (max-width: 1280px) {
-    .rel__card { grid-template-columns: 112px minmax(0, 1fr) 9.5rem; }
+    .rel__card { grid-template-columns: var(--thumb-w) minmax(0, 1fr) 9.5rem; }
     .rel__body { grid-column: 2; }
     .rel__marketcol { grid-column: 3; grid-row: 1; }
     .rel__desc { grid-column: 2 / -1; }

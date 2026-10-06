@@ -5,10 +5,18 @@
 // detail panel on click. Built from the #arc-data JSON and rebuilt on every
 // `archive:results` event, so search, filters and sort shape the corridor.
 ---
-<section class="arc-corridor" id="arc-corridor" data-view-pane="corridor" aria-label="Archive corridor. Scroll to travel forward in time.">
+<section class="arc-corridor" id="arc-corridor" data-view-pane="corridor" aria-label="Archive corridor. Scroll, or use the Forward and Back buttons, to travel through time.">
   <div class="arc-stage">
     <div class="arc-world" data-world></div>
-    <p class="arc-hint" data-hint>Scroll to travel forward in time</p>
+    <div class="arc-guide" data-guide>
+      <p class="arc-guide__title">Walk through the archive, 2018 to today</p>
+      <p class="arc-guide__how">Scroll down or press <b>Forward</b> to move ahead in time. Click any work to see its story.</p>
+    </div>
+    <div class="arc-steps">
+      <button type="button" class="arc-step" data-step="-1" aria-label="Back to the previous work">← Back</button>
+      <button type="button" class="arc-step arc-step--fwd" data-step="1" aria-label="Forward to the next work">Forward →</button>
+      <span class="arc-steps__keys" aria-hidden="true">or scroll · ← → keys</span>
+    </div>
     <nav class="arc-years" data-years aria-label="Jump to year"></nav>
     <a class="arc-skip" href="#rel-list">Skip to the full list ↓</a>
   </div>
@@ -42,23 +50,49 @@
     display: flex; justify-content: space-between; gap: 1rem; padding-top: 0.6rem; text-align: left;
     font-family: var(--sans); color: #ece9e2;
   }
-  .arc-world :global(.arc-piece__title) { font-family: var(--serif); font-size: 15px; line-height: 1.25; }
-  .arc-world :global(.arc-piece__date) { flex: none; font-size: 10px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #8a867f; padding-top: 3px; }
+  .arc-world :global(.arc-piece__title) { font-family: var(--serif); font-size: clamp(15px, 0.8vw, 21px); line-height: 1.25; }
+  .arc-world :global(.arc-piece__date) { flex: none; font-size: clamp(10px, 0.5vw, 13px); font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #8a867f; padding-top: 3px; }
   .arc-world :global(.arc-piece:focus-visible .arc-piece__art) { outline: 1px solid #ece9e2; outline-offset: 4px; }
 
   /* a year floating in space */
   .arc-world :global(.arc-yearmark) {
     position: absolute; left: 50%; top: 46%; margin: 0; pointer-events: none; will-change: transform, opacity;
-    font-family: var(--display); font-size: 280px; line-height: 1; letter-spacing: 0.03em;
+    font-family: var(--display); font-size: clamp(280px, 15vw, 400px); line-height: 1; letter-spacing: 0.03em;
     color: rgb(10 10 10 / 0.7); -webkit-text-stroke: 3px rgb(236 233 226 / 0.62); paint-order: stroke fill;
   }
 
-  .arc-hint {
-    position: absolute; right: 1.25rem; bottom: 1.2rem; margin: 0; pointer-events: none;
-    font-family: var(--sans); font-size: 0.6rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase;
-    color: #8a867f; transition: opacity 0.6s;
+  /* first-visit directions, centred low in the stage; fade once the visitor moves */
+  .arc-guide {
+    position: absolute; left: 50%; bottom: 5.2rem; transform: translateX(-50%); z-index: 200000;
+    width: min(32rem, calc(100% - 2rem)); padding: 1rem 1.25rem; text-align: center; pointer-events: none;
+    background: rgb(10 10 10 / 0.78); border: 1px solid rgb(236 233 226 / 0.16); backdrop-filter: blur(6px);
+    font-family: var(--sans); color: #ece9e2; transition: opacity 0.6s, transform 0.6s;
   }
-  .arc-hint[data-gone] { opacity: 0; }
+  .arc-guide[data-gone] { opacity: 0; transform: translate(-50%, 8px); }
+  .arc-guide__title { margin: 0 0 0.35rem; font-family: var(--serif); font-size: 1.15rem; line-height: 1.25; }
+  .arc-guide__how { margin: 0; font-size: 0.82rem; line-height: 1.5; color: #c6c1b6; }
+  .arc-guide__how b { color: #ece9e2; font-weight: 600; }
+
+  /* step controls: bottom-left of the stage */
+  .arc-steps {
+    position: absolute; left: 1.25rem; bottom: 1.1rem; z-index: 200000;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .arc-step {
+    padding: 0.55rem 0.95rem; cursor: pointer; border-radius: 999px;
+    background: rgb(10 10 10 / 0.6); border: 1px solid rgb(236 233 226 / 0.3); color: #ece9e2;
+    font-family: var(--sans); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+    transition: background 0.2s, border-color 0.2s, opacity 0.2s;
+  }
+  .arc-step:hover:not(:disabled) { background: #ece9e2; color: #0a0a0a; border-color: #ece9e2; }
+  .arc-step:focus-visible { outline: 1px solid #ece9e2; outline-offset: 3px; }
+  .arc-step:disabled { opacity: 0.3; cursor: default; }
+  .arc-step--fwd { border-color: rgb(236 233 226 / 0.6); }
+  .arc-steps__keys {
+    margin-left: 0.4rem; font-family: var(--sans); font-size: 0.6rem; font-weight: 500; letter-spacing: 0.16em;
+    text-transform: uppercase; color: #8a867f;
+  }
+  @media (max-width: 760px) { .arc-steps__keys { display: none; } }
 
   .arc-skip {
     position: absolute; left: 50%; bottom: 1.2rem; transform: translateX(-50%); z-index: 200000;
@@ -85,7 +119,7 @@
 
 <script>
   type Item = {
-    id: string; title: string; date: string; year: string; img: string | null; size: [number, number] | null;
+    id: string; title: string; date: string; year: string; img: string | null; imgLg: string | null; size: [number, number] | null;
     media: { src: string; type: 'video' | 'gif' } | null; price: number | null; listing: { price: string } | null;
     burned?: boolean; alt?: string;
   };
@@ -95,7 +129,9 @@
   const stage = root.querySelector<HTMLElement>('.arc-stage')!;
   const world = root.querySelector<HTMLElement>('[data-world]')!;
   const track = root.querySelector<HTMLElement>('[data-track]')!;
-  const hint = root.querySelector<HTMLElement>('[data-hint]')!;
+  const guide = root.querySelector<HTMLElement>('[data-guide]')!;
+  const stepBack = root.querySelector<HTMLButtonElement>('[data-step="-1"]')!;
+  const stepFwd = root.querySelector<HTMLButtonElement>('[data-step="1"]')!;
   const data: Item[] = JSON.parse(document.getElementById('arc-data')!.textContent!);
   const byId = new Map(data.map((d) => [d.id, d]));
 
@@ -134,7 +170,8 @@
   function boxFor(it: Item) {
     const sw = stage.clientWidth;
     const sh = stage.clientHeight;
-    const maxW = Math.min(sw * 0.5, 760);
+    // up to 760px on laptops; larger on big screens (sharp 1200px images load there)
+    const maxW = Math.min(sw * 0.5, Math.max(760, sw * 0.42));
     const maxH = sh * 0.72;
     const [w0, h0] = it.size ?? [1, 1];
     const s = Math.min(maxW / w0, maxH / h0);
@@ -258,7 +295,14 @@
         continue;
       }
       if (!n.el.isConnected) world.append(n.el);
-      if (!n.img.src) n.img.src = byId.get(id)!.img ?? '';
+      if (!n.img.src) {
+        const it = byId.get(id)!;
+        if (it.imgLg && it.img) {
+          n.img.srcset = `${it.img} 480w, ${it.imgLg} 1200w`;
+          n.img.sizes = `${n.w}px`;
+        }
+        n.img.src = it.img ?? '';
+      }
       place(n.el, n.x, n.y, n.w, n.h, d, fade(d));
       if (d > -GAP * 0.3 && Math.abs(d) < nearestD) {
         nearestD = Math.abs(d);
@@ -271,9 +315,11 @@
       if (on !== m.el.isConnected) on ? world.append(m.el) : m.el.remove();
       if (on) {
         const w = m.el.offsetWidth || 600;
-        place(m.el, 0, -stage.clientHeight * 0.2, w, 280, d, fade(d) * 0.95);
+        place(m.el, 0, -stage.clientHeight * 0.2, w, m.el.offsetHeight || 280, d, fade(d) * 0.95);
       }
     }
+    stepBack.disabled = target <= -LEAD + 1;
+    stepFwd.disabled = target >= lastZ - 1;
     if (nearest && nearestD < GAP * 0.6) setFront(nearest);
     else setFront(null);
     if (nearest) {
@@ -338,7 +384,7 @@
   function onScroll() {
     if (!active()) return;
     target = progressDepth();
-    if (target > -LEAD + GAP * 0.5) hint.setAttribute('data-gone', '');
+    if (target > -LEAD + GAP * 0.5) guide.setAttribute('data-gone', '');
     if (!raf) raf = requestAnimationFrame(tick);
   }
   addEventListener('scroll', onScroll, { passive: true });
@@ -376,6 +422,31 @@
   yearNav.addEventListener('click', (e) => {
     const year = (e.target as HTMLElement).closest<HTMLElement>('[data-year]')?.dataset.year;
     if (year) flyToYear(year);
+  });
+
+  // ── Forward / Back: one work at a time ──────────────────────
+  // Steps from the camera's destination (not its eased position), so repeated
+  // clicks keep advancing. The page jumps instantly; the camera eases, as it does
+  // when scrolling, so the move still reads as a glide through space.
+  function step(dir: 1 | -1) {
+    const zs = order.map((id) => nodes.get(id)!.z);
+    const near = GAP * 0.3;
+    let depth: number;
+    if (dir > 0) depth = zs.find((z) => z > target + near) ?? lastZ;
+    else depth = [...zs].reverse().find((z) => z < target - near) ?? -LEAD;
+    scrollTo({ top: scrollForDepth(depth), behavior: 'instant' as ScrollBehavior });
+    onScroll();
+  }
+  stepBack.addEventListener('click', () => step(-1));
+  stepFwd.addEventListener('click', () => step(1));
+  // ← → keys while the corridor fills the screen (not while typing or in the panel)
+  addEventListener('keydown', (e) => {
+    if (!active() || (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable], dialog')) return;
+    const r = root.getBoundingClientRect();
+    if (r.top > NAV + 2 || r.bottom < innerHeight) return;
+    e.preventDefault();
+    step(e.key === 'ArrowRight' ? 1 : -1);
   });
 
   // Keyboard focus on a work brings it to the front.

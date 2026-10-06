@@ -41,6 +41,18 @@
   --maxw: 1280px;
 }
 
+/* Wide pages (homepage, archive): on large screens the art gets the room, framed by
+   roughly 10% margins, while running text keeps its readable measure (p max-width).
+   Above 1600px, type and spacing (everything in rem) grow gently with the screen:
+   ~112% at 1920px, ~129% at 2560px. */
+:root[data-wide] {
+  --maxw: 2360px;
+  --gutter: clamp(1.25rem, 5vw, 8rem);
+}
+@media (min-width: 1600px) {
+  :root[data-wide] { font-size: calc(100% + (100vw - 1600px) * 0.0048); }
+}
+
 * { box-sizing: border-box; }
 
 html {

@@ -82,7 +82,8 @@ const num = String(index).padStart(2, '0');
     align-items: center;
     margin: 0 0 clamp(2.5rem, 6vw, 4.5rem);
   }
-  .pillar__stage { max-width: 560px; }
+  /* 560px on laptops; on big screens grow with the viewport so the work still fits on screen */
+  .pillar__stage { max-width: max(560px, calc((100vh - 10rem) * 0.8)); width: 100%; justify-self: center; }
   .pillar__img { width: 100%; height: auto; display: block; border-radius: var(--radius); border: 1px solid var(--line-soft); background: var(--bg-raise); }
   .pillar__cap-title { font-family: var(--serif); font-size: 1.5rem; margin: 0 0 0.2em; }
   .pillar__cap-title a { text-decoration: none; }

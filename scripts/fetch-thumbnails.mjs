@@ -9,7 +9,9 @@
 //   3. on-chain metadata           — tokenURI()/uri() → metadata.image (needs a token id;
 //                                    collections on Coldie-only contracts fall back to token #1)
 // No source → no thumbnail (OpenSea's og:image is a generated stats card, not the art).
-// Output: public/releases/thumbs/<id>.webp (480px wide; GIFs use their first frame)
+// Output: public/releases/thumbs/<id>.webp (480px wide; GIFs use their first frame),
+// plus public/releases/thumbs/lg/<id>.webp (up to 1200px, for large screens) listed in
+// src/data/thumbs-lg.json when the source is bigger than the small thumbnail
 // and src/data/thumbs.json mapping release id → public path, plus
 // src/data/thumb-sizes.json (id → [width, height]) so pages can show each work
 // at its own aspect ratio without layout shift.
@@ -23,6 +25,8 @@ const FORCE = process.argv.includes('--force');
 const ROOT = new URL('../', import.meta.url);
 const OUT_DIR = new URL('public/releases/thumbs/', ROOT);
 const MANIFEST = new URL('src/data/thumbs.json', ROOT);
+const LG_DIR = new URL('lg/', OUT_DIR);
+const LG_MANIFEST = new URL('src/data/thumbs-lg.json', ROOT);
 const RPC = {
   Ethereum: 'https://ethereum-rpc.publicnode.com',
   Polygon: 'https://polygon-bor-rpc.publicnode.com',
@@ -164,22 +168,36 @@ async function stillFrame(buf) {
 const exists = (u) => access(u).then(() => true, () => false);
 let manifest = {};
 try { manifest = JSON.parse(await readFile(MANIFEST, 'utf8')); } catch {}
-await mkdir(OUT_DIR, { recursive: true });
+let lgManifest = {};
+try { lgManifest = JSON.parse(await readFile(LG_MANIFEST, 'utf8')); } catch {}
+await mkdir(LG_DIR, { recursive: true });
 
 const missing = [];
 const queue = releases.slice();
 async function worker() {
   for (let r; (r = queue.shift()); ) {
     const file = new URL(`${r.id}.webp`, OUT_DIR);
-    if (!FORCE && manifest[r.id] && (await exists(file))) continue;
+    const lgFile = new URL(`${r.id}.webp`, LG_DIR);
+    const haveSmall = manifest[r.id] && (await exists(file));
+    if (!FORCE && haveSmall && r.id in lgManifest) continue;
     try {
       const src = await sourceFor(r);
       if (!src) throw new Error('no source image');
       const buf = await load(src);
-      await sharp(buf, { page: await stillFrame(buf), pages: 1, limitInputPixels: false })
-        .resize({ width: 480, height: 480, fit: 'inside', withoutEnlargement: true })
-        .webp({ quality: 74 })
-        .toFile(file.pathname);
+      const page = await stillFrame(buf);
+      const still = () => sharp(buf, { page, pages: 1, limitInputPixels: false });
+      if (FORCE || !haveSmall) {
+        await still()
+          .resize({ width: 480, height: 480, fit: 'inside', withoutEnlargement: true })
+          .webp({ quality: 74 })
+          .toFile(file.pathname);
+      }
+      const lg = await still()
+        .resize({ width: 1200, height: 1200, fit: 'inside', withoutEnlargement: true })
+        .webp({ quality: 78 })
+        .toFile(lgFile.pathname);
+      // only worth listing when it's actually larger than the small thumbnail
+      lgManifest[r.id] = Math.max(lg.width, lg.height) > 560 ? `/releases/thumbs/lg/${r.id}.webp` : null;
       manifest[r.id] = `/releases/thumbs/${r.id}.webp`;
       process.stdout.write('.');
     } catch (e) {
@@ -193,6 +211,8 @@ await Promise.all(Array.from({ length: 6 }, worker));
 
 const sorted = Object.fromEntries(Object.entries(manifest).sort(([a], [b]) => a.localeCompare(b)));
 await writeFile(MANIFEST, JSON.stringify(sorted, null, 2) + '\n');
+const lgSorted = Object.fromEntries(Object.entries(lgManifest).sort(([a], [b]) => a.localeCompare(b)));
+await writeFile(LG_MANIFEST, JSON.stringify(lgSorted, null, 2) + '\n');
 
 const sizes = {};
 for (const id of Object.keys(sorted)) {

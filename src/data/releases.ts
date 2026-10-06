@@ -126,7 +126,7 @@ const allReleases: Release[] = [
     chain: 'Ethereum',
     burned: true,
     badge: 'Burned · unsold edition of 10',
-    thumbSrc: '/releases/thumbs/sr-b932a7-25441.webp',
+    thumbSrc: '/releases/thumbs/lg/sr-b932a7-25441.webp',
     related: { id: 'sr-b932a7-25441', label: 'Proof of Work – Genesis (2021, Bonhams)' },
     description:
       'The original Proof of Work: the animated artwork that draws parallels between computers mining proof-of-work cryptocurrency and gold miners panning the rivers of the California gold rush, where Coldie grew up. ' +
@@ -145,7 +145,7 @@ const allReleases: Release[] = [
     chain: 'Ethereum',
     burned: true,
     badge: 'Burned · unsold edition of 25',
-    thumbSrc: '/releases/thumbs/sr-b932a7-12380.webp',
+    thumbSrc: '/releases/thumbs/lg/sr-b932a7-12380.webp',
     related: { id: 'sr-b932a7-12380', label: 'The Lost Vitalik – Decentral Eyes Genesis (2020)' },
     description:
       'The original Lost Vitalik: a true stereoscopic 3D portrait of Vitalik Buterin, made to be seen in depth through red/blue glasses, and the artwork Coldie calls the genesis of the Decentral Eyes series. ' +

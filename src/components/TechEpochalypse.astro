@@ -103,7 +103,8 @@ const overlords = [
   .te__cta { display: flex; gap: 1.4rem; align-items: center; flex-wrap: wrap; margin: 0; }
 
   /* the playable stage */
-  .te__stage { margin: 0; }
+  /* 4:5 player: on wide screens cap its width so the whole portrait fits on screen */
+  .te__stage { margin: 0; width: 100%; max-width: calc((100vh - 10rem) * 0.8); justify-self: center; }
   .te__player {
     position: relative;
     aspect-ratio: 4 / 5;
