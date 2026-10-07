@@ -13,18 +13,19 @@
 - Recognition: selected for national juried exhibitions — 2016 (juried by Jenny Gheith, SFMOMA) and 2018 (juried by Mat Gleason). (Recognition, not an institutional relationship with SFMOMA.)
 - Concert photography: official 3D photographer of the Coachella Festival, 2009 and 2010; a stereoscopic record of performers including Chris Cornell, Mac Miller, and DMX.
 
-## Crypto art pioneer — on-chain record (from the archive at https://coldie3d.com/archive)
+## On-chain since 2018 — the record (from the archive at https://coldie3d.com/archive)
 
 - On-chain since May 7, 2018: *The Day We've All Been Waiting For*, minted on Ethereum via R.A.R.E. Art Labs, is the first stereoscopic artwork recorded on a blockchain. One of its two editions is held by Coinbase and was on display in Coinbase's lobby from 2018 to 2020.
 - Minting on SuperRare since July 24, 2018: *Decentral Eyes – Vitalik Buterin – Variant 01* is token #501 on SuperRare's original 2018 contract.
 - 175 digital releases from 2018 to today across R.A.R.E. Art Labs, SuperRare, Nifty Gateway, ASYNC, MakersPlace, The Memes by 6529 and OpenSea — 1/1s, editions, generative collections and metaverse wearables.
 - Collected by 66 holders of his 1/1 works, including the 6529 Fund and whalevault.eth. 42 works last sold for 10 ETH or more; the highest, *Decentral Eyes Dogg* (2021, an official collaboration with Snoop Dogg), sold for 188.8 ETH.
-- Pioneer recognition at auction: *Proof of Work – Genesis* (conceived and first tokenized in 2018) was Lot 1 of the Bonhams × SuperRare sale "CryptOGs: The Pioneers of NFT Art" (2021). Works have also sold at Sotheby's and Christie's.
+- Early works at auction: *Proof of Work – Genesis* (conceived and first tokenized in 2018) was Lot 1 of the Bonhams × SuperRare sale "CryptOGs: The Pioneers of NFT Art" (2021). Works have also sold at Sotheby's and Christie's.
 - Signature series: Decentral Eyes (2018 to today), stereoscopic and kinetic 3D portraits of the people who shaped crypto and tech, including Vitalik Buterin, Satoshi Nakamoto, Edward Snowden, Andreas Antonopoulos, Warren Buffett, Jack Dorsey and Michael Saylor.
 
 ## Key pages
 
-- Home: https://coldie3d.com/
+- Home — the collection: every work since 2018 as a browsable grid, with prices for works available now: https://coldie3d.com/
+- Studio — current series, exhibitions, Filthy Fiat, the Touch the Art thesis and the story: https://coldie3d.com/studio
 - About / bio / CV: https://coldie3d.com/about
 - Filthy Fiat (project): https://coldie3d.com/filthy-fiat
 - Kinetic magnetic portraits: https://coldie3d.com/kinetic

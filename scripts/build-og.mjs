@@ -92,7 +92,7 @@ await sharp({ create: { width: W, height: H, channels: 3, background: BG } })
       input: Buffer.from(`<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
         ${mark(70, 70, 120)}
         <text x="70" y="330" font-family="${FONT}" font-size="132" font-weight="800" letter-spacing="10" fill="${INK}">COLDIE</text>
-        <text x="74" y="400" font-family="${FONT}" font-size="34" fill="${INK}">Stereoscopic 3D artist · crypto art pioneer since 2018</text>
+        <text x="74" y="400" font-family="${FONT}" font-size="34" fill="${INK}">Stereoscopic 3D artist · on-chain since 2018</text>
         <text x="74" y="452" font-family="${FONT}" font-size="26" fill="${MUTE}">First stereoscopic artwork on a blockchain, May 7, 2018</text>
         <text x="74" y="${H - 56}" font-family="${FONT}" font-size="22" letter-spacing="3" fill="${MUTE}">COLDIE3D.COM</text>
       </svg>`),
@@ -119,7 +119,7 @@ await sharp({ create: { width: W, height: H, channels: 3, background: BG } })
         ${mark(70, 64, 40)}
         <text x="126" y="96" font-family="${FONT}" font-size="30" font-weight="800" letter-spacing="6" fill="${INK}">COLDIE</text>
         <text x="70" y="200" font-family="${FONT}" font-size="64" font-weight="800" fill="${INK}">The complete NFT archive</text>
-        <text x="70" y="262" font-family="${FONT}" font-size="30" fill="${MUTE}">Crypto art pioneer since May 7, 2018 · every release, collector and sale</text>
+        <text x="70" y="262" font-family="${FONT}" font-size="30" fill="${MUTE}">On-chain since May 7, 2018 · every release, collector and sale</text>
         <text x="70" y="${H - 40}" font-family="${FONT}" font-size="22" letter-spacing="3" fill="${MUTE}">COLDIE3D.COM/ARCHIVE</text>
       </svg>`),
       left: 0,
