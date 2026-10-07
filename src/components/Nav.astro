@@ -1,7 +1,15 @@
 ---
 import { site } from '../data/site';
 
-const links: { label: string; href: string; external?: boolean }[] = [
+export interface Props {
+  /** Short nav for the art-first homepage; every other page gets the full set. */
+  simple?: boolean;
+}
+const { simple = false } = Astro.props;
+
+type Link = { label: string; href: string; external?: boolean };
+const store: Link = { label: 'Store', href: site.storeUrl, external: true };
+const full: Link[] = [
   { label: 'Studio', href: '/studio' },
   { label: 'Digital', href: '/studio#featured-digital' },
   { label: 'Physical', href: '/studio#current-series' },
@@ -10,8 +18,15 @@ const links: { label: string; href: string; external?: boolean }[] = [
   { label: 'Stereo 3D', href: '/studio#pioneer' },
   { label: 'Archive', href: '/archive' },
   { label: 'Story', href: '/studio#story' },
-  { label: 'Store', href: 'https://coldie3d.myshopify.com', external: true },
+  store,
 ];
+const short: Link[] = [
+  { label: 'Studio', href: '/studio' },
+  { label: 'Archive', href: '/archive' },
+  { label: 'Story', href: '/studio#story' },
+  store,
+];
+const links = simple ? short : full;
 ---
 
 <header class="nav" data-nav>

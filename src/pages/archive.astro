@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import RansomHeading from '../components/RansomHeading.astro';
-import ArchiveCorridor from '../components/archive/ArchiveCorridor.astro';
+import ArtFirst from '../components/gallery/ArtFirst.astro';
 import ArchivePanel from '../components/archive/ArchivePanel.astro';
 import mediaJson from '../data/media.json';
 import thumbSizesJson from '../data/thumb-sizes.json';
@@ -205,14 +205,16 @@ const searchText = (r: Release) =>
     { name: 'Archive', path: '/archive' },
   ])]}
 >
-  <section class="rel" data-view="list">
+  <section class="rel" data-view="list" data-mode="grid">
     <script is:inline>
-      // Before first paint: the corridor (followed by the full list) on desktop;
-      // just the list on phones, with reduced motion, or without JavaScript.
+      // Before first paint: Grid (the art) or Database (the full record). ?view=list|grid
+      // wins, then the visitor's last choice; the grid is the default.
       (function () {
         var s = document.currentScript.parentElement;
-        var calm = matchMedia('(prefers-reduced-motion: reduce)').matches || innerWidth < 900;
-        if (!calm && new URLSearchParams(location.search).get('view') !== 'list') s.dataset.view = 'corridor';
+        var v = new URLSearchParams(location.search).get('view');
+        var saved = null;
+        try { saved = localStorage.getItem('arc-mode'); } catch (e) {}
+        s.dataset.mode = v === 'list' ? 'db' : v === 'grid' ? 'grid' : saved === 'db' ? 'db' : 'grid';
       })();
     </script>
     <script type="application/json" id="arc-data" set:html={JSON.stringify(archiveItems)} />
@@ -238,6 +240,21 @@ const searchText = (r: Release) =>
         <div><dt>Platforms</dt><dd>{releasePlatforms.length}</dd></div>
         <div><dt>1/1 collectors</dt><dd>{collectorCount}</dd></div>
       </dl>
+      </div>
+
+      <div class="rel__mode" role="group" aria-label="How to view the archive">
+        <button type="button" data-mode-btn="grid">
+          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M1 1h6v6H1zM9 1h6v6H9zM1 9h6v6H1zM9 9h6v6H9z" fill="currentColor" /></svg>
+          Grid <small>the art</small>
+        </button>
+        <button type="button" data-mode-btn="db">
+          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M1 2h14v2H1zM1 7h14v2H1zM1 12h14v2H1z" fill="currentColor" /></svg>
+          Database <small>the full record</small>
+        </button>
+      </div>
+
+      <div class="rel__gridpane" data-mode-pane="grid">
+        <ArtFirst scope="all" />
       </div>
 
 
@@ -313,7 +330,6 @@ const searchText = (r: Release) =>
             ))}
           </nav>
 
-          <ArchiveCorridor />
 
           <section class="arc-record" aria-labelledby="arc-record-title">
             <h2 id="arc-record-title">On-chain since 2018, on the record</h2>
@@ -503,9 +519,24 @@ const searchText = (r: Release) =>
 <style>
   .rel { padding-block: clamp(2.5rem, 6vw, 4.5rem) var(--section-y); }
 
-  /* The corridor shows on desktop only; the full list always follows it. */
-  /* :global — the corridor lives in its own component, outside this page's style scope */
-  .rel:not([data-view='corridor']) :global([data-view-pane='corridor']) { display: none; }
+  /* Grid | Database: one or the other */
+  .rel[data-mode='grid'] .rel__layout,
+  .rel[data-mode='grid'] .arc-listyears,
+  .rel[data-mode='db'] .rel__gridpane { display: none; }
+  /* the grid runs edge to edge, out of the page's text column */
+  .rel__gridpane { margin-inline: calc(50% - 50vw); }
+  .rel__mode {
+    display: inline-flex; gap: 0; margin: 0 0 clamp(1.5rem, 3vw, 2.25rem);
+    border: 1px solid rgb(255 255 255 / 0.25); border-radius: 999px; padding: 3px;
+  }
+  .rel__mode button {
+    display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.15rem; border: 0; border-radius: 999px;
+    background: transparent; color: #f3f1ec; font: inherit; font-size: 0.85rem; font-weight: 500; cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .rel__mode small { font-size: 0.7rem; font-weight: 400; opacity: 0.7; }
+  .rel__mode button[aria-pressed='true'] { background: #f3f1ec; color: #0a0a0a; }
+  @media (max-width: 520px) { .rel__mode small { display: none; } }
   .arc-list { scroll-margin-top: 80px; }
 
   /* "On the record": the facts behind "on-chain since 2018", between corridor and list */
@@ -1011,6 +1042,26 @@ const searchText = (r: Release) =>
     for (const b of navBtns) b.hidden = !!years.find((y) => y.dataset.year === b.dataset.year)?.hidden;
     listNav.hidden = sort.value.startsWith('price'); // a price-sorted list has no years
   });
+
+  // ── Grid | Database ──
+  const modeBtns = [...document.querySelectorAll<HTMLButtonElement>('[data-mode-btn]')];
+  const setMode = (m: string, save = true) => {
+    section.dataset.mode = m;
+    modeBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.modeBtn === m)));
+    if (!save) return;
+    try { localStorage.setItem('arc-mode', m); } catch {}
+    const url = new URL(location.href);
+    url.searchParams.set('view', m === 'db' ? 'list' : 'grid');
+    url.hash = '';
+    history.replaceState(null, '', url);
+  };
+  setMode(section.dataset.mode ?? 'grid', false);
+  modeBtns.forEach((b) => b.addEventListener('click', () => setMode(b.dataset.modeBtn!)));
+  // links into a database entry (#w-…) switch to the database first
+  document.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#w-"]');
+    if (a && section.dataset.mode !== 'db' && !a.closest('.g-page')) setMode('db');
+  }, true);
 
   // let the corridor script attach its listeners before the first results
   setTimeout(update, 0);

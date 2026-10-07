@@ -111,11 +111,14 @@ const HOME_EXCLUDE: (string | RegExp)[] = [
 const excluded = (title: string) =>
   HOME_EXCLUDE.some((x) => (typeof x === 'string' ? title.toLowerCase().includes(x) : x.test(title)));
 
-/** Every work with an image, oldest first (the timeline opens in 2018). */
-export const galleryItems = sortedReleases
-  .filter((r) => thumbs[r.id] && !excluded(r.title))
+/** Every work with an image, oldest first (the timeline opens in 2018). Used by the archive grid. */
+export const allGalleryItems = sortedReleases
+  .filter((r) => thumbs[r.id])
   .map(toItem)
   .sort((a, b) => a.sortDate.localeCompare(b.sortDate));
+
+/** The homepage selection: everything except HOME_EXCLUDE. */
+export const galleryItems = allGalleryItems.filter((g) => !excluded(g.title));
 
 /** The stage: hand-picked works, shown in this order (release ids from releases.ts). */
 const STAGE_PICKS = [
@@ -127,6 +130,9 @@ const STAGE_PICKS = [
 
 export const stageItems = STAGE_PICKS.map((id) => galleryItems.find((g) => g.id === id)).filter((g): g is GalleryItem => !!g);
 
-export const galleryYears = [...new Set(galleryItems.map((g) => g.year).filter((y): y is number => y != null))];
-export const gallerySeries = [...new Set(galleryItems.map((g) => g.series).filter((s): s is string => !!s))].sort();
-export const forSaleCount = galleryItems.filter((g) => g.listing).length;
+/** Years, series and the for-sale count for a set of items. */
+export const galleryMeta = (items: GalleryItem[]) => ({
+  years: [...new Set(items.map((g) => g.year).filter((y): y is number => y != null))],
+  series: [...new Set(items.map((g) => g.series).filter((s): s is string => !!s))].sort(),
+  forSale: items.filter((g) => g.listing).length,
+});

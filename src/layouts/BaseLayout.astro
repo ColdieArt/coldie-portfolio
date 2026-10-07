@@ -18,6 +18,8 @@ export interface Props {
   noindex?: boolean;
   /** Wide layout on large screens (art gets the room; see global.css). On by default; pass wide={false} to opt out. */
   wide?: boolean;
+  /** Short nav (Studio · Archive · Story · Store) — the homepage. */
+  simpleNav?: boolean;
 }
 
 const {
@@ -29,6 +31,7 @@ const {
   jsonld = [],
   noindex = false,
   wide = true,
+  simpleNav = false,
 } = Astro.props;
 
 // One URL per page: no trailing slash (vercel.json trailingSlash: false redirects /x/ → /x).
@@ -89,7 +92,7 @@ const fullTitle = title === site.name ? `${site.name} — ${site.tagline}` : tit
   </head>
   <body>
     <a href="#main" class="skip">Skip to content</a>
-    <Nav />
+    <Nav simple={simpleNav} />
     <main id="main">
       <slot />
     </main>
