@@ -106,9 +106,8 @@ const altOf = (g: (typeof galleryItems)[number]) =>
   )}
 
   <!-- ───────────── 2. Index ───────────── -->
-  <section class="g-index" id="g-index" aria-labelledby="g-index-title">
+  <section class="g-index" id="g-index" aria-label="The collection">
     <header class="g-index__head">
-      <h2 id="g-index-title" class="g-index__title">The&nbsp;Collection</h2>
       <p class="g-index__sub">
         Every work since the first stereoscopic artwork went on-chain in May 2018: {oneOfOnes} one-of-ones, editions,
         and {animated} animated originals. Hover to see them move. Click to step inside.
@@ -360,12 +359,7 @@ const altOf = (g: (typeof galleryItems)[number]) =>
 
   /* ── 2. Index ─────────────────────────────────────────────── */
   .g-index { padding: clamp(2.5rem, 6vw, 5rem) clamp(0.75rem, 2.5vw, 2.5rem) clamp(3rem, 6vw, 5rem); }
-  .g-index__head { display: grid; gap: 1.25rem; align-items: end; margin: 0 auto clamp(2rem, 4vw, 3.5rem); padding: 0 clamp(0.25rem, 1.5vw, 1.5rem); }
-  @media (min-width: 1000px) { .g-index__head { grid-template-columns: auto minmax(0, 40ch); justify-content: space-between; } }
-  .g-index__title {
-    margin: 0; font-family: var(--sans); font-weight: 500; text-transform: none; color: var(--g-ink);
-    font-size: clamp(3rem, 10vw, 10rem); line-height: 0.85; letter-spacing: -0.06em;
-  }
+  .g-index__head { display: grid; gap: 1.25rem; align-items: end; margin: 0 0 clamp(1.25rem, 2.5vw, 2rem); padding: 0 clamp(0.25rem, 1.5vw, 1.5rem); }
   .g-index__sub { margin: 0; color: #bdb8ae; font-size: clamp(0.92rem, 1vw, 1.05rem); line-height: 1.55; max-width: 40ch; }
 
   .g-bar {
