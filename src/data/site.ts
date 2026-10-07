@@ -72,6 +72,13 @@ export const provenance: {
     type: 'Digital',
   },
   {
+    label: '2025 Bitcoin Conference Art Gallery',
+    href: '/work/jack-dorsey-magnetic-portrait',
+    aria: 'Jack Dorsey Magnetic Portrait at the 2025 Bitcoin Conference Art Gallery',
+    note: 'Jack Dorsey Magnetic Portrait',
+    type: '3D Kinetic Magnetic Portrait',
+  },
+  {
     label: 'Eterno Gallery, Lisbon',
     // TODO: insert direct Eterno Gallery exhibition/work URL
     href: 'https://eternogallery.com/',
