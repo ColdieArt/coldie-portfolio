@@ -2,13 +2,14 @@
 import { site } from '../data/site';
 
 const links: { label: string; href: string; external?: boolean }[] = [
-  { label: 'Digital', href: '/#featured-digital' },
-  { label: 'Physical', href: '/#current-series' },
-  { label: 'Filthy Fiat', href: '/#filthy-fiat' },
-  { label: 'Touch the Art', href: '/#work' },
-  { label: 'Stereo 3D', href: '/#pioneer' },
+  { label: 'Studio', href: '/studio' },
+  { label: 'Digital', href: '/studio#featured-digital' },
+  { label: 'Physical', href: '/studio#current-series' },
+  { label: 'Filthy Fiat', href: '/studio#filthy-fiat' },
+  { label: 'Touch the Art', href: '/studio#work' },
+  { label: 'Stereo 3D', href: '/studio#pioneer' },
   { label: 'Archive', href: '/archive' },
-  { label: 'Story', href: '/#story' },
+  { label: 'Story', href: '/studio#story' },
   { label: 'Store', href: 'https://coldie3d.myshopify.com', external: true },
 ];
 ---
@@ -39,7 +40,7 @@ const links: { label: string; href: string; external?: boolean }[] = [
       {links.map((l) => (
         <a href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}</a>
       ))}
-      <a href="/#acquire" class="btn btn--solid nav__cta">Inquire</a>
+      <a href="/studio#acquire" class="btn btn--solid nav__cta">Inquire</a>
     </nav>
   </div>
 </header>
