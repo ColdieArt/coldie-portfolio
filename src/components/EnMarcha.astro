@@ -1,9 +1,8 @@
 ---
-// En Marcha — interactive kinetic 3D mural (Digital Encounters). Embedded as a
-// click-to-load facade (like the Elon embed): a poster + launch button that swaps
-// in the live Transient-hosted interactive on click, so the heavy WebGL loads only
-// when a visitor opts in. Transient's gateway serves the HTML with no framing
-// restriction, so it embeds directly.
+// En Marcha — interactive kinetic 3D mural (Digital Encounters), embedded live like
+// the Tech Epochalypse overlord: no button. The iframe is lazy, so the browser loads
+// it as a visitor scrolls near; the still poster shows until it's ready. Transient's
+// gateway serves the HTML with no framing restriction, so it embeds directly.
 import RansomHeading from './RansomHeading.astro';
 const ART = 'https://ipfs.transientusercontent.xyz/ipfs/bafybeicslpqjrjdpiuu4usgw6tjyjxmwj7f5ypycbnwkjkbvwig5ghcyau/media';
 const TRANSIENT = 'https://www.transient.xyz/nfts/ethereum/0x034220c41322ff03db1c643da2ce991440a29bdd/1';
@@ -22,24 +21,18 @@ const TRANSIENT = 'https://www.transient.xyz/nfts/ethereum/0x034220c41322ff03db1
     </header>
 
     <figure class="enm__stage">
-      <div class="enm__player" data-enm-player data-src={ART}>
-        <button class="enm__launch" type="button" aria-label="Launch the En Marcha interactive mural — loads inline">
-          <img
-            class="enm__poster"
-            src="/works/digital/en-marcha.webp"
-            alt="En Marcha — kinetic 3D mural by Coldie"
-            loading="lazy"
-            decoding="async"
-          />
-          <span class="enm__scrim" aria-hidden="true"></span>
-          <span class="enm__play" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-          </span>
-          <span class="enm__launch-label">
-            Launch the interactive mural
-            <small>Drag · explore · touch the art</small>
-          </span>
-        </button>
+      <div class="enm__player" data-enm-player>
+        <!-- poster shows until the live mural has loaded, then fades away -->
+        <img class="enm__poster" src="/works/digital/en-marcha.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+        <iframe
+          class="enm__iframe"
+          src={ART}
+          title="En Marcha — interactive kinetic 3D mural by Coldie"
+          loading="lazy"
+          allow="accelerometer; gyroscope; fullscreen"
+          allowfullscreen
+          onload="this.parentElement.setAttribute('data-loaded', '')"
+        ></iframe>
       </div>
       <figcaption class="enm__cap">
         En Marcha #1 — Digital Encounters.
@@ -107,6 +100,8 @@ const TRANSIENT = 'https://www.transient.xyz/nfts/ethereum/0x034220c41322ff03db1
     font-family: var(--type); text-transform: uppercase; letter-spacing: 0.08em;
     font-size: 0.72rem; color: rgba(255,255,255,0.74);
   }
+  .enm__iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; opacity: 0; transition: opacity 0.6s; }
+  .enm__player[data-loaded] .enm__iframe { opacity: 1; }
   .enm__player[data-loaded] { box-shadow: 6px 6px 0 color-mix(in srgb, var(--red) 26%, transparent); }
   .enm__cap {
     margin: 0.9em 0 0; font-family: var(--type); font-size: 0.8rem;
@@ -119,22 +114,3 @@ const TRANSIENT = 'https://www.transient.xyz/nfts/ethereum/0x034220c41322ff03db1
   @media (prefers-reduced-motion: reduce) { .enm__poster, .enm__play { transition: none; } }
 </style>
 
-<script>
-  // Click-to-load facade: swap the poster for the live En Marcha interactive iframe.
-  document.querySelectorAll('[data-enm-player]').forEach((player) => {
-    const btn = player.querySelector('.enm__launch');
-    const src = player.getAttribute('data-src');
-    if (!btn || !src) return;
-    btn.addEventListener('click', () => {
-      const iframe = document.createElement('iframe');
-      iframe.src = src;
-      iframe.title = 'En Marcha — interactive kinetic 3D mural by Coldie';
-      iframe.loading = 'eager';
-      iframe.allow = 'accelerometer; gyroscope; fullscreen';
-      iframe.setAttribute('allowfullscreen', '');
-      iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;display:block;';
-      player.replaceChildren(iframe);
-      player.setAttribute('data-loaded', '');
-    }, { once: true });
-  });
-</script>
