@@ -946,7 +946,22 @@ const altOf = (g: (typeof galleryItems)[number]) =>
     if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1);
   });
 
-  // deep link: /v2#w-<id> opens that work
+  // Filters from the link, e.g. /archive?filter=sale or ?series=Kinetic%203D or ?q=snowden
+  {
+    const p = new URLSearchParams(location.search);
+    const f = p.get('filter'), sr = p.get('series'), q = p.get('q');
+    let changed = false;
+    if (f && chips.some((c) => c.dataset.filter === f)) {
+      filter = f;
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.filter === f)));
+      changed = true;
+    }
+    if (sr && [...seriesSel.options].some((o) => o.value === sr)) { seriesSel.value = sr; changed = true; }
+    if (q) { qIn.value = q; terms = q.toLowerCase().split(/\s+/).filter(Boolean); changed = true; }
+    if (changed) apply();
+  }
+
+  // deep link: #w-<id> opens that work
   const deep = location.hash.match(/^#w-(.+)$/);
   // (only while the grid is on screen: on the archive, the database view uses #w- for its own entries)
   if (deep && byId.has(deep[1]) && root.offsetParent !== null) open(deep[1], shown);
