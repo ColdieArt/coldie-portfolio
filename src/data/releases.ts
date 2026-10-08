@@ -814,7 +814,7 @@ const allReleases: Release[] = [
     date: '2024-10-25',
     kind: 'edition',
     supply: null,
-    series: 'Fake Rares',
+    series: 'Filthy Fiat',
     platform: 'Fake Rares',
     chain: 'Ethereum',
     url: 'https://opensea.io/item/ethereum/0xe70659b717112ac4e14284d0db2f5d5703df8e43/348',
@@ -848,7 +848,7 @@ const allReleases: Release[] = [
     date: '2025-11-21',
     kind: '1/1',
     supply: 27,
-    series: 'Decentral Eyes',
+    series: 'Kinetic 3D',
     platform: 'OpenSea',
     chain: 'Ethereum',
     url: 'https://opensea.io/collection/tech-epochalypse-decentral-eyes',
@@ -925,7 +925,7 @@ const allReleases: Release[] = [
     date: '2026-09-11',
     kind: '1/1',
     supply: 1,
-    series: 'Collaborations',
+    series: 'Kinetic 3D',
     platform: 'OpenSea',
     chain: 'Ethereum',
     url: osItem('0x034220c41322ff03db1c643da2ce991440a29bdd', '1'),
@@ -1072,7 +1072,13 @@ export const sortedReleases = releases
 const uniq = (xs: (string | undefined)[]) => [...new Set(xs.filter(Boolean) as string[])].sort();
 export const releasePlatforms = uniq(releases.map((r) => r.platform));
 export const releaseChains = uniq(releases.map((r) => r.chain));
-export const releaseSeries = uniq(releases.map((r) => r.series));
+/** Series menus list these first, in this order; the rest follow alphabetically. */
+const SERIES_FIRST = ['Decentral Eyes', 'Filthy Fiat', 'Kinetic 3D', 'Landscapes'];
+export const bySeriesOrder = (a: string, b: string) => {
+  const ia = SERIES_FIRST.indexOf(a), ib = SERIES_FIRST.indexOf(b);
+  return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.localeCompare(b);
+};
+export const releaseSeries = uniq(releases.map((r) => r.series)).sort(bySeriesOrder);
 export const releaseKinds = (Object.keys(KIND_LABEL) as ReleaseKind[]).filter((k) =>
   releases.some((r) => r.kind === k)
 );

@@ -7,7 +7,7 @@ import sizesJson from './thumb-sizes.json';
 import mediaJson from './media.json';
 import marketJson from './market.json';
 import { works } from './works';
-import { sortedReleases, releaseYear, formatReleaseDate, KIND_LABEL, type Release } from './releases';
+import { sortedReleases, releaseYear, formatReleaseDate, KIND_LABEL, bySeriesOrder, type Release } from './releases';
 
 type Price = { amount: number; symbol: string; usd: number | null };
 type Owner = { address: string; name: string | null; username: string | null; ens: string | null; artist: boolean };
@@ -133,6 +133,6 @@ export const stageItems = STAGE_PICKS.map((id) => galleryItems.find((g) => g.id 
 /** Years, series and the for-sale count for a set of items. */
 export const galleryMeta = (items: GalleryItem[]) => ({
   years: [...new Set(items.map((g) => g.year).filter((y): y is number => y != null))],
-  series: [...new Set(items.map((g) => g.series).filter((s): s is string => !!s))].sort(),
+  series: [...new Set(items.map((g) => g.series).filter((s): s is string => !!s))].sort(bySeriesOrder),
   forSale: items.filter((g) => g.listing).length,
 });
