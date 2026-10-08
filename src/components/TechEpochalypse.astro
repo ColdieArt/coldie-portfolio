@@ -2,8 +2,8 @@
 // Tech Epochalypse — interactive kinetic 3D portraits of the "overlords" shaping
 // the age of AI. Images + links pulled from knowyouroverlord.art (the full site).
 // The right half of the top block embeds the live Elon Musk kinetic 3D artwork so
-// visitors can try it inline. It uses a click-to-load facade (like the YouTube
-// embeds) so the heavy WebGL experience only loads when someone opts in.
+// visitors can try it inline. It loads straight away; the still portrait shows
+// underneath until the live artwork is ready.
 import RansomHeading from './RansomHeading.astro';
 const SITE = 'https://www.knowyouroverlord.art/';
 const ELON_ART = 'https://www.knowyouroverlord.art/artworks/elon-musk';
@@ -37,24 +37,26 @@ const overlords = [
       </div>
 
       <figure class="te__stage">
-        <div class="te__player" data-te-player data-src={ELON_ART}>
-          <button class="te__launch" type="button" aria-label="Launch the Elon Musk kinetic 3D artwork — loads inline">
-            <img
-              class="te__poster"
-              src="/works/tech-epochalypse/elon-musk.webp"
-              alt="Elon Musk — kinetic 3D portrait by Coldie"
-              loading="lazy"
-              decoding="async"
-            />
-            <span class="te__scrim" aria-hidden="true"></span>
-            <span class="te__play" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-            </span>
-            <span class="te__launch-label">
-              Launch kinetic 3D artwork
-              <small>Drag · rotate · export — right here</small>
-            </span>
-          </button>
+        <div class="te__player" data-te-player>
+          <!-- poster shows until the live artwork has loaded, then fades away -->
+          <img
+            class="te__poster te__poster--still"
+            src="/works/tech-epochalypse/elon-musk.webp"
+            alt=""
+            aria-hidden="true"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+          <iframe
+            class="te__iframe"
+            src={ELON_ART}
+            title="Elon Musk — kinetic 3D interactive artwork by Coldie"
+            loading="eager"
+            allow="accelerometer; gyroscope; fullscreen"
+            allowfullscreen
+            onload="this.parentElement.setAttribute('data-loaded', '')"
+          ></iframe>
         </div>
         <figcaption class="te__cap">
           Overlord I — Elon Musk, “The Architect.”
@@ -152,7 +154,9 @@ const overlords = [
   }
   /* loaded state: iframe fills the stage */
   .te__player[data-loaded] { box-shadow: 6px 6px 0 color-mix(in srgb, var(--cyan) 24%, transparent); }
-  .te__iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+  .te__iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; opacity: 0; transition: opacity 0.6s; }
+  .te__player[data-loaded] .te__iframe { opacity: 1; }
+  .te__poster--still { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .te__cap {
     margin: 0.9em 0 0; font-family: var(--type); font-size: 0.75rem;
     letter-spacing: 0.04em; color: var(--ink-mute);
@@ -194,25 +198,3 @@ const overlords = [
   }
 </style>
 
-<script>
-  // Click-to-load facade: swap the poster for the live kinetic 3D artwork iframe.
-  document.querySelectorAll('[data-te-player]').forEach((player) => {
-    const btn = player.querySelector('.te__launch');
-    const src = player.getAttribute('data-src');
-    if (!btn || !src) return;
-    btn.addEventListener('click', () => {
-      const iframe = document.createElement('iframe');
-      iframe.src = src;
-      iframe.className = 'te__iframe';
-      iframe.title = 'Elon Musk — kinetic 3D interactive artwork by Coldie';
-      iframe.loading = 'eager';
-      iframe.allow = 'accelerometer; gyroscope; fullscreen';
-      iframe.setAttribute('allowfullscreen', '');
-      // Inline sizing: component <style> is scoped by a data-attribute that a
-      // JS-created element never receives, so the iframe must fill its box here.
-      iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;display:block;';
-      player.replaceChildren(iframe);
-      player.setAttribute('data-loaded', '');
-    }, { once: true });
-  });
-</script>
