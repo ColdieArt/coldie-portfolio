@@ -1,12 +1,13 @@
 ---
 // Tech Epochalypse — interactive kinetic 3D portraits of the "overlords" shaping
 // the age of AI. Images + links pulled from knowyouroverlord.art (the full site).
-// The right half of the top block embeds the live Elon Musk kinetic 3D artwork so
+// The right half of the top block embeds the live Jeff Bezos kinetic 3D artwork so
 // visitors can try it inline. It loads straight away; the still portrait shows
 // underneath until the live artwork is ready.
 import RansomHeading from './RansomHeading.astro';
 const SITE = 'https://www.knowyouroverlord.art/';
-const ELON_ART = 'https://www.knowyouroverlord.art/artworks/elon-musk';
+// Bezos loads noticeably faster than Musk (smaller files), so he leads the homepage.
+const FEATURED_ART = 'https://www.knowyouroverlord.art/artworks/jeff-bezos';
 const overlords = [
   { name: 'Elon Musk', img: '/works/tech-epochalypse/elon-musk.webp' },
   { name: 'Mark Zuckerberg', img: '/works/tech-epochalypse/mark-zuckerberg.webp' },
@@ -41,7 +42,7 @@ const overlords = [
           <!-- poster shows until the live artwork has loaded, then fades away -->
           <img
             class="te__poster te__poster--still"
-            src="/works/tech-epochalypse/elon-musk.webp"
+            src="/works/tech-epochalypse/jeff-bezos.webp"
             alt=""
             aria-hidden="true"
             loading="eager"
@@ -50,8 +51,8 @@ const overlords = [
           />
           <iframe
             class="te__iframe"
-            src={ELON_ART}
-            title="Elon Musk — kinetic 3D interactive artwork by Coldie"
+            src={FEATURED_ART}
+            title="Jeff Bezos — kinetic 3D interactive artwork by Coldie"
             loading="eager"
             allow="accelerometer; gyroscope; fullscreen"
             allowfullscreen
@@ -59,8 +60,8 @@ const overlords = [
           ></iframe>
         </div>
         <figcaption class="te__cap">
-          Overlord I — Elon Musk, “The Architect.”
-          <a href={ELON_ART} target="_blank" rel="noopener">Open full experience ↗</a>
+          Overlord IV — Jeff Bezos, “The Optimizer.”
+          <a href={FEATURED_ART} target="_blank" rel="noopener">Open full experience ↗</a>
         </figcaption>
       </figure>
     </div>
