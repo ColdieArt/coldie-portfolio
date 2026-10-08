@@ -962,6 +962,8 @@ const allReleases: Release[] = [
   {
     id: 'tech-epochalypse-moments',
     title: 'Tech Epochalypse Moments - Decentral Eyes',
+    // ten moments across all five overlords and four control layers (tokens 51, 150, 203, 250, 206, 101, 207, 1, 100, 210)
+    cover: '/works/tech-epochalypse/moments.webp',
     date: '2026-02-17',
     kind: 'edition',
     kindNote: '1/1/250',
