@@ -154,9 +154,12 @@ const STAGE_PICKS = [
 
 export const stageItems = STAGE_PICKS.map((id) => galleryItems.find((g) => g.id === id)).filter((g): g is GalleryItem => !!g);
 
+/** Series left out of the grid's series menu (the works stay; the Database menu keeps them). */
+const MENU_HIDE = new Set(['Wearables']);
+
 /** Years, series and the for-sale count for a set of items. */
 export const galleryMeta = (items: GalleryItem[]) => ({
   years: [...new Set(items.map((g) => g.year).filter((y): y is number => y != null))],
-  series: [...new Set(items.flatMap((g) => g.seriesAll))].sort(bySeriesOrder),
+  series: [...new Set(items.flatMap((g) => g.seriesAll))].filter((x) => !MENU_HIDE.has(x)).sort(bySeriesOrder),
   forSale: items.filter((g) => g.listing).length,
 });
