@@ -44,6 +44,15 @@ const clip = (t: string, n = 900) => (t.length > n ? `${t.slice(0, n).replace(/\
 /** What a collector can do right now, in plain words. */
 const CTA = { buy: 'Buy now', floor: 'Collect from', reserve: 'Reserve', auction: 'Live auction' } as const;
 
+/** Kept out of the "3D" filter even though their descriptions mention stereoscopic or anaglyph. */
+const NOT_3D = new Set([
+  'Decentral Eyes - Vitalik Buterin - Variant 01',
+  'Decentral Eyes - John McAfee - Variant 01',
+  'Andreas Antonopoulos - Decentral Eyes - Variant 01',
+  'Vitalik Buterin - Decentral Eyes - Variant 04',
+  'Warren Buffett — Decentral Eyes',
+]);
+
 export type GalleryItem = ReturnType<typeof toItem>;
 
 function toItem(r: Release) {
@@ -87,8 +96,8 @@ function toItem(r: Release) {
     price: mk?.listing?.amount ?? null,
     burned: !!r.burned,
     desc: desc ? clip(desc) : null,
-    /** described as stereoscopic or anaglyph — the "Stereoscopic" filter */
-    stereo: /stereoscopic|anaglyph/i.test(`${desc ?? ''} ${r.title} ${r.badge ?? ''}`),
+    /** described as stereoscopic or anaglyph, less a few left out by hand — the "3D" filter */
+    stereo: /stereoscopic|anaglyph/i.test(`${desc ?? ''} ${r.title} ${r.badge ?? ''}`) && !NOT_3D.has(r.title),
   };
 }
 

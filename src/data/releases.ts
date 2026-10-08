@@ -1023,6 +1023,7 @@ const SR_SERIES: [RegExp, string][] = [
   [/gandinsky/i, 'GANdinsky'],
   [/choose your own adventure/i, 'Landscapes'],
   [/light painting/i, '3D Photography'],
+  [/^the one$/i, '3D Photography'],
   [/human nature series/i, 'Human Nature'],
   [/nft nyc 2020/i, 'Design/Typography'],
   [/eth sf 2018/i, 'Design/Typography'],
