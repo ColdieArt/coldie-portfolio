@@ -50,6 +50,8 @@ const ALSO_3D = new Set([
   'Now is the Best Time - Convergence Series',
   'Everything Connected - Convergence Series',
   'Filthy Pepe — Fake Rares',
+  'Michael Saylor - Not One Satoshi - Decentral Eyes 3D GIF Editions',
+  'Michael Saylor - Not One Satoshi - Decentral Eyes 1/1',
 ]);
 
 /** Kept out of the "3D" filter even though their descriptions mention stereoscopic or anaglyph. */

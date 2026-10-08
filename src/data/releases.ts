@@ -977,7 +977,9 @@ const allReleases: Release[] = [
   },
   {
     id: 'not-one-satoshi',
-    title: 'Michael Saylor - Not One Satoshi - Decentral Eyes',
+    title: 'Michael Saylor - Not One Satoshi - Decentral Eyes 3D GIF Editions',
+    // cycles editions 178, 047, 020 and 127 (tokens 91, 16, 197, 153), each wiggling three times
+    cover: '/works/digital/not-one-satoshi-editions.webp',
     date: '2026-08-21',
     kind: 'edition',
     supply: 211,
@@ -991,7 +993,7 @@ const allReleases: Release[] = [
   },
   {
     id: 'saylor-not-one-satoshi-1of1',
-    title: 'Michael Saylor - Decentral Eyes - Not One Satoshi Variant',
+    title: 'Michael Saylor - Not One Satoshi - Decentral Eyes 1/1',
     date: '2026-09-18',
     kind: '1/1',
     supply: 1,
@@ -1016,12 +1018,17 @@ const allReleases: Release[] = [
     kind: '1/1',
     supply: 1,
     series: 'Kinetic 3D',
-    platform: 'OpenSea',
+    platform: 'Transient Labs',
     chain: 'Ethereum',
-    url: osItem('0x034220c41322ff03db1c643da2ce991440a29bdd', '1'),
+    url: 'https://www.transient.xyz/nfts/ethereum/0x034220c41322ff03db1c643da2ce991440a29bdd/1',
+    listing: { amount: 2.25, symbol: 'ETH', kind: 'buy', asOf: '2026-10-06' }, // listed by Coldie on Transient Labs
     contract: '0x034220c41322ff03db1c643da2ce991440a29bdd',
     tokenId: '1',
     badge: 'Digital Encounters · 8NAP × Superchief',
+    description:
+      "En Marcha is a digital kinetic 3D mural inspired by the works of Diego Rivera and Museo Anahuacalli. During my residency for the Digital Encounters project, curated by 8NAP and Superchief, I was offered the unique opportunity to experience a variety of Rivera's murals with his grandsons as personal guides. This in-depth connection to the works and his lineage resonated deeply. Having come into the residency with an initial concept in mind, I was taken aback and pivoted to honor Rivera's mural work and the cultural artifacts he collected during his life.\n\n" +
+      "The vision for this work is to invite the viewer to take control and have an experience. By allowing the viewer to 'touch the art' they become impassioned, curious, and inquisitive about the objects being used. I integrated my favorite artifacts and the museum itself as elements in the mural. I photographed every element in the mural during my tour of Museo Anahuacalli and Rivera's private vault collection of Mexican artifacts. Each element is hand-embellished with textures consistent with my collage practice to blend my aesthetic with the cultural artifacts to create an integrated, interactive art experience.\n\n" +
+      "As part of the interactive mural experience, I created a variety of visual effects that relate directly to Diego Rivera's murals and Museo Anahuacalli. Two of my favorite murals, Dream of a Sunday Afternoon in Alameda Park and Fertile Land, are represented, as well as the three realms / levels the museum was constructed to embody. I hope this work creates a deeper connection with viewers who interact with the work and educates about Museo Anahuacalli and Diego Rivera.",
     thumbSrc: 'https://i2c.seadn.io/ethereum/0x034220c41322ff03db1c643da2ce991440a29bdd/5b303187a5090927727a54898ffefd/7b5b303187a5090927727a54898ffefd.jpeg',
     source: 'opensea',
   },
