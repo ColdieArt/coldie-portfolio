@@ -212,14 +212,10 @@ const searchText = (r: Release) =>
 >
   <section class="rel" data-view="list" data-mode="grid">
     <script is:inline>
-      // Before first paint: Grid (the art) or Database (the full record). ?view=list|grid
-      // wins, then the visitor's last choice; the grid is the default.
+      // Before first paint: the page always opens on the Grid; ?view=list links straight to the Database.
       (function () {
         var s = document.currentScript.parentElement;
-        var v = new URLSearchParams(location.search).get('view');
-        var saved = null;
-        try { saved = localStorage.getItem('arc-mode'); } catch (e) {}
-        s.dataset.mode = v === 'list' ? 'db' : v === 'grid' ? 'grid' : saved === 'db' ? 'db' : 'grid';
+        if (new URLSearchParams(location.search).get('view') === 'list') s.dataset.mode = 'db';
       })();
     </script>
     <script type="application/json" id="arc-data" set:html={JSON.stringify(archiveItems)} />
@@ -1054,7 +1050,6 @@ const searchText = (r: Release) =>
     section.dataset.mode = m;
     modeBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.modeBtn === m)));
     if (!save) return;
-    try { localStorage.setItem('arc-mode', m); } catch {}
     const url = new URL(location.href);
     url.searchParams.set('view', m === 'db' ? 'list' : 'grid');
     url.hash = '';
