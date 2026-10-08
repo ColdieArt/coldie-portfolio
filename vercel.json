@@ -20,6 +20,11 @@
       "source": "/studio",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/v3",
+      "destination": "/",
+      "permanent": false
     }
   ]
 }

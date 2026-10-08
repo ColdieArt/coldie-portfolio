@@ -8,7 +8,7 @@ import market from './src/data/market.json' with { type: 'json' };
 export const SITE = 'https://coldie3d.com';
 
 // Pages built but still awaiting copy — also rendered with noindex. Remove once ready.
-const DRAFT_PAGES = ['/series/decentral-eyes', '/404', '/v3', ...works.filter((w) => w.draft).map((w) => `/work/${w.slug}`)];
+const DRAFT_PAGES = ['/series/decentral-eyes', '/404', ...works.filter((w) => w.draft).map((w) => `/work/${w.slug}`)];
 
 // Image entries for the sitemap (Google Images): each work page's hero.
 const abs = (p) => new URL(p, SITE).href;

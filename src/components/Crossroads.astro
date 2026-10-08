@@ -1,10 +1,10 @@
 ---
-// Choose-your-own-adventure opening (test homepage, /v3): one question, three doors:
+// Choose-your-own-adventure opening of the homepage: one question, three doors:
 // Where I've been · In the studio · Where I'm going.
 // Each door leads with one artwork and lists the areas of interest on its path; links
 // into the archive carry a filter (?filter= / ?series=) so the grid opens on that view.
-// Hovering (or focusing) a door widens it and dims the others. The Studio homepage
-// sections follow below for anyone who scrolls past the question.
+// Hovering (or focusing) a door widens it and dims the others. The Studio sections
+// follow below (#studio) for anyone who scrolls past the question.
 
 type Link = { label: string; href: string; external?: boolean };
 type Door = { key: string; title: string; line: string; img: string; alt: string; enter: Link; links: Link[] };
@@ -31,7 +31,7 @@ const doors: Door[] = [
     line: 'What’s in the studio now: works you can collect today, Filthy Fiat, and physical pieces.',
     img: '/works/warren-buffett/ordinal.webp',
     alt: 'Warren Buffett — Filthy Fiat, built from buried, mold-ruined dollar bills',
-    enter: { label: 'Enter the studio', href: '/' },
+    enter: { label: 'Enter the studio', href: '#studio' },
     links: [
       { label: 'Filthy Fiat', href: '#filthy-fiat' },
       { label: 'Physical works', href: '#current-series' },
@@ -82,7 +82,7 @@ const ext = (l: Link) => (l.external ? { target: '_blank', rel: 'noopener' } : {
       </article>
     ))}
   </div>
-  <a class="cx__more" href="#tech-epochalypse">Or see everything <span aria-hidden="true">↓</span></a>
+  <a class="cx__more" href="#studio">Or see everything <span aria-hidden="true">↓</span></a>
 </section>
 
 <style>

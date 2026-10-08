@@ -14,6 +14,7 @@ import FilthyFiat from '../components/FilthyFiat.astro';
 import Acquire from '../components/Acquire.astro';
 import { site } from '../data/site';
 import { personLd, websiteLd } from '../data/jsonld';
+import Crossroads from '../components/Crossroads.astro';
 ---
 <BaseLayout
   title="Coldie — Stereoscopic 3D Crypto Art Since 2018"
@@ -23,7 +24,12 @@ import { personLd, websiteLd } from '../data/jsonld';
 >
   <h1 class="sr-only">Coldie — stereoscopic 3D and crypto artist, on-chain since 2018.</h1>
 
-  <!-- Tech Epochalypse — top of page -->
+  <!-- Choose your own adventure: three doors, then the Studio -->
+  <Crossroads />
+
+  <div id="studio" class="studio-start" aria-hidden="true"></div>
+
+  <!-- Tech Epochalypse -->
   <TechEpochalypse />
 
   <!-- Featured digital works — on-chain editions, collect on OpenSea -->
@@ -73,4 +79,5 @@ import { personLd, websiteLd } from '../data/jsonld';
   .work__h { margin: 0 0 0.4em; }
   .work__lede { margin: 0 0 1em; }
   .work__lede2 { margin: 0; color: var(--ink-soft); }
+  .studio-start { scroll-margin-top: 64px; }
 </style>

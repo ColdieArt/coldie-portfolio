@@ -3,7 +3,8 @@
 // the age of AI. Images + links pulled from knowyouroverlord.art (the full site).
 // The right half of the top block embeds the live Jensen Huang kinetic 3D artwork so
 // visitors can try it inline. It loads straight away; the still portrait shows
-// underneath until the live artwork is ready.
+// underneath until the live artwork is ready. The still (jensen-huang-live.webp) is the
+// artwork's own first frame, captured at the frame's 4:5 size, so the hand-off is seamless.
 import RansomHeading from './RansomHeading.astro';
 const SITE = 'https://www.knowyouroverlord.art/';
 // The featured overlord on the homepage (lighter files than Musk, so it loads quickly).
@@ -46,7 +47,7 @@ const overlords = [
           <!-- poster shows until the live artwork has loaded, then fades away -->
           <img
             class="te__poster te__poster--still"
-            src="/works/tech-epochalypse/jensen-huang.webp"
+            src="/works/tech-epochalypse/jensen-huang-live.webp"
             alt=""
             aria-hidden="true"
             loading="eager"
