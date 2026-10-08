@@ -515,6 +515,21 @@ const allReleases: Release[] = [
     source: 'sheet:editions',
   },
   {
+    id: 'buffett-filthy-fiat-ordinal',
+    title: 'Warren Buffett — Filthy Fiat (Ordinal)',
+    date: '2024',
+    kind: '1/1',
+    supply: 1,
+    series: 'Filthy Fiat',
+    platform: 'Bitcoin Ordinals',
+    chain: 'Bitcoin',
+    slug: 'warren-buffett-filthy-fiat',
+    badge: "Christie's · recursive edition paired with the physical sculpture",
+    thumbSrc: '/works/warren-buffett/01.jpg',
+    // TODO: inscription URL and date
+    source: 'site',
+  },
+  {
     id: 'ash2-life',
     thumbSrc: 'https://i2c.seadn.io/ethereum/0x4d232cd85294acd53ec03f4a57f57888c9ea1946/5040defdd28976231968253a8fdbfd40.png?w=500',
     title: 'Ash2 — Life Is Good / Life Is Hard',
@@ -1001,11 +1016,10 @@ const SR_SERIES: [RegExp, string][] = [
   [/gandinsky/i, 'GANdinsky'],
   [/choose your own adventure/i, 'Landscapes'],
   [/light painting/i, '3D Photography'],
-  [/mind control series/i, 'Mind Control'],
   [/human nature series/i, 'Human Nature'],
-  [/nft nyc 2020/i, 'NFT NYC 2020'],
-  [/eth sf 2018/i, 'ETHSanFrancisco 2018'],
-  [/eth singapore/i, 'ETHSingapore 2018'],
+  [/nft nyc 2020/i, 'Design/Typography'],
+  [/eth sf 2018/i, 'Design/Typography'],
+  [/eth singapore/i, 'Design/Typography'],
   [/the day we've all been waiting for/i, "The Day We've All Been Waiting For"],
 ];
 

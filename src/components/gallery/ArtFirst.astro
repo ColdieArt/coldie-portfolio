@@ -22,6 +22,10 @@ const first = galleryYears[0];
 const latest = galleryYears.at(-1);
 const oneOfOnes = galleryItems.filter((g) => g.kind === '1/1').length;
 const animated = galleryItems.filter((g) => g.media).length;
+const stereoCount = galleryItems.filter((g) => g.stereo).length;
+/** What the search box looks through. */
+const searchText = (g: (typeof galleryItems)[number]) =>
+  [g.title, g.series, g.year, g.kindLabel, g.platform, g.chain, g.badge, g.owner?.label, g.desc].filter(Boolean).join(' ').toLowerCase();
 /** The full-screen slideshow above the grid. Off: the grid leads. */
 const SHOW_STAGE = false && scope === 'home';
 const layoutAr = (ar: number) => Math.min(2.2, Math.max(0.56, ar));
@@ -126,11 +130,6 @@ const altOf = (g: (typeof galleryItems)[number]) =>
 
     <div class="g-bar" data-bar>
       <div class="g-chips" role="group" aria-label="Show">
-        <button type="button" class="g-chip" data-filter="all" aria-pressed="true">All <sup>{galleryItems.length}</sup></button>
-        <button type="button" class="g-chip g-chip--live" data-filter="sale" aria-pressed="false"><i aria-hidden="true"></i>Available now <sup>{forSaleCount}</sup></button>
-        <button type="button" class="g-chip" data-filter="one" aria-pressed="false">1/1 <sup>{oneOfOnes}</sup></button>
-        <button type="button" class="g-chip" data-filter="ed" aria-pressed="false">Editions</button>
-        <button type="button" class="g-chip" data-filter="anim" aria-pressed="false">In motion <sup>{animated}</sup></button>
         <label class="g-select">
           <span class="sr-only">Series</span>
           <select data-series>
@@ -138,8 +137,18 @@ const altOf = (g: (typeof galleryItems)[number]) =>
             {gallerySeries.map((s) => <option value={s}>{s}</option>)}
           </select>
         </label>
+        <button type="button" class="g-chip" data-filter="all" aria-pressed="true">All <sup>{galleryItems.length}</sup></button>
+        <button type="button" class="g-chip" data-filter="one" aria-pressed="false">1/1 <sup>{oneOfOnes}</sup></button>
+        <button type="button" class="g-chip" data-filter="ed" aria-pressed="false">Editions</button>
+        <button type="button" class="g-chip g-chip--live" data-filter="sale" aria-pressed="false"><i aria-hidden="true"></i>Available now <sup>{forSaleCount}</sup></button>
+        <button type="button" class="g-chip" data-filter="stereo" aria-pressed="false">Stereoscopic <sup>{stereoCount}</sup></button>
       </div>
       <div class="g-tools">
+        <label class="g-search">
+          <span class="sr-only">Search the collection</span>
+          <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5" /><path d="M11 11l4 4" stroke="currentColor" stroke-width="1.5" /></svg>
+          <input type="search" placeholder="Search" autocomplete="off" data-q title="Title, series, year, collector or description" />
+        </label>
         <label class="g-select">
           <span class="sr-only">Sort</span>
           <select data-sort>
@@ -182,6 +191,8 @@ const altOf = (g: (typeof galleryItems)[number]) =>
               data-series={g.series ?? ''}
               data-sale={g.listing ? '' : undefined}
               data-anim={g.media ? g.media.type : undefined}
+              data-stereo={g.stereo ? '' : undefined}
+              data-q={searchText(g)}
               data-price={g.price ?? undefined}
               data-date={g.sortDate}
               style={`--ar:${layoutAr(g.ar)}`}
@@ -398,8 +409,19 @@ const altOf = (g: (typeof galleryItems)[number]) =>
     color: var(--g-ink); font: inherit; font-size: 0.78rem; cursor: pointer;
   }
   .g-select select option { background: #111; }
+  .g-select [data-series] { max-width: 11.5rem; text-overflow: ellipsis; }
+  .g-search {
+    display: inline-flex; align-items: center; gap: 0.5rem; padding: 0 0.95rem; height: 2.2rem;
+    border: 1px solid var(--g-line); border-radius: 999px; color: var(--g-mute); transition: border-color 0.2s;
+  }
+  .g-search:focus-within { border-color: rgb(255 255 255 / 0.5); color: var(--g-ink); }
+  .g-search input {
+    width: 8rem; border: 0; outline: 0; background: transparent; color: var(--g-ink); font: inherit; font-size: 0.78rem; padding: 0;
+  }
+  .g-search input::placeholder { color: var(--g-mute); }
+  .g-search input::-webkit-search-cancel-button { filter: invert(1); }
   .g-scale { display: inline-flex; align-items: center; gap: 0.55rem; padding: 0 0.4rem 0 0.8rem; color: var(--g-mute); }
-  .g-scale input { width: 110px; accent-color: var(--g-ink); }
+  .g-scale input { width: 84px; accent-color: var(--g-ink); }
   .g-years { display: flex; flex-wrap: wrap; gap: 0.1rem 0.9rem; width: 100%; font-size: 0.72rem; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
   .g-years a { color: var(--g-mute); text-decoration: none; padding: 0.15rem 0; border-bottom: 1px solid transparent; transition: color 0.2s, border-color 0.2s; }
   .g-years a:hover, .g-years a[data-current] { color: var(--g-ink); border-bottom-color: var(--g-ink); }
@@ -683,17 +705,20 @@ const altOf = (g: (typeof galleryItems)[number]) =>
   const scale = bar.querySelector<HTMLInputElement>('[data-scale]')!;
   const yearLinks = [...bar.querySelectorAll<HTMLAnchorElement>('[data-year-link]')];
   const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+  const qIn = bar.querySelector<HTMLInputElement>('[data-q]')!;
+  let terms: string[] = [];
   let filter = 'all';
   let shown: string[] = tiles.map((t) => t.dataset.tile!);
 
   const match = (t: HTMLElement) => {
     const d = t.dataset;
     if (seriesSel.value && d.series !== seriesSel.value) return false;
+    if (terms.length && !terms.every((w) => d.q!.includes(w))) return false;
     switch (filter) {
       case 'sale': return d.sale != null;
       case 'one': return d.kind === '1/1';
       case 'ed': return d.kind !== '1/1';
-      case 'anim': return d.anim != null;
+      case 'stereo': return d.stereo != null;
       default: return true;
     }
   };
@@ -715,7 +740,7 @@ const altOf = (g: (typeof galleryItems)[number]) =>
         const mine = tiles.filter((t) => t.dataset.year === y.dataset.yeartile).sort((a, b) => dir * a.dataset.date!.localeCompare(b.dataset.date!));
         const n = mine.filter((t) => !t.hidden).length;
         // years frame the full collection; in a filtered view the art alone reads better
-        y.hidden = n === 0 || filter !== 'all' || !!seriesSel.value;
+        y.hidden = n === 0 || filter !== 'all' || !!seriesSel.value || terms.length > 0;
         y.querySelector('[data-yn]')!.textContent = String(n);
         y.dataset.n = String(n);
         order.push(y, ...mine);
@@ -737,6 +762,14 @@ const altOf = (g: (typeof galleryItems)[number]) =>
     root.querySelector('#g-index')!.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
   });
   seriesSel.addEventListener('change', apply);
+  let qTimer = 0;
+  qIn.addEventListener('input', () => {
+    clearTimeout(qTimer);
+    qTimer = window.setTimeout(() => {
+      terms = qIn.value.toLowerCase().split(/\s+/).filter(Boolean);
+      apply();
+    }, 120);
+  });
   // year rail: jump to the year marker, or to that year's first work when markers are hidden
   bar.querySelector('[data-years]')!.addEventListener('click', (e) => {
     const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('[data-year-link]');
@@ -748,7 +781,7 @@ const altOf = (g: (typeof galleryItems)[number]) =>
   });
   sortSel.addEventListener('change', apply);
   root.querySelector('[data-reset]')!.addEventListener('click', () => {
-    filter = 'all'; seriesSel.value = '';
+    filter = 'all'; seriesSel.value = ''; qIn.value = ''; terms = [];
     chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.filter === 'all')));
     apply();
   });

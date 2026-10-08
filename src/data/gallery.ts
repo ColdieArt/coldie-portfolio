@@ -84,6 +84,8 @@ function toItem(r: Release) {
     price: mk?.listing?.amount ?? null,
     burned: !!r.burned,
     desc: desc ? clip(desc) : null,
+    /** described as stereoscopic or anaglyph — the "Stereoscopic" filter */
+    stereo: /stereoscopic|anaglyph/i.test(`${desc ?? ''} ${r.title} ${r.badge ?? ''}`),
   };
 }
 
