@@ -958,7 +958,29 @@ const altOf = (g: (typeof galleryItems)[number]) =>
     }
     if (sr && [...seriesSel.options].some((o) => o.value === sr)) { seriesSel.value = sr; changed = true; }
     if (q) { qIn.value = q; terms = q.toLowerCase().split(/\s+/).filter(Boolean); changed = true; }
-    if (changed) apply();
+    if (changed) {
+      apply();
+      // arriving on a filtered view: middle image size, and land with the filter bar
+      // at the top of the screen, just clear of the nav logo
+      if (innerWidth > 700) { scale.value = '50'; root.style.setProperty('--g-rh', `${Math.round(18 + 0.25 * 60)}vh`); }
+      // the page above keeps settling as fonts and images load, so re-land until it
+      // has, unless the visitor starts scrolling first
+      let user = false;
+      const stop = () => (user = true);
+      addEventListener('wheel', stop, { once: true, passive: true });
+      addEventListener('touchstart', stop, { once: true, passive: true });
+      addEventListener('keydown', stop, { once: true });
+      const land = () => {
+        if (user) return;
+        const logo = document.querySelector('.nav__logo')?.getBoundingClientRect().bottom ?? 64;
+        const clear = Math.max(64, logo) + 8;
+        scrollTo({ top: bar.getBoundingClientRect().top + scrollY - clear, behavior: 'instant' as ScrollBehavior });
+      };
+      land();
+      document.fonts?.ready.then(land);
+      if (document.readyState === 'complete') land(); else addEventListener('load', land, { once: true });
+      [300, 900].forEach((t) => setTimeout(land, t));
+    }
   }
 
   // deep link: #w-<id> opens that work

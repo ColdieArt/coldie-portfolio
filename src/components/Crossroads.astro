@@ -1,5 +1,6 @@
 ---
-// Choose-your-own-adventure opening (test homepage, /v3): one question, three doors.
+// Choose-your-own-adventure opening (test homepage, /v3): one question, three doors:
+// Where I've been · In the studio · Where I'm going.
 // Each door leads with one artwork and lists the areas of interest on its path; links
 // into the archive carry a filter (?filter= / ?series=) so the grid opens on that view.
 // Hovering (or focusing) a door widens it and dims the others. The Studio homepage
@@ -26,19 +27,19 @@ const doors: Door[] = [
     ],
   },
   {
-    key: 'between',
-    title: 'Somewhere in between',
+    key: 'studio',
+    title: 'In the studio',
     line: 'What’s in the studio now: works you can collect today, Filthy Fiat, and physical pieces.',
     img: '/works/warren-buffett/ordinal.webp',
     alt: 'Warren Buffett — Filthy Fiat, built from buried, mold-ruined dollar bills',
-    enter: { label: 'See what’s available', href: '/archive?filter=sale' },
+    enter: { label: 'Enter the studio', href: '/' },
     links: [
-      { label: 'Available now', href: '/archive?filter=sale' },
       { label: 'Filthy Fiat', href: '#filthy-fiat' },
       { label: 'Physical works', href: '#current-series' },
       { label: 'Featured digital', href: '#featured-digital' },
       { label: 'Touch the art', href: '#work' },
       { label: 'Store', href: 'https://coldie3d.myshopify.com', external: true },
+      { label: 'Available now', href: '/archive?filter=sale' },
     ],
   },
   {
@@ -109,7 +110,7 @@ const ext = (l: Link) => (l.external ? { target: '_blank', rel: 'noopener' } : {
     transition: filter 0.6s, transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .cx__door[data-door='been'] .cx__art { object-position: 50% 40%; }
-  .cx__door[data-door='between'] .cx__art { object-position: 50% 28%; }
+  .cx__door[data-door='studio'] .cx__art { object-position: 50% 28%; }
   .cx__veil { position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgb(0 0 0 / 0.9) 0%, rgb(0 0 0 / 0.45) 45%, rgb(0 0 0 / 0.05) 75%); }
   .cx__body { padding: clamp(1rem, 2.2vw, 1.75rem); width: 100%; max-width: 34rem; }
   .cx__title { margin: 0 0 0.5rem; font-family: var(--display); font-weight: 400; text-transform: uppercase; letter-spacing: 0.01em; line-height: 0.95; font-size: clamp(1.6rem, 2.7vw, 2.75rem); }
