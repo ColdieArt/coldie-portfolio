@@ -24,14 +24,13 @@
 
 ## Key pages
 
-- Home — the collection: every work since 2018 as a browsable grid, with prices for works available now: https://coldie3d.com/
-- Studio — current series, exhibitions, Filthy Fiat, the Touch the Art thesis and the story: https://coldie3d.com/studio
+- Home: https://coldie3d.com/
 - About / bio / CV: https://coldie3d.com/about
 - Filthy Fiat (project): https://coldie3d.com/filthy-fiat
 - Kinetic magnetic portraits: https://coldie3d.com/kinetic
 - Collection (on-chain works hub): https://coldie3d.com/collection
 - On-chain editions: https://coldie3d.com/editions
-- Archive — every digital release since 2018, searchable, with dates, collectors and prices: https://coldie3d.com/archive
+- Archive — every digital release since 2018, as a browsable grid or a searchable database with dates, collectors and prices: https://coldie3d.com/archive
 
 ## Key works
 

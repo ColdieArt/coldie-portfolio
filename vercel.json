@@ -15,6 +15,11 @@
       "source": "/work/decentral-eyes-portrait",
       "destination": "/archive",
       "permanent": true
+    },
+    {
+      "source": "/studio",
+      "destination": "/",
+      "permanent": true
     }
   ]
 }
