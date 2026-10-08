@@ -120,10 +120,12 @@ export const provenance: {
     aria: 'Front Row 3D at Gazelli Art House, London',
     note: 'Front Row 3D Concert Photography',
     type: 'Stereoscopic 3D Lenticular, VR, Digital',
-    image: '/images/front-row-3d/coachella-2010/coachella-2010-them-crooked-vultures.jpg',
-    imageAlt: 'Them Crooked Vultures at Coachella 2010, stereoscopic 3D photograph by Coldie from Front Row 3D',
+    // 3D GIF from the Front Row 3D drop on Gazell.io (Gazelli's digital platform):
+    // https://gazell.io/collections/coldie-frontrow3d/products/flaming-lips
+    image: '/images/front-row-3d/gazelli/flaming-lips.gif',
+    imageAlt: 'The Flaming Lips, Santa Rosa, June 11, 2011 — stereoscopic 3D GIF by Coldie from Front Row 3D',
     event: 'Front Row 3D',
-    desc: 'Stereoscopic concert photography from his years as the official 3D photographer of Coachella (2009 and 2010), shown as lenticular, VR and digital works.',
+    desc: "Stereoscopic concert photography, including his years as Coachella's official 3D photographer (2009 and 2010). Each work comes as anaglyph, 3D GIF and VR editions.",
   },
 ];
 
