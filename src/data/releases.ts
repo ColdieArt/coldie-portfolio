@@ -48,6 +48,8 @@ export type Release = {
   kindNote?: string;
   supply: number | null;
   series?: string;
+  /** further series the work also belongs to (it shows under each in the series menus) */
+  alsoSeries?: string[];
   platform: string;
   chain: string;
   url?: string;
@@ -509,6 +511,7 @@ const allReleases: Release[] = [
     kind: 'generative',
     supply: 300,
     series: 'Filthy Fiat',
+    alsoSeries: ['Ordinals (BTC)'],
     platform: 'OpenSea',
     chain: 'Ethereum',
     url: 'https://opensea.io/collection/filthyfiat-curated',
@@ -517,16 +520,20 @@ const allReleases: Release[] = [
   {
     id: 'buffett-filthy-fiat-ordinal',
     title: 'Warren Buffett — Filthy Fiat (Ordinal)',
-    date: '2024',
+    date: '2024-11-19',
     kind: '1/1',
     supply: 1,
     series: 'Filthy Fiat',
+    alsoSeries: ['Decentral Eyes', 'Ordinals (BTC)'],
     platform: 'Bitcoin Ordinals',
     chain: 'Bitcoin',
+    url: 'https://gamma.io/ordinals/inscriptions/68af5d1cc64a45552d27dd8e6fe45a3660ede07b91948f0ee3ad01b261d72d2ei0',
+    tokenId: '77713812',
     slug: 'warren-buffett-filthy-fiat',
-    badge: "Christie's · recursive edition paired with the physical sculpture",
+    badge: "Christie's · inscription #77713812, paired with the physical sculpture",
     thumbSrc: '/works/warren-buffett/01.jpg',
-    // TODO: inscription URL and date
+    description:
+      "1/1 recursive Ordinal inscribed for primary sale with Christie's NYC “First Open | Post-War and Contemporary Art” auction, December 3–18, 2024. The digital artwork is composed of 10 recursive portrait elements that build the Warren Buffett portrait. Its collage elements include US dollar bills Coldie buried in the ground for two years as a SHTF stash; moisture contaminated them with mold, leaving them very fragile. This unintentional generative art by nature began the Filthy Fiat series, and this is the series' first 1/1. The digital artwork is paired with a physical 1/1 magnetic 3D portrait whose individual pieces can be moved around and customized.",
     source: 'site',
   },
   {
@@ -1092,7 +1099,9 @@ export const bySeriesOrder = (a: string, b: string) => {
   const ia = SERIES_FIRST.indexOf(a), ib = SERIES_FIRST.indexOf(b);
   return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.localeCompare(b);
 };
-export const releaseSeries = uniq(releases.map((r) => r.series)).sort(bySeriesOrder);
+/** Every series a release belongs to: its main series first, then any others. */
+export const seriesOf = (r: Pick<Release, 'series' | 'alsoSeries'>) => [r.series, ...(r.alsoSeries ?? [])].filter((x): x is string => !!x);
+export const releaseSeries = uniq(releases.flatMap(seriesOf)).sort(bySeriesOrder);
 export const releaseKinds = (Object.keys(KIND_LABEL) as ReleaseKind[]).filter((k) =>
   releases.some((r) => r.kind === k)
 );

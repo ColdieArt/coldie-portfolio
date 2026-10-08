@@ -17,6 +17,7 @@ import {
   releaseChains,
   releaseSeries,
   releaseKinds,
+  seriesOf,
   type Release,
 } from '../data/releases';
 
@@ -98,6 +99,7 @@ const marketName = (url: string) =>
   : url.includes('opensea.io') ? 'OpenSea'
   : url.includes('deca.art') ? 'Deca'
   : url.includes('rareart.io') ? 'R.A.R.E. Art Labs'
+  : url.includes('gamma.io') ? 'Gamma'
   : new URL(url).hostname.replace(/^www\./, '');
 
 /** Descriptive alt text: what the work is, by whom, when — read by image search and AI. */
@@ -387,7 +389,7 @@ const searchText = (r: Release) =>
                       data-id={r.id}
                       data-search={searchText(r)}
                       data-kind={r.kind}
-                      data-series={r.series ?? ''}
+                      data-series={seriesOf(r).join('|')}
                       data-platform={r.platform}
                       data-chain={r.chain}
                       data-forsale={market[r.id]?.listing ? '1' : undefined}
@@ -894,7 +896,7 @@ const searchText = (r: Release) =>
       const d = entry.dataset;
       const ok =
         terms.every((t) => d.search!.includes(t)) &&
-        active.every(([k, el]) => d[k] === el.value) &&
+        active.every(([k, el]) => (k === 'series' ? (d.series ?? '').split('|').includes(el.value) : d[k] === el.value)) &&
         (!forSale.checked || d.forsale === '1') &&
         (!collector || d.owner === collector);
       entry.hidden = !ok;

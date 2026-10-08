@@ -7,7 +7,7 @@ import sizesJson from './thumb-sizes.json';
 import mediaJson from './media.json';
 import marketJson from './market.json';
 import { works } from './works';
-import { sortedReleases, releaseYear, formatReleaseDate, KIND_LABEL, bySeriesOrder, type Release } from './releases';
+import { sortedReleases, releaseYear, formatReleaseDate, KIND_LABEL, bySeriesOrder, seriesOf, type Release } from './releases';
 
 type Price = { amount: number; symbol: string; usd: number | null };
 type Owner = { address: string; name: string | null; username: string | null; ens: string | null; artist: boolean };
@@ -36,6 +36,7 @@ const marketName = (url: string) =>
   : url.includes('opensea.io') ? 'OpenSea'
   : url.includes('deca.art') ? 'Deca'
   : url.includes('rareart.io') ? 'R.A.R.E. Art Labs'
+  : url.includes('gamma.io') ? 'Gamma'
   : url.includes('niftygateway.com') ? 'Nifty Gateway'
   : new URL(url).hostname.replace(/^www\./, '');
 const clip = (t: string, n = 900) => (t.length > n ? `${t.slice(0, n).replace(/\s+\S*$/, '')}…` : t);
@@ -63,6 +64,8 @@ function toItem(r: Release) {
     kind: r.kind,
     kindLabel: `${KIND_LABEL[r.kind]}${r.supply != null && r.kind !== '1/1' ? ` of ${r.supply.toLocaleString('en-US')}` : ''}`,
     series: r.series && r.series !== 'Landmark' ? r.series : null,
+    /** every series it belongs to (series menu) */
+    seriesAll: seriesOf(r).filter((x) => x !== 'Landmark'),
     platform: r.platform,
     chain: r.chain,
     badge: r.badge ?? null,
@@ -135,6 +138,6 @@ export const stageItems = STAGE_PICKS.map((id) => galleryItems.find((g) => g.id 
 /** Years, series and the for-sale count for a set of items. */
 export const galleryMeta = (items: GalleryItem[]) => ({
   years: [...new Set(items.map((g) => g.year).filter((y): y is number => y != null))],
-  series: [...new Set(items.map((g) => g.series).filter((s): s is string => !!s))].sort(bySeriesOrder),
+  series: [...new Set(items.flatMap((g) => g.seriesAll))].sort(bySeriesOrder),
   forSale: items.filter((g) => g.listing).length,
 });
