@@ -118,7 +118,6 @@ const HOME_EXCLUDE: (string | RegExp)[] = [
   'proof of stake - variant 01',
   'proof of stake - variant 02',
   'ubaraja',
-  'decentraland wearables',
   /^ETH SF 2018 [2-5]\/5$/i, // keep 1/5
   /^ETH Singapore(?!.*3D Poster)/i, // keep only the 3D Poster
   'mystic bufficorn',

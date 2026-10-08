@@ -222,6 +222,7 @@ const allReleases: Release[] = [
   },
   {
     id: 'voxels-3d-glasses',
+    alsoSeries: ['VR / Metaverse'],
     title: 'Cryptovoxels 3D Glasses Wearables',
     date: '2019-12-01',
     kind: 'wearable',
@@ -323,6 +324,7 @@ const allReleases: Release[] = [
   // ─────────────────────────── 2020 ───────────────────────────
   {
     id: 'voxels-get-out',
+    alsoSeries: ['VR / Metaverse'],
     title: 'GET OUT — 3D Glasses',
     date: '2020-03-04',
     kind: 'wearable',
@@ -474,6 +476,7 @@ const allReleases: Release[] = [
   },
   {
     id: 'decentral-eyes-vr-og-collage',
+    alsoSeries: ['VR / Metaverse'],
     title: 'Decentral Eyes VR — OG Collage — Variant 01',
     date: '2021-08-06',
     kind: 'edition',
@@ -507,6 +510,7 @@ const allReleases: Release[] = [
   },
   {
     id: 'decentraland-wearables',
+    alsoSeries: ['VR / Metaverse'],
     thumbSrc: 'https://i2c.seadn.io/polygon/0x7c688630370a2900960f5ffd7573d2f66f179733/75c75c1a9fe1857f322dd067d4a6a0/0875c75c1a9fe1857f322dd067d4a6a0.png?w=500',
     title: 'Decentraland Wearables',
     date: '2021-08-15',
@@ -625,6 +629,7 @@ const allReleases: Release[] = [
   },
   {
     id: 'deyes-ascended',
+    alsoSeries: ['VR / Metaverse'],
     title: 'Deyes Ascended',
     date: '2022-08-04',
     kind: 'generative',
@@ -683,6 +688,7 @@ const allReleases: Release[] = [
   },
   {
     id: 'alotta-money',
+    alsoSeries: ['VR / Metaverse'],
     thumbSrc: 'https://i2c.seadn.io/ethereum/0x2d820afb710681580a55ca8077b57fba6dd9fd72/81c899195cca1d29ee08e523557720a0.png?w=500',
     title: 'Alotta Money',
     date: '2022-12-08',
@@ -806,6 +812,7 @@ const allReleases: Release[] = [
   },
   {
     id: 'deyes-legends',
+    alsoSeries: ['VR / Metaverse'],
     thumbSrc: 'https://i2c.seadn.io/ethereum/0x76250e9269e3df7d5bdc6af42582a1b54bf5d24e/bb2ddb42d9d0971aa7a46a27718ecb75.jpeg?w=500',
     title: 'DEyes Legends',
     date: '2023-08-08',
