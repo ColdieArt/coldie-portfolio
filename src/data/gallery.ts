@@ -44,6 +44,9 @@ const clip = (t: string, n = 900) => (t.length > n ? `${t.slice(0, n).replace(/\
 /** What a collector can do right now, in plain words. */
 const CTA = { buy: 'Buy now', floor: 'Collect from', reserve: 'Reserve', auction: 'Live auction' } as const;
 
+/** In the "3D" filter whatever their descriptions say. */
+const ALSO_3D = new Set(['Now is the Best Time - Convergence Series', 'Everything Connected - Convergence Series']);
+
 /** Kept out of the "3D" filter even though their descriptions mention stereoscopic or anaglyph. */
 const NOT_3D = new Set([
   'Decentral Eyes - Vitalik Buterin - Variant 01',
@@ -96,8 +99,8 @@ function toItem(r: Release) {
     price: mk?.listing?.amount ?? null,
     burned: !!r.burned,
     desc: desc ? clip(desc) : null,
-    /** described as stereoscopic or anaglyph, less a few left out by hand — the "3D" filter */
-    stereo: /stereoscopic|anaglyph/i.test(`${desc ?? ''} ${r.title} ${r.badge ?? ''}`) && !NOT_3D.has(r.title),
+    /** described as stereoscopic or anaglyph, adjusted by hand (ALSO_3D / NOT_3D) — the "3D" filter */
+    stereo: ALSO_3D.has(r.title) || (/stereoscopic|anaglyph/i.test(`${desc ?? ''} ${r.title} ${r.badge ?? ''}`) && !NOT_3D.has(r.title)),
   };
 }
 
@@ -113,8 +116,6 @@ const HOME_EXCLUDE: (string | RegExp)[] = [
   'proof of stake - variant 02',
   'ubaraja',
   'decentraland wearables',
-  'now is the best time',
-  'everything connected',
   /^ETH SF 2018 [2-5]\/5$/i, // keep 1/5
   /^ETH Singapore(?!.*3D Poster)/i, // keep only the 3D Poster
   'mystic bufficorn',
