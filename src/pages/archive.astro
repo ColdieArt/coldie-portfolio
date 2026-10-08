@@ -18,6 +18,7 @@ import {
   releaseSeries,
   releaseKinds,
   seriesOf,
+  withCovers,
   type Release,
 } from '../data/releases';
 
@@ -55,9 +56,9 @@ import thumbsJson from '../data/thumbs.json';
 import thumbsLgJson from '../data/thumbs-lg.json';
 import marketJson from '../data/market.json';
 import { works } from '../data/works';
-const thumbs: Record<string, string> = thumbsJson;
+const thumbs = withCovers<string>(thumbsJson);
 // 1200px versions for large screens (only where the source is bigger than the thumbnail)
-const thumbsLg: Record<string, string | null> = thumbsLgJson;
+const thumbsLg = withCovers<string | null>(thumbsLgJson);
 
 type Price = { amount: number; symbol: string; usd: number | null };
 type Owner = { address: string; name: string | null; username: string | null; ens: string | null; artist: boolean };

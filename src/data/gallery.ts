@@ -7,7 +7,7 @@ import sizesJson from './thumb-sizes.json';
 import mediaJson from './media.json';
 import marketJson from './market.json';
 import { works } from './works';
-import { sortedReleases, releaseYear, formatReleaseDate, KIND_LABEL, bySeriesOrder, seriesOf, type Release } from './releases';
+import { sortedReleases, releaseYear, formatReleaseDate, KIND_LABEL, bySeriesOrder, seriesOf, withCovers, type Release } from './releases';
 
 type Price = { amount: number; symbol: string; usd: number | null };
 type Owner = { address: string; name: string | null; username: string | null; ens: string | null; artist: boolean };
@@ -18,8 +18,8 @@ type Market = {
   listing: (Price & { kind: 'buy' | 'floor' | 'reserve' | 'auction' }) | null;
 };
 
-const thumbs: Record<string, string> = thumbsJson;
-const thumbsLg: Record<string, string | null> = thumbsLgJson;
+const thumbs = withCovers<string>(thumbsJson);
+const thumbsLg = withCovers<string | null>(thumbsLgJson);
 const sizes = sizesJson as Record<string, [number, number]>;
 const media = mediaJson as Record<string, { src: string; type: 'video' | 'gif' } | null>;
 const market = marketJson.releases as Record<string, Market>;

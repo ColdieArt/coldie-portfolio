@@ -64,6 +64,8 @@ export type Release = {
   /** links to /work/<slug> when the piece has a detail page */
   slug?: string;
   badge?: string;
+  /** image shown as-is in place of the generated thumbnail (e.g. an animated GIF); /public path */
+  cover?: string;
   /** thumbnail override for scripts/fetch-thumbnails.mjs: a /public path or image URL */
   thumbSrc?: string;
   /** token to take the thumbnail from when the release has no single tokenId */
@@ -899,7 +901,7 @@ const allReleases: Release[] = [
   },
   {
     id: 'tech-epochalypse',
-    title: 'Tech Epochalypse - Decentral Eyes',
+    title: 'Tech Epochalypse - 3D Kinetic',
     date: '2025-11-21',
     kind: '1/1',
     supply: 27,
@@ -909,6 +911,7 @@ const allReleases: Release[] = [
     url: 'https://opensea.io/collection/tech-epochalypse-decentral-eyes',
     contract: TECH_EPOCHALYPSE,
     badge: 'Kinetic 3D portraits of five tech overlords',
+    cover: '/works/tech-epochalypse/overlords.gif', // cycles through all five overlords
     thumbSrc: 'https://i2c.seadn.io/ethereum/0xea030bb4da83c7b470f6d6109880116459509553/c20a807f4f699b260bf43be7082075/77c20a807f4f699b260bf43be7082075.png',
     notes: 'Collection launched Nov 21, 2025; individual pieces minted Mar–Aug 2026.',
     variants: [
@@ -1094,6 +1097,13 @@ allReleases.push(...srReleases);
 
 /** Every release shown on the site (entries flagged `hidden` are left out). */
 export const releases: Release[] = allReleases.filter((r) => !r.hidden);
+
+/** Thumbnail maps with each release's `cover` laid over the generated thumbnails. */
+export function withCovers<T extends string | null>(map: Record<string, T>): Record<string, T | string> {
+  const out: Record<string, T | string> = { ...map };
+  for (const r of releases) if (r.cover) out[r.id] = r.cover;
+  return out;
+}
 
 // ── Derived helpers ───────────────────────────────────────────
 
