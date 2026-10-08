@@ -38,6 +38,10 @@ const overlords = [
       </div>
 
       <figure class="te__stage">
+        <p class="te__how">
+          <strong>Touch the art.</strong> Click on pieces to move and modify. Move the canvas in 3D. Apply control
+          layers. <strong>Feel something.</strong>
+        </p>
         <div class="te__player" data-te-player>
           <!-- poster shows until the live artwork has loaded, then fades away -->
           <img
@@ -108,6 +112,11 @@ const overlords = [
   /* the playable stage */
   /* 4:5 player: on wide screens cap its width so the whole portrait fits on screen */
   .te__stage { margin: 0; width: 100%; max-width: calc((100vh - 10rem) * 0.8); justify-self: center; }
+  .te__how {
+    margin: 0 0 0.9rem; max-width: none;
+    font-family: var(--type); font-size: 0.82rem; line-height: 1.5; color: var(--ink-soft);
+  }
+  .te__how strong { color: var(--ink); font-weight: 700; }
   .te__player {
     position: relative;
     aspect-ratio: 4 / 5;
