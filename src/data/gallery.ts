@@ -53,7 +53,10 @@ const NOT_3D = new Set([
   'Decentral Eyes - John McAfee - Variant 01',
   'Andreas Antonopoulos - Decentral Eyes - Variant 01',
   'Vitalik Buterin - Decentral Eyes - Variant 04',
-  'Warren Buffett — Decentral Eyes',
+  'Warren Buffett — Decentral Eyes — Variant 03',
+  'Warren Buffett — Decentral Eyes — Variant 04',
+  'Warren Buffett — Decentral Eyes — Variant 05',
+  'Warren Buffett — Decentral Eyes — Variant 06',
 ]);
 
 export type GalleryItem = ReturnType<typeof toItem>;

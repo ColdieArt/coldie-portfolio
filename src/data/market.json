@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-06",
+  "fetchedAt": "2026-10-08",
   "releases": {
     "vitalik-variant-03": {
       "owner": {
@@ -25,7 +25,7 @@
         "kind": "floor",
         "amount": 0.5,
         "symbol": "ETH",
-        "usd": 1347
+        "usd": 1282
       }
     },
     "gandinsky-3d-1": {
@@ -104,20 +104,39 @@
       },
       "listing": null
     },
-    "buffett-decentral-eyes": {
-      "description": "Coldie's second collection on Nifty Gateway features 4 NFTs - 2 auctions and 2 editions. Each is a 3D rendering of Warren Buffet. A main theme in the works is Buffet's investments in gold, but failure to recognize Bitcoin as holding value through its properties of 'digital gold'.\n\nColdie is an award-winning mixed media artist whose stereoscopic 3D art has been featured in national juried art exhibitions, cryptocurrency conferences, and live auctions. His blockchain themed artwork gives a personalized visual representation of the disruptive industry. Coldie is the first artist to tokenize stereoscopic 3D art and photography on the blockchain.",
-      "lastSale": {
-        "amount": 1.8,
-        "symbol": "ETH",
-        "usd": 3451,
-        "date": "2026-07-29"
+    "buffett-decentral-eyes-v03": {
+      "owner": {
+        "address": "0x8a431a7312651256ba734029abbe2be6bfc25b0a",
+        "name": "cb1212",
+        "username": null,
+        "ens": null,
+        "artist": false
       },
-      "listing": {
-        "kind": "floor",
-        "amount": 2.1,
-        "symbol": "ETH",
-        "usd": 5659
-      }
+      "description": "Warren Buffett – Decentral Eyes – Variant 03 by Coldie",
+      "lastSale": null,
+      "listing": null
+    },
+    "buffett-decentral-eyes-v04": {
+      "owner": {
+        "address": "0xe540a8d94bd379c4d9c0478c8fe9f7fe7f0b06e1",
+        "name": "wsavas",
+        "username": null,
+        "ens": null,
+        "artist": false
+      },
+      "description": "Warren Buffett – Decentral Eyes – Variant 04 by Coldie",
+      "lastSale": null,
+      "listing": null
+    },
+    "buffett-decentral-eyes-v05": {
+      "description": "Warren Buffett – Decentral Eyes – Variant 05 by Coldie",
+      "lastSale": null,
+      "listing": null
+    },
+    "buffett-decentral-eyes-v06": {
+      "description": "Warren Buffett – Decentral Eyes – Variant 06 by Coldie",
+      "lastSale": null,
+      "listing": null
     },
     "trust-your-intuition": {
       "description": "NFTBoxes are a curated monthly box of NFTs on the newest gold standard of NFT technology.\n\nArtist: Coldie\n\nSignature Address: 0xd0C877B474CD51959931a7f70D7a6c60F50cdAE7\n\nSignature Hash: 0xda8045cbb58c21a7f34d67181fdc4d96cc62612851291f51bf7723a4d4687805202de6edd648499577b42f6b5acfc210e3bb2c643c27a5c56189875ffd2636d91b\n\nSignature Message: Coldie | Trust Your Intuition | January 2021  | Contract: 0x5f8061f9d6a2bb4688f46491cca7658e214e2cb6\n\nArtist Note: While on the path of life, always take time to listen to the voice in your head, or the feeling in your stomach. Over time this relationship strengthens, and it becomes an extra sense. While creating art, listening to this intuition has helped me to push past boundaries and experiment in ways I had not considered prior.",
@@ -131,7 +150,7 @@
         "kind": "floor",
         "amount": 0.1,
         "symbol": "ETH",
-        "usd": 269
+        "usd": 256
       }
     },
     "decentral-eyes-vr-og-collage": {
@@ -155,7 +174,7 @@
       "listing": null
     },
     "decentraland-wearables": {
-      "description": "DCL Wearable 77/100",
+      "description": "DCL Wearable 41/100",
       "lastSale": {
         "amount": 0.01,
         "symbol": "ETH",
@@ -174,9 +193,9 @@
       },
       "listing": {
         "kind": "floor",
-        "amount": 0.131995,
+        "amount": 0.131603,
         "symbol": "ETH",
-        "usd": 356
+        "usd": 337
       }
     },
     "filthy-fiat": {
@@ -201,7 +220,7 @@
         "kind": "floor",
         "amount": 0.0255,
         "symbol": "ETH",
-        "usd": 69
+        "usd": 65
       }
     },
     "swaps": {
@@ -256,7 +275,7 @@
         "kind": "floor",
         "amount": 0.99,
         "symbol": "ETH",
-        "usd": 2669
+        "usd": 2538
       }
     },
     "chronicles-2019": {
@@ -274,9 +293,9 @@
       },
       "listing": {
         "kind": "floor",
-        "amount": 0.015869,
+        "amount": 0.015819,
         "symbol": "ETH",
-        "usd": 43
+        "usd": 41
       }
     },
     "alotta-money": {
@@ -291,7 +310,7 @@
         "kind": "floor",
         "amount": 0.05884,
         "symbol": "ETH",
-        "usd": 159
+        "usd": 151
       }
     },
     "deyes-assembled": {
@@ -306,7 +325,7 @@
         "kind": "floor",
         "amount": 6,
         "symbol": "ETH",
-        "usd": 16175
+        "usd": 15382
       }
     },
     "talking-heads": {
@@ -319,9 +338,9 @@
       },
       "listing": {
         "kind": "floor",
-        "amount": 0.130993,
+        "amount": 0.193599,
         "symbol": "ETH",
-        "usd": 353
+        "usd": 496
       }
     },
     "uae-first-immersion": {
@@ -346,7 +365,7 @@
         "kind": "floor",
         "amount": 0.0666,
         "symbol": "ETH",
-        "usd": 180
+        "usd": 171
       }
     },
     "async-energetic-body": {
@@ -408,7 +427,7 @@
         "kind": "floor",
         "amount": 0.04197,
         "symbol": "ETH",
-        "usd": 113
+        "usd": 108
       }
     },
     "fake-rares-filthy-pepe": {
@@ -423,7 +442,7 @@
         "kind": "buy",
         "amount": 0.25,
         "symbol": "ETH",
-        "usd": 674
+        "usd": 641
       }
     },
     "sin-king-ship": {
@@ -438,7 +457,7 @@
         "kind": "buy",
         "amount": 0.0599999,
         "symbol": "ETH",
-        "usd": 162
+        "usd": 154
       }
     },
     "tech-epochalypse": {
@@ -448,7 +467,7 @@
         "kind": "floor",
         "amount": 5,
         "symbol": "ETH",
-        "usd": 13479
+        "usd": 12818
       }
     },
     "tech-epochalypse-moments": {
@@ -463,7 +482,7 @@
         "kind": "floor",
         "amount": 0.0998999,
         "symbol": "ETH",
-        "usd": 269
+        "usd": 256
       }
     },
     "not-one-satoshi": {
@@ -478,16 +497,16 @@
         "kind": "floor",
         "amount": 0.059,
         "symbol": "ETH",
-        "usd": 159
+        "usd": 151
       }
     },
     "en-marcha": {
       "owner": {
-        "address": "0xd0c877b474cd51959931a7f70d7a6c60f50cdae7",
-        "name": "Coldie",
+        "address": "0x6f66b95a0c512f3497fb46660e0bc3b94b989f8d",
+        "name": null,
         "username": null,
-        "ens": "coldie.eth",
-        "artist": true
+        "ens": null,
+        "artist": false
       },
       "description": "En Marcha is a digital kinetic 3D mural inspired by the works of Diego Rivera and Museo Anahuacalli. During my residency for the Digital Encounters project, curated by 8NAP and Superchief, I was offered the unique opportunity to experience a variety of Rivera’s murals with his Grandsons as personal guides. This in-depth connection to the works and his lineage resonated deeply. Having come into the residency with an initial concept in mind, I was taken aback and pivoted to honor Rivera’s mural work and collection of cultural artifacts he collected during his life.\n\nThe vision for this work is to invite the viewer to take control and have an experience. By allowing the viewer to ‘touch the art’ they become impassioned, curious, and inquisitive about the objects being used. I integrated my favorite artifacts and the museum itself as elements in the mural. I photographed every element in the mural during my tour of Museo Anahuacalli and Rivera's private vault collection of Mexican artifacts. Each element is hand-embellished with textures consistent with my collage practice to blend my aesthetic with the cultural artifacts to create an integrated, interactive art experience.\n\nAs part of the interactive mural experience, I created a variety of visual effects that that relate directly to Diego Rivera’s murals and Museo Anahuacalli. Two of my favorite murals, Dream of a Sunday Afternoon in Alameda Park and Fertile Land are represented, as well as the three realms / levels the museum was constructed to embody. I hope this work creates a deeper connection with viewers who interact with the work and educate about Museo Anahuacalli and Diego Rivera.",
       "lastSale": null,
