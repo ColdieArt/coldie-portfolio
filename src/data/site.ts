@@ -49,6 +49,13 @@ export const provenance: {
   type?: string;
   /** True when href is a placeholder awaiting the real direct URL. */
   todo?: boolean;
+  /** Image of the work shown on its provenance card (a /public path), with alt text. */
+  image?: string;
+  imageAlt?: string;
+  /** Sale or show, and when — e.g. "First Open | Post-War and Contemporary Art · Dec 2024". */
+  event?: string;
+  /** One or two sentences on why it matters. Facts only — engines cite this. */
+  desc?: string;
 }[] = [
   {
     label: "Christie's",
@@ -56,6 +63,10 @@ export const provenance: {
     aria: "Warren Buffett – Filthy Fiat at Christie's, First Open | Post-War and Contemporary Art",
     note: 'Warren Buffett – Filthy Fiat',
     type: '3D Kinetic Magnetic Portrait / Digital',
+    image: '/works/warren-buffett/01.jpg',
+    imageAlt: "Warren Buffett – Filthy Fiat (2024) by Coldie, a kinetic magnetic portrait sold at Christie's",
+    event: 'First Open | Post-War and Contemporary Art · Dec 2024',
+    desc: "The debut of Coldie's portraits as physical 3D sculpture, built from dollar bills he buried for two years. Offered with its 1/1 recursive Ordinal on Bitcoin.",
   },
   {
     label: "Sotheby's",
@@ -63,6 +74,10 @@ export const provenance: {
     aria: "3D Light Painting 03 at Sotheby's, Inside the World of MaxStealth (Sept 14, 2022)",
     note: '3D Light Painting 03',
     type: 'Digital',
+    image: '/works/3d-light-painting-03/hero.jpg',
+    imageAlt: "3D Light Painting 03 (2018) by Coldie with Bucket T, sold at Sotheby's",
+    event: 'Inside the World of MaxStealth · Sept 14, 2022',
+    desc: "Included in the first single-owner NFT auction held live in Sotheby's salesroom, alongside Beeple, XCOPY and Pak. UAP, Coldie's 3D collaboration with Hackatao, was in the same sale.",
   },
   {
     label: 'Bonhams',
@@ -70,6 +85,10 @@ export const provenance: {
     aria: 'Proof of Work – Genesis at Bonhams, Bonhams & SuperRare: CryptOGs',
     note: 'Proof of Work – Genesis',
     type: 'Digital',
+    image: '/works/proof-of-work-genesis/hero.jpg',
+    imageAlt: 'Proof of Work – Genesis by Coldie, Lot 1 at Bonhams',
+    event: 'CryptOGs: The Pioneers of NFT Art · Lot 1 · 2021',
+    desc: 'Conceived and first tokenized in 2018, it opened the Bonhams × SuperRare sale honoring the earliest artists of the NFT space.',
   },
   {
     label: '2025 Bitcoin Conference Art Gallery',
@@ -77,6 +96,10 @@ export const provenance: {
     aria: 'Jack Dorsey Magnetic Portrait at the 2025 Bitcoin Conference Art Gallery',
     note: 'Jack Dorsey Magnetic Portrait',
     type: '3D Kinetic Magnetic Portrait',
+    image: '/works/eterno/jack-dorsey.jpg',
+    imageAlt: 'Jack Dorsey Magnetic Portrait by Coldie, shown at the 2025 Bitcoin Conference Art Gallery',
+    event: 'Bitcoin Conference Art Gallery · 2025',
+    desc: 'A magnetic, rearrangeable portrait in stereoscopic 3D. The collector reconfigures the composition by hand.',
   },
   {
     label: 'Eterno Gallery, Lisbon',
@@ -85,6 +108,10 @@ export const provenance: {
     aria: 'Unpermissioned Self at Eterno Gallery, Lisbon',
     note: 'Unpermissioned Self',
     type: '3D Kinetic Magnetic Portrait / Prints / Digital',
+    image: '/works/eterno-prints/01.jpg',
+    imageAlt: 'Tech Epochalypse: Overlord Mashup giclée print by Coldie, on view at Eterno Gallery, Lisbon',
+    event: 'On view now',
+    desc: 'Kinetic magnetic portraits, signed Tech Epochalypse giclée prints and an interactive touchscreen piece, on view and available through the gallery.',
     todo: true,
   },
   {
@@ -93,6 +120,10 @@ export const provenance: {
     aria: 'Front Row 3D at Gazelli Art House, London',
     note: 'Front Row 3D Concert Photography',
     type: 'Stereoscopic 3D Lenticular, VR, Digital',
+    image: '/images/front-row-3d/coachella-2010/coachella-2010-them-crooked-vultures.jpg',
+    imageAlt: 'Them Crooked Vultures at Coachella 2010, stereoscopic 3D photograph by Coldie from Front Row 3D',
+    event: 'Front Row 3D',
+    desc: 'Stereoscopic concert photography from his years as the official 3D photographer of Coachella (2009 and 2010), shown as lenticular, VR and digital works.',
   },
 ];
 

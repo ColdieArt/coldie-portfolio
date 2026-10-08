@@ -1,24 +1,43 @@
 ---
+// Provenance — the auction houses and galleries behind the work, each as a card:
+// the work itself, where and when, and one line on why it matters. Data (and the
+// rules for what may be listed) lives in `provenance` in site.ts.
 import { provenance } from '../data/site';
 ---
 <section id="provenance" class="prov section--flat" aria-labelledby="prov-h">
   <div class="wrap">
-    <h2 id="prov-h" class="eyebrow prov__h">Provenance</h2>
-    <ul class="prov__row">
+    <header class="prov__head">
+      <p class="eyebrow prov__eyebrow">Provenance</p>
+      <h2 id="prov-h" class="prov__h">Sold and shown at</h2>
+      <p class="prov__names" aria-hidden="true">
+        {provenance.map((p, i) => <>{i > 0 && <span class="prov__dot">·</span>}{p.label}</>)}
+      </p>
+    </header>
+
+    <ul class="prov__grid">
       {provenance.map((p) => {
         const external = p.href.startsWith('http');
         return (
-          <li class="prov__item">
+          <li class="prov__card">
             <a
-              class="prov__main"
+              class="prov__link"
               href={p.href}
               aria-label={p.aria}
               title={p.aria}
               {...(external ? { target: '_blank', rel: 'noopener' } : {})}
             >
-              <span class="prov__label">{p.label}{external && <span class="prov__ext" aria-hidden="true"> ↗</span>}</span>
-              {p.note && <span class="prov__note">{p.note}</span>}
-              {p.type && <span class="prov__type">{p.type}</span>}
+              {p.image && (
+                <span class="prov__frame">
+                  <img src={p.image} alt={p.imageAlt ?? p.note ?? ''} loading="lazy" decoding="async" />
+                </span>
+              )}
+              <span class="prov__body">
+                <span class="prov__venue">{p.label}{external && <span class="prov__ext" aria-hidden="true"> ↗</span>}</span>
+                {p.note && <span class="prov__work">{p.note}</span>}
+                {p.event && <span class="prov__event">{p.event}</span>}
+                {p.desc && <span class="prov__desc">{p.desc}</span>}
+                {p.type && <span class="prov__type">{p.type}</span>}
+              </span>
             </a>
           </li>
         );
@@ -28,29 +47,48 @@ import { provenance } from '../data/site';
 </section>
 
 <style>
-  /* Flat, no motion. Stillness is the point. Type, not logos. */
+  /* Gallery-label calm: stillness is the point. The art leads; the type is a wall label. */
   .prov {
-    padding-block: clamp(2.5rem, 5vw, 4rem);
+    padding-block: clamp(3rem, 7vw, 5.5rem);
     border-block: 1px solid #cfcfcc;
     background: #f4f2ec;
   }
-  .prov__h { margin: 0 0 1.6em; }
-  .prov__row {
+  .prov__head { margin: 0 0 clamp(1.75rem, 4vw, 2.75rem); }
+  .prov__eyebrow { margin: 0 0 0.6em; }
+  .prov__h {
+    margin: 0 0 0.45em; font-family: var(--serif); font-weight: 400; text-transform: none; letter-spacing: -0.01em;
+    font-size: clamp(1.9rem, 4vw, 3.2rem); line-height: 1.05; color: var(--ink);
+  }
+  .prov__names { margin: 0; max-width: none; font-family: var(--type); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
+  .prov__dot { margin: 0 0.6em; color: var(--ink-mute); }
+
+  .prov__grid {
     list-style: none; margin: 0; padding: 0;
-    display: flex; flex-wrap: wrap;
-    column-gap: clamp(1.5rem, 4vw, 3.5rem); row-gap: 1.4rem;
-    align-items: baseline;
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.75rem, 3vw, 2.75rem) clamp(1rem, 2.5vw, 2rem);
   }
-  .prov__item { display: inline-flex; flex-direction: column; gap: 0.15em; }
-  .prov__main { text-decoration: none; display: inline-flex; flex-direction: column; gap: 0.15em; }
-  .prov__label { font-family: var(--serif); font-size: clamp(1.05rem, 1.6vw, 1.35rem); color: var(--ink); }
-  .prov__main:hover .prov__label { color: var(--accent); }
-  .prov__note { font-size: 0.75rem; color: var(--ink-mute); letter-spacing: 0.02em; }
-  .prov__type {
-    margin-top: 0.1em;
-    font-family: var(--type); font-size: 0.66rem; letter-spacing: 0.06em;
-    text-transform: uppercase; color: var(--ink-soft);
+  @media (max-width: 1000px) { .prov__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .prov__grid { grid-template-columns: 1fr; } }
+
+  .prov__link { display: flex; flex-direction: column; height: 100%; text-decoration: none; color: inherit; }
+  .prov__frame {
+    display: block; aspect-ratio: 4 / 3; overflow: hidden; background: #e6e3db;
+    border: 1px solid #d8d5cd; margin-bottom: 1rem;
   }
-  .prov__ext { font-size: 0.7em; color: var(--ink-mute); }
-  .prov__main:hover .prov__ext { color: var(--accent); }
+  /* the whole work, never cropped: contained on a neutral mat */
+  .prov__frame img {
+    width: 100%; height: 100%; object-fit: contain; display: block; padding: clamp(0.5rem, 1.2vw, 0.9rem); box-sizing: border-box; background: transparent;
+    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .prov__link:hover .prov__frame img, .prov__link:focus-visible .prov__frame img { transform: scale(1.035); }
+  .prov__body { display: flex; flex-direction: column; gap: 0.3rem; }
+  .prov__venue { font-family: var(--serif); font-size: clamp(1.25rem, 1.8vw, 1.6rem); line-height: 1.15; color: var(--ink); }
+  .prov__link:hover .prov__venue { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+  .prov__ext { font-size: 0.6em; color: var(--ink-mute); }
+  .prov__work { font-size: 0.92rem; font-weight: 500; color: var(--ink); }
+  .prov__event { font-family: var(--type); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
+  .prov__desc { margin-top: 0.35rem; font-size: 0.86rem; line-height: 1.55; color: var(--ink-soft); max-width: 46ch; }
+  .prov__type { margin-top: 0.25rem; font-family: var(--type); font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-mute); }
+
+  @media (prefers-reduced-motion: reduce) { .prov__frame img { transition: none; } }
 </style>
