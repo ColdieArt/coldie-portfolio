@@ -64,6 +64,11 @@ export type Release = {
   /** links to /work/<slug> when the piece has a detail page */
   slug?: string;
   badge?: string;
+  /**
+   * Listing recorded by hand, for marketplaces scripts/fetch-market.mjs can't read
+   * (e.g. Transient Labs). Shown as the current price until changed or removed.
+   */
+  listing?: { amount: number; symbol: 'ETH'; kind: 'buy' | 'reserve' | 'auction'; asOf: string };
   /** image shown as-is in place of the generated thumbnail (e.g. an animated GIF); /public path */
   cover?: string;
   /** thumbnail override for scripts/fetch-thumbnails.mjs: a /public path or image URL */
@@ -985,6 +990,26 @@ const allReleases: Release[] = [
     source: 'opensea',
   },
   {
+    id: 'saylor-not-one-satoshi-1of1',
+    title: 'Michael Saylor - Decentral Eyes - Not One Satoshi Variant',
+    date: '2026-09-18',
+    kind: '1/1',
+    supply: 1,
+    series: 'Decentral Eyes',
+    platform: 'Transient Labs',
+    chain: 'Ethereum',
+    url: 'https://www.transient.xyz/nfts/ethereum/0x383788c0a5a6f4cc8f1bcd3993742db6b3332850/211',
+    contract: '0x383788c0a5a6f4cc8f1bcd3993742db6b3332850',
+    tokenId: '211',
+    badge: '1/1 animation · the 210 wigglegram editions were drawn from it',
+    thumbSrc: '/works/digital/saylor.webp',
+    animation: 'https://ipfs.transientusercontent.xyz/ipfs/bafybeiba2hhhkd25lijn2h5yjcvy2m4zkdhkunsii6c6afdhxat54iemwu/media',
+    listing: { amount: 15, symbol: 'ETH', kind: 'buy', asOf: '2026-10-06' }, // listed by Coldie on Transient Labs
+    description:
+      "21-second animation focused on Michael Saylor and $MSTR, who sold a portion of their BTC. Saylor had always said to 'never sell your Bitcoin.' When his company sold, it created a scene and quite a bit of backpedalling in interviews to say that retail investors should never sell, but his company selling was a different story. A moment in crypto history bookmarked in the Decentral Eyes series. A series of 210 3D wigglegram works were released based on this 1/1 work.",
+    source: 'site',
+  },
+  {
     id: 'en-marcha',
     title: 'En Marcha',
     date: '2026-09-11',
@@ -1104,6 +1129,17 @@ allReleases.push(...srReleases);
 
 /** Every release shown on the site (entries flagged `hidden` are left out). */
 export const releases: Release[] = allReleases.filter((r) => !r.hidden);
+
+/** market.json entries, plus hand-recorded listings (`listing`) for releases the script can't price. */
+export function withManualListings<M extends { listing: unknown }>(market: Record<string, M>): Record<string, M> {
+  const out = { ...market };
+  for (const r of releases) {
+    if (!r.listing) continue;
+    const { amount, symbol, kind } = r.listing;
+    out[r.id] = { ...(out[r.id] ?? { owner: null, description: null, lastSale: null }), listing: { amount, symbol, usd: null, kind } } as M;
+  }
+  return out;
+}
 
 /** Thumbnail maps with each release's `cover` laid over the generated thumbnails. */
 export function withCovers<T extends string | null>(map: Record<string, T>): Record<string, T | string> {

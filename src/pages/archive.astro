@@ -19,6 +19,7 @@ import {
   releaseKinds,
   seriesOf,
   withCovers,
+  withManualListings,
   type Release,
 } from '../data/releases';
 
@@ -68,7 +69,7 @@ type Market = {
   lastSale: (Price & { date?: string | null }) | null;
   listing: (Price & { kind: 'buy' | 'floor' | 'reserve' | 'auction' }) | null;
 };
-const market = marketJson.releases as Record<string, Market>;
+const market = withManualListings(marketJson.releases as Record<string, Market>);
 const marketAsOf = formatReleaseDate(marketJson.fetchedAt);
 const captions = new Map(works.map((w) => [w.slug, w.caption]));
 const description = (r: Release) =>
@@ -101,6 +102,7 @@ const marketName = (url: string) =>
   : url.includes('deca.art') ? 'Deca'
   : url.includes('rareart.io') ? 'R.A.R.E. Art Labs'
   : url.includes('gamma.io') ? 'Gamma'
+  : url.includes('transient.xyz') ? 'Transient Labs'
   : new URL(url).hostname.replace(/^www\./, '');
 
 /** Descriptive alt text: what the work is, by whom, when — read by image search and AI. */

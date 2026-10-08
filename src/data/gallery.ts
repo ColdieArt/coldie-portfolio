@@ -7,7 +7,7 @@ import sizesJson from './thumb-sizes.json';
 import mediaJson from './media.json';
 import marketJson from './market.json';
 import { works } from './works';
-import { sortedReleases, releaseYear, formatReleaseDate, KIND_LABEL, bySeriesOrder, seriesOf, withCovers, type Release } from './releases';
+import { sortedReleases, releaseYear, formatReleaseDate, KIND_LABEL, bySeriesOrder, seriesOf, withCovers, withManualListings, type Release } from './releases';
 
 type Price = { amount: number; symbol: string; usd: number | null };
 type Owner = { address: string; name: string | null; username: string | null; ens: string | null; artist: boolean };
@@ -22,7 +22,7 @@ const thumbs = withCovers<string>(thumbsJson);
 const thumbsLg = withCovers<string | null>(thumbsLgJson);
 const sizes = sizesJson as Record<string, [number, number]>;
 const media = mediaJson as Record<string, { src: string; type: 'video' | 'gif' } | null>;
-const market = marketJson.releases as Record<string, Market>;
+const market = withManualListings(marketJson.releases as Record<string, Market>);
 const captions = new Map(works.map((w) => [w.slug, w.caption]));
 
 const fmtEth = (p: Price) =>
@@ -37,6 +37,7 @@ const marketName = (url: string) =>
   : url.includes('deca.art') ? 'Deca'
   : url.includes('rareart.io') ? 'R.A.R.E. Art Labs'
   : url.includes('gamma.io') ? 'Gamma'
+  : url.includes('transient.xyz') ? 'Transient Labs'
   : url.includes('niftygateway.com') ? 'Nifty Gateway'
   : new URL(url).hostname.replace(/^www\./, '');
 const clip = (t: string, n = 900) => (t.length > n ? `${t.slice(0, n).replace(/\s+\S*$/, '')}…` : t);
@@ -45,7 +46,11 @@ const clip = (t: string, n = 900) => (t.length > n ? `${t.slice(0, n).replace(/\
 const CTA = { buy: 'Buy now', floor: 'Collect from', reserve: 'Reserve', auction: 'Live auction' } as const;
 
 /** In the "3D" filter whatever their descriptions say. */
-const ALSO_3D = new Set(['Now is the Best Time - Convergence Series', 'Everything Connected - Convergence Series']);
+const ALSO_3D = new Set([
+  'Now is the Best Time - Convergence Series',
+  'Everything Connected - Convergence Series',
+  'Filthy Pepe — Fake Rares',
+]);
 
 /** Kept out of the "3D" filter even though their descriptions mention stereoscopic or anaglyph. */
 const NOT_3D = new Set([
