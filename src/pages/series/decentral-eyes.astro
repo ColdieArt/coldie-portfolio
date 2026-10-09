@@ -46,6 +46,7 @@ const marketName = (url: string) =>
 const subjects = SUBJECTS.map((s) => {
   const list = works.filter((r) => subjectOf(r)?.key === s.key);
   const best =
+    (s.cover && list.find((r) => r.id === s.cover)) ??
     list.filter((r) => market[r.id]?.lastSale).sort((a, b) => market[b.id].lastSale!.amount - market[a.id].lastSale!.amount)[0] ??
     list[0];
   const ys = list.map(releaseYear).filter((y): y is number => y != null);

@@ -3,10 +3,12 @@
 
 import type { Release } from './releases';
 
-export type Subject = { key: string; name: string; match: RegExp };
+// `cover` pins which release's image represents the subject on the hub grid,
+// overriding the default (highest last sale). Use a release id.
+export type Subject = { key: string; name: string; match: RegExp; cover?: string };
 
 export const SUBJECTS: Subject[] = [
-  { key: 'vitalik-buterin', name: 'Vitalik Buterin', match: /vitalik/i },
+  { key: 'vitalik-buterin', name: 'Vitalik Buterin', match: /vitalik/i, cover: 'sr-b932a7-12380' },
   { key: 'satoshi-nakamoto', name: 'Satoshi Nakamoto', match: /satoshi nakamoto/i },
   { key: 'edward-snowden', name: 'Edward Snowden', match: /snowden/i },
   { key: 'andreas-antonopoulos', name: 'Andreas Antonopoulos', match: /antonopoulos/i },
