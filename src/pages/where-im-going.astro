@@ -1,0 +1,64 @@
+---
+// Where I'm going — Touch the Art, the thesis behind the interactive work, then
+// Filthy Fiat and what comes next. (Tech Epochalypse, En Marcha and the kinetic portraits live in the
+// Studio on the homepage.) Third of the homepage doors (Crossroads).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RansomHeading from '../components/RansomHeading.astro';
+import FilthyFiat from '../components/FilthyFiat.astro';
+import { personLd, breadcrumbLd } from '../data/jsonld';
+
+const PATH = '/where-im-going';
+
+---
+<BaseLayout
+  title="Where I’m going — kinetic 3D and what comes next"
+  description="Touch the Art: why Coldie makes art you can take apart and rebuild, and Filthy Fiat, portraits built from buried, mold-ruined dollar bills."
+  path={PATH}
+  jsonld={[personLd(), breadcrumbLd([{ name: 'Home', path: '/' }, { name: 'Where I’m going', path: PATH }])]}
+>
+  <header class="going-head">
+    <div class="wrap going-head__in">
+      <p class="eyebrow">Where I’m going</p>
+      <RansomHeading as="h1" text="What comes next" />
+      <p class="going-head__sub">Projects and concepts I am cooking on and you can get an early look at.</p>
+    </div>
+  </header>
+
+  <!-- Touch the Art — the thesis -->
+  <div id="work" class="going-work">
+    <div class="wrap work__intro">
+      <p class="eyebrow">The Thesis</p>
+      <RansomHeading as="h2" class="work__h" lines={["Touch the art.", "Feel something."]} />
+      <p class="lede work__lede">
+        For years, I would bring my son to art museums and galleries. After years of continually saying
+        “DON’T TOUCH THE ART,” this phrase stopped me in my tracks while in a gallery. Why am I keeping my
+        child from experiencing art in the way he wants to? At that moment “TOUCH THE ART” was born, and I
+        have been working toward this mantra to create art that can be interacted with in my own style of
+        3D collage.
+      </p>
+    </div>
+  </div>
+
+  <FilthyFiat />
+
+  <div class="wrap going-next">
+    <a class="btn btn--solid" href="/#acquire">Commissions →</a>
+  </div>
+</BaseLayout>
+
+<style>
+  .going-head { padding-block: clamp(3.5rem, 9vw, 7rem) clamp(2.5rem, 6vw, 4rem); }
+  .going-head__in { text-align: center; }
+  .going-head__sub {
+    font-family: var(--serif); font-size: clamp(1.1rem, 2.2vw, 1.6rem); color: var(--ink-soft);
+    margin: 0.2em auto 1.2em; max-width: 44ch;
+  }
+
+  .going-work { scroll-margin-top: 64px; }
+  .work__intro { padding-top: clamp(3.5rem, 8vw, 6rem); max-width: 66ch; }
+  .work__h { margin: 0 0 0.4em; }
+  .work__lede { margin: 0 0 1em; }
+  .going-work { padding-bottom: clamp(3rem, 7vw, 5rem); }
+
+  .going-next { text-align: center; padding-block: clamp(3rem, 7vw, 5rem); border-top: 1px solid var(--line-soft); }
+</style>

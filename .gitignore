@@ -22,3 +22,11 @@ frontrow.zip
 Ascension-Transition.JPG
 # local tooling config
 .claude/
+
+# private, local-only reports (collector wallet data) — never deployed
+reports/
+src/data/reports/
+src/pages/internal/
+
+# pre-NFT source media (originals; resized copies live in public/images/prenft)
+coldie3d-prenft/

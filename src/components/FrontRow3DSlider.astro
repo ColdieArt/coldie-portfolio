@@ -1,5 +1,5 @@
 ---
-// Front Row 3D — accessible "billboard" slider for the Coachella 2010 photos.
+// Front Row 3D — accessible "billboard" slider for the Coachella 3D photos.
 // Crossfade carousel: prev/next + dots, keyboard arrows, swipe, slow autoplay
 // (pause on hover/focus), honors prefers-reduced-motion. Aspect ratio reserved.
 export interface Slide { src: string; alt: string; caption: string }
@@ -8,8 +8,10 @@ export interface Props {
   ratio?: string;
   interval?: number;
   label?: string;
+  /** Line under the act name, e.g. "Coachella 2009 · shot in 3D by Coldie". */
+  sub?: string;
 }
-const { slides, ratio = '3/4', interval = 5000, label = 'Coachella 2010 3D concert photography' } = Astro.props;
+const { slides, ratio = '3/4', interval = 5000, label = 'Coachella 2010 3D concert photography', sub = 'Coachella 2010 · shot in 3D by Coldie' } = Astro.props;
 ---
 <div
   class="fr3"
@@ -37,7 +39,7 @@ const { slides, ratio = '3/4', interval = 5000, label = 'Coachella 2010 3D conce
 
   <p class="fr3__caption" data-caption aria-live="polite">
     <span data-caption-act>{slides[0]?.caption}</span>
-    <span class="fr3__sub muted small">Coachella 2010 · shot in 3D by Coldie</span>
+    <span class="fr3__sub muted small">{sub}</span>
   </p>
 
   <div class="fr3__dots" role="tablist" aria-label="Choose photo">

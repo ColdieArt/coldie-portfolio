@@ -1022,10 +1022,10 @@ const allReleases: Release[] = [
     series: 'Kinetic 3D',
     platform: 'Transient Labs',
     chain: 'Ethereum',
-    url: 'https://www.transient.xyz/nfts/ethereum/0x034220c41322ff03db1c643da2ce991440a29bdd/1',
+    url: 'https://www.transient.xyz/nfts/ethereum/0x034220c41322ff03db1c643da2ce991440a29bdd/2',
     listing: { amount: 2.25, symbol: 'ETH', kind: 'buy', asOf: '2026-10-06' }, // listed by Coldie on Transient Labs
     contract: '0x034220c41322ff03db1c643da2ce991440a29bdd',
-    tokenId: '1',
+    tokenId: '2',
     badge: 'Digital Encounters · 8NAP × Superchief',
     description:
       "En Marcha is a digital kinetic 3D mural inspired by the works of Diego Rivera and Museo Anahuacalli. During my residency for the Digital Encounters project, curated by 8NAP and Superchief, I was offered the unique opportunity to experience a variety of Rivera's murals with his grandsons as personal guides. This in-depth connection to the works and his lineage resonated deeply. Having come into the residency with an initial concept in mind, I was taken aback and pivoted to honor Rivera's mural work and the cultural artifacts he collected during his life.\n\n" +

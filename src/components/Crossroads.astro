@@ -3,21 +3,26 @@
 // Where I've been · In the studio · Where I'm going.
 // Each door leads with one artwork and lists the areas of interest on its path; links
 // into the archive carry a filter (?filter= / ?series=) so the grid opens on that view.
-// Hovering (or focusing) a door widens it and dims the others. The Studio sections
+// Hovering (or focusing) a door widens it and dims the others. A door with `slides`
+// crossfades through them behind its text (one image fetched ahead at a time). The Studio sections
 // follow below (#studio) for anyone who scrolls past the question.
 
+// Six Tech Epochalypse: Overlord Mashup prints, cropped to the artwork (originals in /works/eterno-prints).
+const mashups = ['03', '19', '21', '25', '28', '36'].map((n) => `/images/studio-door/overlord-mashup-${n}.jpg`);
+
 type Link = { label: string; href: string; external?: boolean };
-type Door = { key: string; title: string; line: string; img: string; alt: string; enter: Link; links: Link[] };
+type Door = { key: string; title: string; line: string; img: string; alt: string; slides?: string[]; enter: Link; links: Link[] };
 
 const doors: Door[] = [
   {
     key: 'been',
     title: 'Where I’ve been',
-    line: 'Since 2018: the first stereoscopic artwork on a blockchain, auction records, and every release since.',
+    line: 'LA Weekly, Coachella in 3D, then the first stereoscopic artwork on a blockchain in 2018 and every release since.',
     img: '/works/the-day/the-day.jpg',
     alt: 'The Day We’ve All Been Waiting For (2018), the first stereoscopic artwork on a blockchain',
     enter: { label: 'Experience the archive', href: '/archive?view=grid' },
     links: [
+      { label: 'Before the blockchain', href: '/where-ive-been' },
       { label: 'First 3D on-chain, 2018', href: '/work/the-day-weve-all-been-waiting-for' },
       { label: 'Decentral Eyes', href: '/archive?series=Decentral%20Eyes' },
       { label: 'Proof of Work', href: '/archive?series=Proof%20of%20Work' },
@@ -28,15 +33,17 @@ const doors: Door[] = [
   {
     key: 'studio',
     title: 'In the studio',
-    line: 'What’s in the studio now: works you can collect today, Filthy Fiat, and physical pieces.',
-    img: '/works/warren-buffett/ordinal.webp',
-    alt: 'Warren Buffett — Filthy Fiat, built from buried, mold-ruined dollar bills',
+    line: 'Kinetic 3D portraits you can take apart and rebuild, and art you’re meant to touch.',
+    img: mashups[0],
+    alt: 'Tech Epochalypse: Overlord Mashup prints by Coldie, at Eterno Gallery',
+    slides: mashups,
     enter: { label: 'Enter the studio', href: '#studio' },
     links: [
-      { label: 'Filthy Fiat', href: '#filthy-fiat' },
-      { label: 'Physical works', href: '#current-series' },
+      { label: 'Eterno Gallery', href: '#current-series' },
       { label: 'Featured digital', href: '#featured-digital' },
-      { label: 'Touch the art', href: '#work' },
+      { label: 'Tech Epochalypse', href: '#tech-epochalypse' },
+      { label: 'En Marcha', href: '#en-marcha-interactive' },
+      { label: 'Kinetic portraits', href: '#kinetic-portraits' },
       { label: 'Store', href: 'https://coldie3d.myshopify.com', external: true },
       { label: 'Available now', href: '/archive?filter=sale' },
     ],
@@ -44,17 +51,15 @@ const doors: Door[] = [
   {
     key: 'going',
     title: 'Where I’m going',
-    line: 'Kinetic 3D portraits you can take apart and rebuild, and what comes next.',
-    img: '/works/tech-epochalypse/jensen-huang.webp',
-    alt: 'Jensen Huang — kinetic 3D portrait from Tech Epochalypse',
-    enter: { label: 'Enter the Tech Epochalypse', href: '#tech-epochalypse' },
+    line: 'Projects and concepts I am cooking on and you can get an early look at.',
+    img: '/images/doors/jack-dorsey-magnetic-portrait.jpg',
+    alt: 'Jack Dorsey Magnetic Portrait by Coldie, a rearrangeable kinetic 3D portrait',
+    enter: { label: 'See where I’m going', href: '/where-im-going' },
     links: [
-      { label: 'Tech Epochalypse', href: '#tech-epochalypse' },
-      { label: 'En Marcha', href: '#en-marcha-interactive' },
+      { label: 'Touch the Art', href: '/where-im-going#work' },
+      { label: 'Filthy Fiat', href: '/where-im-going#filthy-fiat' },
       { label: 'Kinetic 3D works', href: '/archive?series=Kinetic%203D' },
-      { label: 'Kinetic 3D patronage', href: 'https://www.knowyouroverlord.art/kinetic-3d-patronage', external: true },
-      { label: 'Ordinals (BTC)', href: '/archive?series=Ordinals%20(BTC)' },
-      { label: 'Commission a portrait', href: '#acquire' },
+      { label: 'Commissions', href: '#acquire' },
     ],
   },
 ];
@@ -66,6 +71,9 @@ const ext = (l: Link) => (l.external ? { target: '_blank', rel: 'noopener' } : {
     {doors.map((d) => (
       <article class="cx__door" data-door={d.key} aria-labelledby={`cx-${d.key}`}>
         <img class="cx__art" src={d.img} alt={d.alt} loading="eager" decoding="async" />
+        {d.slides && (
+          <img class="cx__art cx__art--next" alt="" aria-hidden="true" decoding="async" data-cx-slides={JSON.stringify(d.slides)} />
+        )}
         <span class="cx__veil" aria-hidden="true"></span>
         <div class="cx__body">
           <h2 class="cx__title" id={`cx-${d.key}`}>
@@ -109,7 +117,10 @@ const ext = (l: Link) => (l.external ? { target: '_blank', rel: 'noopener' } : {
     transition: filter 0.6s, transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .cx__door[data-door='been'] .cx__art { object-position: 50% 40%; }
-  .cx__door[data-door='studio'] .cx__art { object-position: 50% 28%; }
+  .cx__door[data-door='studio'] .cx__art { object-position: 50% 50%; }
+  /* slideshow: the second layer fades in over the first, then they swap */
+  .cx__art--next { opacity: 0; transition: opacity 1.4s ease, filter 0.6s, transform 1.4s cubic-bezier(0.22, 1, 0.36, 1); }
+  .cx__art--next.is-in { opacity: 1; }
   .cx__veil { position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgb(0 0 0 / 0.9) 0%, rgb(0 0 0 / 0.45) 45%, rgb(0 0 0 / 0.05) 75%); }
   .cx__body { padding: clamp(1rem, 2.2vw, 1.75rem); width: 100%; max-width: 34rem; }
   .cx__title { margin: 0 0 0.5rem; font-family: var(--display); font-weight: 400; text-transform: uppercase; letter-spacing: 0.01em; line-height: 0.95; font-size: clamp(1.6rem, 2.7vw, 2.75rem); }
@@ -149,3 +160,32 @@ const ext = (l: Link) => (l.external ? { target: '_blank', rel: 'noopener' } : {
     .cx__door, .cx__art, .cx__enter { transition: none; }
   }
 </style>
+
+<script>
+  // Crossfade a door's slides: preload the next image into the hidden layer, fade it
+  // in, then copy it to the base layer and reset. Pauses off-screen / reduced motion.
+  document.querySelectorAll<HTMLImageElement>('[data-cx-slides]').forEach((next) => {
+    const base = next.previousElementSibling as HTMLImageElement;
+    const slides: string[] = JSON.parse(next.dataset.cxSlides || '[]');
+    if (slides.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let i = 0, timer = 0, visible = true;
+    const advance = () => {
+      if (!visible || document.hidden) return;
+      const k = (i + 1) % slides.length;
+      const pre = new Image();
+      pre.onload = () => {
+        next.src = slides[k];
+        requestAnimationFrame(() => next.classList.add('is-in'));
+        window.setTimeout(() => {
+          base.src = slides[k];
+          next.classList.remove('is-in');
+          i = k;
+        }, 1500);
+      };
+      pre.src = slides[k];
+    };
+    const start = () => { if (!timer) timer = window.setInterval(advance, 4200); };
+    const stop = () => { clearInterval(timer); timer = 0; };
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; visible ? start() : stop(); }).observe(base);
+  });
+</script>

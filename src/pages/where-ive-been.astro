@@ -1,0 +1,527 @@
+---
+// Where I've been — the work before the blockchain (2005–2018), stacked like the
+// Studio sections on the homepage: Art School, LA Weekly, Coachella 3D, Front Row 3D,
+// stereoscopic fine art (with the first interview) and the national juried shows.
+// Media lives in /public/images/prenft (resized from the coldie3d-prenft folder).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RansomHeading from '../components/RansomHeading.astro';
+import FrontRow3DSlider from '../components/FrontRow3DSlider.astro';
+import YouTubeLite from '../components/YouTubeLite.astro';
+import MediaGrid, { type MediaItem } from '../components/MediaGrid.astro';
+import { site, provenance } from '../data/site';
+import { personLd, breadcrumbLd } from '../data/jsonld';
+
+const PATH = '/where-ive-been';
+const MEDIA_READY = true;
+
+const jumps = [
+  { label: 'Art School', href: '#art-school' },
+  { label: 'LA Weekly', href: '#la-weekly' },
+  { label: 'Coachella 3D', href: '#coachella' },
+  { label: 'Front Row 3D', href: '#front-row-3d' },
+  { label: 'Stereoscopic fine art', href: '#fine-art' },
+  { label: 'Juried exhibitions', href: '#juried' },
+];
+
+// Grid images: full file + "-sm" grid size; w/h are the grid file's (aspect only).
+const img = (dir: string, file: string, w: number, h: number, alt: string, caption?: string, wide = false): MediaItem => ({
+  src: `/images/prenft/${dir}/${file}.jpg`,
+  thumb: `/images/prenft/${dir}/${file}-sm.jpg`,
+  w, h, alt, caption, wide,
+});
+
+const schoolHonors = [
+  { role: 'President, Art Student Alliance', year: '2005' },
+  { role: 'Founder and President, AIGA Student Chapter', year: '2004–2005' },
+  { role: 'Winner, AIGA Los Angeles Student Portfolio Competition', year: '2005' },
+];
+
+const schoolPosters: MediaItem[] = [
+  img('art-school', '1984-poster', 506, 760, 'Film poster for George Orwell’s 1984, designed by Coldie at Cal Poly Pomona', 'George Orwell’s 1984 · film poster'),
+  img('art-school', 'masque-of-the-red-death', 483, 760, 'Theater poster for The Masque of the Red Death', 'The Masque of the Red Death · theater poster'),
+  img('art-school', 'segd-sign-of-the-times-1', 506, 760, 'SEGD Sign of the Times call-for-entries poster', 'SEGD “Sign of the Times” call for entries'),
+  img('art-school', 'segd-sign-of-the-times-2', 506, 760, 'SEGD Sign of the Times call-for-entries poster, blue variation', 'SEGD “Sign of the Times” call for entries'),
+  img('art-school', 'segd-sign-of-the-times-3', 506, 760, 'SEGD Sign of the Times call-for-entries poster, red and white variation', 'SEGD “Sign of the Times” call for entries'),
+  img('art-school', 'segd-sign-of-the-times-4', 506, 760, 'SEGD Sign of the Times call-for-entries poster, blue halftone variation', 'SEGD “Sign of the Times” call for entries'),
+  img('art-school', 'segd-sign-of-the-times-back', 506, 760, 'Reverse of the SEGD call-for-entries poster, deadline April 15, 2005', 'SEGD call for entries · reverse, 2005'),
+  img('art-school', 'pearl-jam-ad', 299, 760, 'Pearl Jam album advertisement', 'Pearl Jam · album advertisement'),
+];
+const schoolStudio: MediaItem[] = [
+  ...[2, 3, 5, 6, 7].map((n) => img('art-school', `pearl-jam-booklet-${n}`, 760, 347, 'Spread from a Pearl Jam album booklet designed by Coldie', 'Pearl Jam · album booklet')),
+  img('art-school', 'poster-series-installed', 760, 352, 'Three of the poster designs mounted on a wall', 'Poster series, mounted'),
+  img('art-school', 'studio-table', 760, 506, 'Spray paint cans, photocopies and books on a studio table', 'The studio table'),
+  img('art-school', 'frame-sequence', 760, 570, 'A grid of sixteen frames showing a fire sequence', 'Frame sequence'),
+];
+
+const lawCovers: MediaItem[] = [
+  { ...img('la-weekly', 'cover-tenacious-d', 614, 760, 'LA Weekly cover: Hungry for Stink, shooting with Tenacious D', 'Hungry for Stink · Tenacious D'), note: 'LA Press Club 2006 · Excellence in Design · Honorable Mention' },
+  img('la-weekly', 'cover-morrissey', 626, 760, 'LA Weekly cover: Moz the Cat, Morrissey', 'Moz the Cat · Morrissey'),
+  { ...img('la-weekly', 'cover-jennifer-finch', 614, 760, 'LA Weekly cover: 14 and Shooting, Jennifer Finch’s early punk photographs', '14 and Shooting · Jennifer Finch'), note: 'The highest newsstand pickup rate in the history of the paper' },
+  img('la-weekly', 'cover-seventh-letter', 615, 760, 'LA Weekly cover: Graffiti Gods of the Seventh Letter', 'Graffiti Gods of the Seventh Letter'),
+  img('la-weekly', 'cover-soul-of-the-machine', 619, 760, 'LA Weekly cover: Soul of the Machine, Machine Project gallery', 'Soul of the Machine'),
+  img('la-weekly', 'newsstand', 570, 760, 'LA Weekly concert guide in a street newsrack', 'On the street'),
+];
+// Live reviews Coldie wrote for laweekly.com (his guest-author page lists all seven).
+const LAW_AUTHOR = 'https://www.laweekly.com/guest-author/ryan-colditz/';
+const lawReviews = [
+  { title: 'Obama and Tool. Two stages. One night.', date: '2007-12-12', href: 'https://www.laweekly.com/obama-and-tool-two-stages-one-night/' },
+  { title: 'Ben Harper and The Innocent Criminals, Orpheum Theatre', date: '2007-11-12', href: 'https://www.laweekly.com/ben-harper-and-the-innocent-criminals-orpheum-theatre-11-09/' },
+  { title: 'Queens of the Stone Age, Nokia Theater', date: '2007-10-30', href: 'https://www.laweekly.com/queens-of-the-stone-age-nokia-theater-10-29/' },
+  { title: 'Immagine in Cornice (Picture in a Frame): a Pearl Jam film', date: '2007-09-26', href: 'https://www.laweekly.com/immagine-in-cornice-picture-in-a-frame-a-pearl-jam-film/' },
+  { title: 'Chris Cornell, Wiltern Theater', date: '2007-07-12', href: 'https://www.laweekly.com/chris-cornell-wiltern-theater/' },
+  { title: 'Pearl Jam, as Hot as the Devil’s Asshole', date: '2007-06-20', href: 'https://www.laweekly.com/pearl-jam-as-hot-as-the-devils-asshole/' },
+  { title: 'Live in L.A.: Roger Waters', date: '2007-06-18', href: 'https://www.laweekly.com/live-in-l-a-roger-waters/' },
+];
+const fmtDate = (d: string) =>
+  new Date(`${d}T12:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+
+const lawConcerts: MediaItem[] = [
+  img('la-weekly', 'detour-festival-2007', 481, 760, 'Poster for the 2007 LA Weekly Detour Music Festival, headlined by Bloc Party and Justice', 'LA Weekly Detour Festival · 2007'),
+  img('la-weekly', 'la101-sspu-1', 533, 760, 'LA 101 concert guide cover featuring Silversun Pickups', 'LA 101 concert guide · cover'),
+  img('la-weekly', 'la101-sspu-2', 533, 760, 'LA 101 concert guide set times and map', 'LA 101 · set times and map'),
+  img('la-weekly', 'la101-sspu-3', 533, 760, 'LA 101 concert guide page on Silversun Pickups', 'Silversun Pickups'),
+  img('la-weekly', 'la101-sspu-5', 533, 760, 'LA 101 concert guide page on Matt & Kim', 'Matt & Kim'),
+  img('la-weekly', 'la101-sspu-6', 533, 760, 'LA 101 concert guide page on Dengue Fever', 'Dengue Fever'),
+  img('la-weekly', 'la101-2010-1', 620, 760, 'LA 101 2010 concert preview guide cover: Massive Attack and Thievery Corporation', 'LA 101 · November 7, 2010'),
+  img('la-weekly', 'la101-2010-2', 620, 760, 'LA 101 2010 guide page on Massive Attack', 'Massive Attack'),
+  img('la-weekly', 'la101-2010-3', 620, 760, 'LA 101 2010 guide page on Thievery Corporation', 'Thievery Corporation'),
+  img('la-weekly', 'la101-2010-spread', 760, 459, 'LA 101 2010 guide spread with Massive Attack and Thievery Corporation', 'LA 101 2010 · spread', true),
+];
+const lawFeatures: MediaItem[] = [
+  img('la-weekly', 'feature-govan-spread', 1222, 760, 'Two-page feature spread: The Encyclopedic City, with Michael Govan photographed in a gallery corridor', 'The Encyclopedic City · Michael Govan · spread', true),
+  img('la-weekly', 'feature-graffiti-spread', 760, 472, 'Feature spread on Los Angeles graffiti: Saber, Push and the LA River', 'Seventh Letter graffiti · spread'),
+  img('la-weekly', 'feature-the-grind', 760, 474, 'Feature spread: The Grind, hip-hop typography over an orange car', 'The Grind · spread'),
+];
+const lawWeb = [
+  ['07WBB_Stage01', 'The Power of the Fart'], ['17WBB_Art', 'Upside Yo Head'], ['25WBB_jeffreestar', 'The Fairest One of All: Jeffree Star'],
+  ['30WBB_news-politmail', 'The Filthiest 48 Hours'], ['31WBB_Feature_Govan', 'The Encyclopedic City'], ['36WBB_Music2', 'Eraserhead: Thom Yorke'],
+  ['45WBB_LaVida', 'Not for Shrinking Violets'], ['50WBB_Finch', '14 and Shooting'], ['52WBB_LedeTenD', 'Hungry for Stink'],
+  ['25Web_BB-art', 'Dutch Auction'], ['26Web_BB-music1', 'Feelin’ the Sparks'], ['22_PEOPLE_MAIN', 'LA People'], ['34bblede', 'Mad Society Kings'],
+].map(([file, title]) => ({ src: `/images/prenft/la-weekly/web/${file}.jpg`, title }));
+
+const artWorks: MediaItem[] = [
+  { src: '/images/prenft/fine-art/welcome-home.gif', thumb: '/images/prenft/fine-art/welcome-home.gif', w: 760, h: 580, alt: 'Welcome Home, anaglyph collage on canvas: silhouettes walking toward a city, animated', caption: 'Welcome Home' },
+  img('fine-art', 'home-ufo-crop-circle', 563, 760, 'Home, anaglyph collage on canvas with a UFO and crop circle', 'Home · 2016 national juried exhibition'),
+  img('fine-art', 'yosemite-falls', 564, 760, 'Yosemite Falls, anaglyph collage on canvas with burned edges', 'Yosemite Falls'),
+  img('fine-art', 'ascension-above-below', 582, 760, 'Ascension: Above / Ascension: Below, anaglyph cityscape on canvas with burned edges', 'Ascension: Above / Ascension: Below · 2018 national juried exhibition'),
+  img('fine-art', 'music-apocalypse', 593, 760, 'Music Apocalypse, anaglyph collage with helicopters and a record over a city', 'Music Apocalypse'),
+];
+const artInstalled: MediaItem[] = [
+  ...([[6547, 636, 760], [6555, 432, 760], [6556, 602, 760], [6577, 579, 760], [6583, 760, 646]] as const).map(([n, w, h]) =>
+    img('fine-art', `installed-${n}`, w, h, 'Anaglyph canvas by Coldie installed on a gallery wall', 'Installed')),
+  ...['20160705_205810', '20160813_192707', '20160930_194044'].map((f, k) => ({
+    src: `/clips/prenft/light-${f}.jpg`,
+    video: `/clips/prenft/light-${f}.mp4`,
+    w: k === 0 ? 393 : 700,
+    h: k === 0 ? 700 : 393,
+    alt: 'Video of an anaglyph canvas with a light-up element, 2016',
+    caption: 'Lit from within · 2016',
+  })),
+];
+
+// Coachella 3D galleries: 2009 pulled from the Wayback Machine snapshot of
+// coachella.com/gallery/20093d (self-hosted), 2010 already on the site.
+const coachella = (year: number, list: [string, string][]) =>
+  list.map(([act, file]) => ({
+    src: `/images/front-row-3d/coachella-${year}/coachella-${year}-${file}.jpg`,
+    caption: act,
+    alt: `${act} at Coachella ${year}, shot in stereoscopic 3D by Coldie.`,
+  }));
+
+const slides2009 = coachella(2009, [
+  ['TV on the Radio', 'tv-on-the-radio'],
+  ['Fleet Foxes', 'fleet-foxes'],
+  ['Silversun Pickups', 'silversun-pickups'],
+  ['Band of Horses', 'band-of-horses'],
+  ['The New Number Two', 'the-new-no-2'],
+  ['The Brian Jonestown Massacre', 'brian-jonestown-massacre'],
+  ['Devendra Banhart', 'devendra-banhart'],
+  ['Sébastien Tellier', 'sebastien-tellier'],
+  ['Dr. Dog', 'dr-dog'],
+  ['Coachella art installation', 'art-installation'],
+  ['Coachella crowd', 'crowd'],
+]);
+const slides2010 = coachella(2010, [
+  ['Them Crooked Vultures', 'them-crooked-vultures'],
+  ['Julian Casablancas', 'julian-casablancas'],
+  ['MGMT', 'mgmt'],
+  ['She & Him', 'she-and-him'],
+  ['Perry Farrell', 'perry-farrell'],
+  ['Edward Sharpe and the Magnetic Zeros', 'edward-sharpe'],
+  ['Hot Chip', 'hot-chip'],
+  ['Coachella crowd', 'crowd-01'],
+  ['Coachella crowd', 'crowd-02'],
+]);
+
+const GALLERY_2009 = 'https://web.archive.org/web/20091012095134/http://www.coachella.com/gallery/20093d';
+const GALLERY_2010 = 'https://web.archive.org/web/20100914213515/http://coachella.com/gallery/20103d';
+const GAZELLI = provenance.find((p) => p.label.startsWith('Gazelli'));
+
+const juried = [
+  {
+    year: '2016',
+    show: 'National juried exhibition',
+    juror: 'Jenny Gheith',
+    jurorRole: 'Assistant Curator of Painting and Sculpture, SFMOMA (now Curator and Interim Head of Painting and Sculpture)',
+    work: 'Home',
+    img: '/images/prenft/fine-art/home-ufo-crop-circle-sm.jpg',
+    w: 563,
+    h: 760,
+  },
+  {
+    year: '2018',
+    show: 'National juried exhibition',
+    juror: 'Mat Gleason',
+    jurorRole: 'Los Angeles critic and curator',
+    work: 'Ascension: Above / Ascension: Below',
+    img: '/images/prenft/fine-art/ascension-above-below-sm.jpg',
+    w: 582,
+    h: 760,
+  },
+];
+
+const imagesLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Coachella 2009 and 2010 3D Concert Photography by Coldie',
+  itemListElement: [...slides2009, ...slides2010].map((s, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': 'ImageObject',
+      contentUrl: new URL(s.src, site.url).href,
+      caption: s.caption,
+      creator: { '@id': `${site.url}/#person` },
+    },
+  })),
+};
+---
+<BaseLayout
+  title="Where I’ve been — before the blockchain, 2005–2018"
+  description="Before NFTs: Coldie’s Cal Poly Pomona design work, LA Weekly covers and concert reviews, official Coachella 3D photography (2009–2010), Front Row 3D, anaglyph fine art on canvas and two national juried exhibitions."
+  path={PATH}
+  noindex={!MEDIA_READY}
+  jsonld={[personLd(), imagesLd, breadcrumbLd([{ name: 'Home', path: '/' }, { name: 'Where I’ve been', path: PATH }])]}
+>
+  <header class="been-head">
+    <div class="wrap been-head__in">
+      <p class="eyebrow">Where I’ve been · 2005–2018</p>
+      <RansomHeading as="h1" text="Before the blockchain" />
+      <p class="been-head__sub">
+        Before the first stereoscopic artwork went on-chain: design school, magazine covers and concert
+        guides, festival photography in 3D, and anaglyph landscapes on canvas.
+      </p>
+      <ul class="been-head__jumps">
+        {jumps.map((j) => <li><a href={j.href}>{j.label}</a></li>)}
+      </ul>
+    </div>
+  </header>
+
+  <!-- Art School -->
+  <section id="art-school" class="been section--flat" aria-labelledby="school-h">
+    <div class="wrap school__intro">
+      <div class="school__text">
+        <p class="eyebrow">Cal Poly Pomona · class of 2005</p>
+        <RansomHeading as="h2" id="school-h" text="Art School" />
+        <p class="been__sub">BFA in Graphic Design, California State Polytechnic University, Pomona.</p>
+        <p class="lede">
+          Posters, album packaging and type: layered, torn and screen-printed by hand, the collage instinct that
+          runs through everything since.
+        </p>
+      </div>
+      <aside class="school__box" aria-label="Art school leadership and awards">
+        <ul>
+          {schoolHonors.map((h) => (
+            <li><span class="school__role">{h.role}</span><span class="school__year">{h.year}</span></li>
+          ))}
+        </ul>
+      </aside>
+    </div>
+    <div class="wrap">
+      <h3 class="been__sub-h">Posters</h3>
+      <MediaGrid items={schoolPosters} label="Art school posters" cols={4} />
+      <h3 class="been__sub-h been__sub-h--gap">Packaging and studio</h3>
+      <MediaGrid items={schoolStudio} label="Art school packaging and studio" cols={2} />
+    </div>
+  </section>
+
+  <!-- LA Weekly -->
+  <section id="la-weekly" class="been section--flat" aria-labelledby="law-h">
+    <div class="wrap been__head">
+      <p class="eyebrow">2006–2010</p>
+      <RansomHeading as="h2" id="law-h" text="LA Weekly" size="clamp(3.2rem, 14vw, 11rem)" />
+      <p class="been__sub">Cover design and live concert reviews.</p>
+      <p class="lede been__lede">
+        Covers, feature spreads, festival posters and the LA 101 concert guides for Los Angeles’ alt-weekly,
+        plus the web billboards that ran on laweekly.com.
+      </p>
+    </div>
+    <div class="wrap">
+      <h3 class="been__sub-h">Covers</h3>
+      <MediaGrid items={lawCovers} label="LA Weekly covers" cols={3} />
+      <h3 class="been__sub-h been__sub-h--gap">Concert Reviews</h3>
+      <p class="reviews__quote">
+        LA Weekly was a great job because not only did I get access to the best art in the city, but I also
+        scored concert tickets to see bands I loved and got to write about them.
+      </p>
+      <ol class="reviews">
+        {lawReviews.map((r) => (
+          <li class="reviews__item">
+            <time class="reviews__date" datetime={r.date}>{fmtDate(r.date)}</time>
+            <a class="reviews__title" href={r.href} target="_blank" rel="noopener">{r.title} <span aria-hidden="true">↗</span></a>
+          </li>
+        ))}
+      </ol>
+      <p class="reviews__all"><a class="link-arrow" href={LAW_AUTHOR} target="_blank" rel="noopener">All reviews on laweekly.com</a></p>
+      <h3 class="been__sub-h been__sub-h--gap">Concerts and festivals</h3>
+      <MediaGrid items={lawConcerts} label="LA Weekly concert guides and festival posters" cols={4} />
+      <h3 class="been__sub-h been__sub-h--gap">Features</h3>
+      <MediaGrid items={lawFeatures} label="LA Weekly feature spreads" cols={2} />
+      <h3 class="been__sub-h been__sub-h--gap">Web billboards</h3>
+    </div>
+    <ul class="web-strip" aria-label="LA Weekly web billboards">
+      {lawWeb.map((b) => (
+        <li><img src={b.src} alt={`LA Weekly web billboard: ${b.title}`} width="570" height="246" loading="lazy" decoding="async" /></li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- Coachella 3D -->
+  <section id="coachella" class="been section--flat" aria-labelledby="coach-h">
+    <div class="wrap been__head">
+      <p class="eyebrow">2009 · 2010</p>
+      <RansomHeading as="h2" id="coach-h" text="Coachella 3D Photography" />
+      <p class="been__sub">Official 3D photographer of the Coachella Festival, two years running.</p>
+      <p class="lede been__lede">
+        Shot front row with a stereoscopic camera Coldie built himself, and published as 3D galleries on
+        coachella.com in 2009 and 2010.
+      </p>
+    </div>
+
+    <div class="wrap coach__pair">
+      <div class="coach__year">
+        <h3 class="been__sub-h">Coachella 2009</h3>
+        <FrontRow3DSlider slides={slides2009} label="Coachella 2009 3D concert photography" sub="Coachella 2009 · shot in 3D by Coldie" />
+      </div>
+      <div class="coach__year">
+        <h3 class="been__sub-h">Coachella 2010</h3>
+        <FrontRow3DSlider slides={slides2010} label="Coachella 2010 3D concert photography" sub="Coachella 2010 · shot in 3D by Coldie" />
+      </div>
+    </div>
+
+    <div class="wrap been__center">
+      <p class="been__glasses">
+        <span class="been__glasses-icon" aria-hidden="true"></span>
+        Grab your blue/red 3D glasses
+      </p>
+      <p class="muted small been__note">Featured on coachella.com, 2009–2010</p>
+      <div class="been__btns">
+        <a class="btn" href={GALLERY_2009} target="_blank" rel="noopener">View the archived 2009 Coachella 3D gallery ↗</a>
+        <a class="btn" href={GALLERY_2010} target="_blank" rel="noopener">View the archived 2010 Coachella 3D gallery ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Front Row 3D -->
+  <section id="front-row-3d" class="been section--flat" aria-labelledby="fr-h">
+    <div class="wrap been__split">
+      <div class="been__text">
+        <p class="eyebrow">2009–2018</p>
+        <RansomHeading as="h2" id="fr-h" text="Front Row 3D" />
+        <p class="been__sub">A decade shooting live music in stereoscopic 3D.</p>
+        <p class="lede">
+          Rock and hip-hop, front row, in real depth, with a camera Coldie built himself. He shot believing a
+          technology that didn’t yet exist would one day show the images in full dimensional color. In 2021,
+          viewing the archive in VR for the first time, that conviction was confirmed.
+        </p>
+        <p>
+          Some of the musicians he captured, including Chris Cornell, Mac Miller and DMX, are no longer with us,
+          which makes these among the only times they’ll be seen again in true dimensional space. The series
+          was exhibited as <em>Front Row 3D</em> at Gazelli Art House, London.
+        </p>
+        {GAZELLI && (
+          <a class="btn" href={GAZELLI.href} target="_blank" rel="noopener">Front Row 3D at Gazelli Art House ↗</a>
+        )}
+      </div>
+      {GAZELLI && (
+        <figure class="been__fig">
+          <img src={GAZELLI.image} alt={GAZELLI.imageAlt} loading="lazy" decoding="async" />
+          <figcaption class="muted small">The Flaming Lips, Santa Rosa, June 11, 2011 · 3D GIF</figcaption>
+        </figure>
+      )}
+    </div>
+  </section>
+
+  <!-- Stereoscopic fine art -->
+  <section id="fine-art" class="been section--flat" aria-labelledby="fa-h">
+    <div class="wrap been__head">
+      <p class="eyebrow">Since 2009 · anaglyph on canvas</p>
+      <RansomHeading as="h2" id="fa-h" lines={["Stereoscopic", "Fine Art"]} />
+      <p class="been__sub">Landscapes and portraits in real depth, hung with 3D glasses beside them.</p>
+      <p class="lede been__lede">
+        Begun in 2009, the work marked a symbolic shift: from Downtown Los Angeles, where much of the source
+        photography was shot, back to Northern California, where Coldie found the peace and solitude to create
+        his first body of work. The pieces are collaged cityscapes and landscapes printed as red/cyan anaglyphs
+        on canvas, some with burned edges, some lit from within.
+      </p>
+    </div>
+
+    <div class="wrap">
+      <MediaGrid items={artWorks} label="Anaglyph works on canvas" cols={3} />
+      <p class="been__glasses been__glasses--center">
+        <span class="been__glasses-icon" aria-hidden="true"></span>
+        Grab your blue/red 3D glasses
+      </p>
+      <h3 class="been__sub-h been__sub-h--gap">On the wall</h3>
+      <MediaGrid items={artInstalled} label="Anaglyph canvases installed, and light-up works on video" cols={3} />
+
+      <figure class="fa__interview">
+        <YouTubeLite id="kMIMr8Ro9So" title="Coldie — first interview (2011)" />
+        <figcaption class="fa__cap">
+          <span class="fa__kicker">The first interview (2011)</span>
+          <p class="muted">
+            Featuring stereoscopic 3D artwork including <em>Front Row 3D: Photography from the Coachella Music
+            Festival</em>, and works that would later be tokenized as digital works.
+          </p>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- National juried exhibitions -->
+  <section id="juried" class="been section--flat" aria-labelledby="jur-h">
+    <div class="wrap been__head">
+      <p class="eyebrow">Recognition</p>
+      <RansomHeading as="h2" id="jur-h" text="National Juried Exhibitions" />
+      <p class="been__sub">
+        Two anaglyph 3D landscapes on canvas, shown with 3D glasses on display: the traditional art world
+        meeting the medium on its own terms.
+      </p>
+    </div>
+    <div class="wrap">
+      <ol class="jur">
+        {juried.map((j) => (
+          <li class="jur__item">
+            <span class="jur__year">{j.year}</span>
+            <div>
+              <h3 class="jur__show"><em>{j.work}</em></h3>
+              <p class="jur__medium">Mixed media · stereoscopic 3D anaglyph gel transfer on canvas</p>
+              <p class="jur__juror">{j.show}, juried by <strong>{j.juror}</strong>, {j.jurorRole}</p>
+            </div>
+            <img class="jur__img" src={j.img} alt={`${j.work}, stereoscopic 3D anaglyph gel transfer on canvas by Coldie`} width={j.w} height={j.h} loading="lazy" decoding="async" />
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <div class="wrap been__next">
+    <a class="btn btn--solid" href="/archive?view=grid">Then 2018: experience the archive →</a>
+  </div>
+
+</BaseLayout>
+
+<style>
+  .been-head { padding-block: clamp(3.5rem, 9vw, 7rem) clamp(2.5rem, 6vw, 4rem); }
+  /* full width so BLOCKCHAIN stays centered; the subhead keeps its own measure */
+  .been-head__in { text-align: center; }
+  .been-head__sub {
+    font-family: var(--serif); font-size: clamp(1.1rem, 2.2vw, 1.6rem); color: var(--ink-soft);
+    margin: 0.2em auto 1.2em; max-width: 44ch;
+  }
+  .been-head__jumps { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+  .been-head__jumps a {
+    display: inline-block; padding: 0.38rem 0.8rem; border-radius: 999px; font-size: 0.76rem; font-weight: 500;
+    color: var(--ink); text-decoration: none; border: 1px solid var(--line-soft); transition: background 0.25s, color 0.25s;
+  }
+  .been-head__jumps a:hover, .been-head__jumps a:focus-visible { background: var(--ink); color: var(--bg); }
+
+  .been { padding-block: clamp(4rem, 9vw, 8rem); border-top: 1px solid var(--line-soft); scroll-margin-top: 64px; }
+  /* full width so long ransom words (PHOTOGRAPHY, STEREOSCOPIC) stay centered; text keeps a reading measure */
+  .been__head { margin: 0 auto clamp(2rem, 5vw, 3.5rem); text-align: center; }
+  .been__sub {
+    font-family: var(--serif); font-size: clamp(1.15rem, 2.4vw, 1.7rem); color: var(--ink-soft);
+    margin: 0.1em auto 0.9em; max-width: 44ch;
+  }
+  .been__lede { margin: 0 auto; max-width: 62ch; }
+  .been__sub-h { font-family: var(--display); text-transform: uppercase; letter-spacing: 0.01em; text-align: center; margin: 0 0 1em; }
+  .reviews__quote {
+    font-family: var(--serif); font-size: clamp(1.1rem, 2vw, 1.45rem); line-height: 1.5; color: var(--ink-soft);
+    text-align: center; max-width: 52ch; margin: 0 auto clamp(1.5rem, 4vw, 2.5rem);
+  }
+  .reviews { list-style: none; margin: 0 auto; padding: 0; max-width: 52rem; }
+  .reviews__item {
+    display: grid; grid-template-columns: 8rem 1fr; gap: 1rem; align-items: baseline;
+    padding: 0.95rem 0; border-top: 1px solid var(--line-soft);
+  }
+  .reviews__item:last-child { border-bottom: 1px solid var(--line-soft); }
+  .reviews__date { font-family: var(--type); font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); }
+  .reviews__title { font-family: var(--serif); font-size: clamp(1.05rem, 1.6vw, 1.3rem); color: var(--ink); text-decoration: none; }
+  .reviews__title:hover, .reviews__title:focus-visible { text-decoration: underline; text-underline-offset: 0.18em; }
+  .reviews__all { text-align: center; margin: 1.4rem auto 0; max-width: none; }
+  .been__sub-h--gap { margin-top: clamp(3rem, 7vw, 5rem); }
+  .been__glasses--center { display: flex; justify-content: center; }
+  .been__center { text-align: center; }
+
+  .web-strip {
+    list-style: none; margin: 0; padding: 0 clamp(1rem, 4vw, 3rem) 0.75rem; display: flex; gap: 0.75rem;
+    overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+  }
+  .web-strip li { flex: 0 0 auto; scroll-snap-align: start; }
+  .web-strip img { display: block; width: min(380px, 78vw); height: auto; border: 1px solid var(--line-soft); border-radius: var(--radius); }
+  .been__btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+  .been__note { margin: 0 auto 1em; max-width: none; }
+  .been__glasses {
+    display: inline-flex; align-items: center; gap: 0.6em; margin: clamp(1.5rem, 4vw, 2.5rem) 0 1.4rem; max-width: none;
+    font-family: var(--type); font-size: 0.8rem; letter-spacing: 0.04em; color: var(--ink-soft);
+  }
+  .been__glasses-icon { width: 26px; height: 13px; border-radius: 2px; flex: none; background: linear-gradient(90deg, #45c7d0 0 50%, #e23b2e 50% 100%); }
+
+  .school__intro {
+    display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center; margin-bottom: clamp(2.5rem, 6vw, 4rem);
+  }
+  .school__text .been__sub { margin-inline: 0; }
+  .school__text .lede { margin: 0; max-width: 56ch; }
+  .school__box { border: 1px solid var(--line-soft); border-radius: var(--radius); padding: clamp(1.1rem, 2.5vw, 1.6rem); }
+  .school__box ul { list-style: none; margin: 0; padding: 0; }
+  .school__box li { display: flex; flex-direction: column; gap: 0.2rem; padding: 0.85rem 0; border-top: 1px solid var(--line-soft); }
+  .school__box li:first-child { border-top: 0; padding-top: 0; }
+  .school__box li:last-child { padding-bottom: 0; }
+  .school__role { font-family: var(--serif); font-size: clamp(1rem, 1.4vw, 1.15rem); line-height: 1.3; color: var(--ink); }
+  .school__year { font-family: var(--type); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); }
+
+  .coach__pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(2rem, 5vw, 4rem); }
+
+  .been__split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+  .been__text .been__sub { margin-inline: 0; }
+  .been__text p { max-width: 58ch; }
+  .been__fig { margin: 0; }
+  .been__fig img { width: 100%; height: auto; border: 1px solid var(--line-soft); border-radius: var(--radius); }
+  .been__fig figcaption { margin-top: 0.7em; }
+
+
+  .fa__interview { margin: clamp(3.5rem, 8vw, 6rem) auto 0; max-width: 60rem; }
+  .fa__cap { display: grid; grid-template-columns: auto 1fr; gap: clamp(1rem, 3vw, 3rem); align-items: start; margin-top: 1.4em; }
+  .fa__kicker { font-family: var(--type); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red); white-space: nowrap; padding-top: 0.2em; }
+  .fa__cap p { margin: 0; max-width: 60ch; }
+
+  .jur { list-style: none; margin: 0 auto; padding: 0; max-width: 64rem; }
+  .jur__item { display: grid; grid-template-columns: 5rem 1fr minmax(12rem, 20rem); align-items: start; gap: 1.5rem; padding: 1.4rem 0; border-top: 1px solid var(--line-soft); }
+  .jur__item:last-child { border-bottom: 1px solid var(--line-soft); }
+  .jur__year { font-family: var(--display); font-size: clamp(1.6rem, 3vw, 2.2rem); line-height: 1; }
+  .jur__show { font-family: var(--serif); font-size: clamp(1.25rem, 2vw, 1.6rem); margin: 0 0 0.3em; }
+  .jur__medium { margin: 0 0 0.5em; font-size: 0.78rem; letter-spacing: 0.04em; color: var(--ink-mute); }
+  .jur__juror { margin: 0; color: var(--ink-soft); }
+  .jur__img { width: 100%; height: auto; border: 1px solid var(--line-soft); border-radius: var(--radius); }
+
+  .been__next { text-align: center; padding-block: clamp(3rem, 7vw, 5rem); border-top: 1px solid var(--line-soft); }
+
+  @media (max-width: 860px) {
+    .coach__pair, .been__split, .school__intro { grid-template-columns: 1fr; }
+    .fa__cap { grid-template-columns: 1fr; gap: 0.4rem; }
+    .jur__item { grid-template-columns: 3.5rem 1fr; gap: 1rem; }
+    .jur__img { grid-column: 1 / -1; max-width: 22rem; justify-self: center; }
+    .reviews__item { grid-template-columns: 1fr; gap: 0.2rem; }
+  }
+</style>

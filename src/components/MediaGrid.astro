@@ -1,0 +1,128 @@
+---
+// MediaGrid — a masonry grid of images (and optional muted video loops) with
+// captions. Clicking an image opens the full-size file in a lightbox <dialog>
+// (arrows / Esc / swipe-free, keyboard friendly). Used on /where-ive-been.
+export interface MediaItem {
+  /** Full-size image (opens in the lightbox). */
+  src: string;
+  /** Grid-size image; defaults to src. */
+  thumb?: string;
+  /** Video loop shown in place of an image (src is then its poster). */
+  video?: string;
+  w: number;
+  h: number;
+  alt: string;
+  caption?: string;
+  /** A second line under the caption: an award, a record, a note. */
+  note?: string;
+  /** Span the full grid width (wide spreads). */
+  wide?: boolean;
+}
+export interface Props { items: MediaItem[]; label: string; cols?: number }
+const { items, label, cols = 3 } = Astro.props;
+---
+<div class="mg" data-mg style={`--cols:${cols}`} role="list" aria-label={label}>
+  {items.map((m, i) => (
+    <figure class:list={['mg__item', { 'mg__item--wide': m.wide }]} role="listitem">
+      {m.video ? (
+        <video
+          class="mg__media"
+          src={m.video}
+          poster={m.src}
+          width={m.w}
+          height={m.h}
+          muted
+          loop
+          playsinline
+          controls
+          preload="none"
+          aria-label={m.alt}
+        ></video>
+      ) : (
+        <button type="button" class="mg__open" data-mg-open={i} data-full={m.src} data-caption={[m.caption, m.note].filter(Boolean).join(' — ')} aria-label={`Enlarge: ${m.alt}`}>
+          <img class="mg__media" src={m.thumb ?? m.src} alt={m.alt} width={m.w} height={m.h} loading="lazy" decoding="async" />
+        </button>
+      )}
+      {(m.caption || m.note) && (
+        <figcaption class="mg__cap">
+          {m.caption}
+          {m.note && <span class="mg__note">{m.note}</span>}
+        </figcaption>
+      )}
+    </figure>
+  ))}
+</div>
+
+<dialog class="mg-box" data-mg-box aria-label="Enlarged image">
+  <img class="mg-box__img" alt="" data-mg-img />
+  <p class="mg-box__cap" data-mg-cap></p>
+  <button type="button" class="mg-box__btn mg-box__close" data-mg-close aria-label="Close">×</button>
+  <button type="button" class="mg-box__btn mg-box__prev" data-mg-prev aria-label="Previous image">‹</button>
+  <button type="button" class="mg-box__btn mg-box__next" data-mg-next aria-label="Next image">›</button>
+</dialog>
+
+<style>
+  .mg { columns: var(--cols); column-gap: clamp(0.75rem, 1.6vw, 1.25rem); }
+  .mg__item { break-inside: avoid; margin: 0 0 clamp(0.75rem, 1.6vw, 1.25rem); }
+  .mg__item--wide { column-span: all; }
+  .mg__open { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+  .mg__media {
+    display: block; width: 100%; height: auto; border: 1px solid var(--line-soft); border-radius: var(--radius);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s;
+  }
+  .mg__open:hover .mg__media, .mg__open:focus-visible .mg__media { transform: translateY(-3px); box-shadow: -4px 0 0 #ff3d3d, 4px 0 0 #45c7d0; }
+  .mg__open:focus-visible { outline: none; }
+  .mg__cap { margin-top: 0.55em; font-size: 0.8rem; line-height: 1.45; color: var(--ink-soft); }
+  .mg__note { display: block; margin-top: 0.3em; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); }
+
+  .mg-box {
+    width: 100vw; height: 100svh; max-width: none; max-height: none; margin: 0; padding: clamp(1rem, 4vw, 3rem);
+    border: 0; background: rgb(5 5 5 / 0.94); color: #f3f1ec;
+  }
+  .mg-box[open] { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.9rem; }
+  .mg-box::backdrop { background: transparent; }
+  .mg-box__img { max-width: 100%; max-height: calc(100svh - 7rem); object-fit: contain; }
+  .mg-box__cap { margin: 0; font-size: 0.85rem; color: #b9b4aa; text-align: center; max-width: 60ch; }
+  .mg-box__btn {
+    position: absolute; width: 44px; height: 44px; display: grid; place-items: center; font-size: 1.6rem; line-height: 1;
+    color: #fff; background: rgb(0 0 0 / 0.5); border: 1px solid rgb(255 255 255 / 0.35); border-radius: 50%; cursor: pointer;
+  }
+  .mg-box__btn:hover { border-color: #fff; }
+  .mg-box__close { top: 1rem; right: 1rem; }
+  .mg-box__prev { left: 1rem; top: 50%; transform: translateY(-50%); }
+  .mg-box__next { right: 1rem; top: 50%; transform: translateY(-50%); }
+
+  @media (max-width: 860px) { .mg { columns: 2; } }
+  @media (max-width: 480px) { .mg { columns: 1; } }
+  @media (prefers-reduced-motion: reduce) { .mg__media { transition: none; } }
+</style>
+
+<script>
+  function init(grid: HTMLElement) {
+    const box = grid.nextElementSibling as HTMLDialogElement;
+    const img = box.querySelector<HTMLImageElement>('[data-mg-img]')!;
+    const cap = box.querySelector<HTMLElement>('[data-mg-cap]')!;
+    const btns = Array.from(grid.querySelectorAll<HTMLButtonElement>('[data-mg-open]'));
+    let i = 0;
+    const show = (k: number) => {
+      i = (k + btns.length) % btns.length;
+      const b = btns[i];
+      img.src = b.dataset.full!;
+      img.alt = b.querySelector('img')?.alt ?? '';
+      cap.textContent = b.dataset.caption ?? '';
+    };
+    btns.forEach((b, k) => b.addEventListener('click', () => { show(k); box.showModal(); }));
+    box.querySelector('[data-mg-close]')!.addEventListener('click', () => box.close());
+    box.querySelector('[data-mg-prev]')!.addEventListener('click', () => show(i - 1));
+    box.querySelector('[data-mg-next]')!.addEventListener('click', () => show(i + 1));
+    box.addEventListener('click', (e) => { if (e.target === box) box.close(); });
+    box.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') show(i - 1);
+      else if (e.key === 'ArrowRight') show(i + 1);
+    });
+    box.addEventListener('close', () => btns[i]?.focus());
+  }
+  document.querySelectorAll<HTMLElement>('[data-mg]').forEach((el) => {
+    if (!el.dataset.init) { el.dataset.init = '1'; init(el); }
+  });
+</script>

@@ -1,11 +1,9 @@
 ---
-// "In his own words" — Coldie's first interview featured, then interviews across
-// his career in a spacious two-column index. Facade embeds (YouTubeLite) keep it
+// "In his own words" — interviews across his career in a spacious two-column index
+// (the 2011 first interview lives on /where-ive-been, under Stereoscopic Fine Art). Facade embeds (YouTubeLite) keep it
 // clean and gallery-grade. Titles/descriptions pulled from the YouTube pages.
 import YouTubeLite from './YouTubeLite.astro';
 import RansomHeading from './RansomHeading.astro';
-
-const FEATURED_ID = 'kMIMr8Ro9So';
 
 const interviews = [
   {
@@ -42,16 +40,6 @@ const interviews = [
       <p class="story__sub">A life spent capturing depth, and trusting the technology would catch up.</p>
     </header>
 
-    <figure class="story__feature">
-      <YouTubeLite id={FEATURED_ID} title="Coldie — first interview" />
-      <figcaption class="story__feature-cap">
-        <span class="story__kicker">The first interview (2011)</span>
-        <p class="muted">
-          Featuring stereoscopic 3D artwork including <em>Front Row 3D: Photography from the Coachella
-          Music Festival</em>, and works that would later be tokenized as digital works.
-        </p>
-      </figcaption>
-    </figure>
 
     <ol class="story__index" aria-label="More interviews">
       {interviews.map((iv, i) => (
@@ -80,17 +68,6 @@ const interviews = [
     color: var(--ink-soft); margin: 0.25em 0 0; max-width: 34ch;
   }
 
-  /* featured interview */
-  .story__feature { margin: 0 0 clamp(4rem, 9vw, 7rem); }
-  .story__feature-cap {
-    display: grid; grid-template-columns: auto 1fr; gap: clamp(1rem, 3vw, 3rem);
-    align-items: start; margin-top: 1.4em;
-  }
-  .story__kicker {
-    font-family: var(--type); font-size: 0.72rem; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--red); white-space: nowrap; padding-top: 0.2em;
-  }
-  .story__feature-cap p { margin: 0; max-width: 60ch; }
 
   /* two-column interview index */
   .story__index {
@@ -115,6 +92,5 @@ const interviews = [
 
   @media (max-width: 760px) {
     .story__index { grid-template-columns: 1fr; }
-    .story__feature-cap { grid-template-columns: 1fr; gap: 0.4rem; }
   }
 </style>
