@@ -44,8 +44,9 @@ function wrap(text, maxChars, maxLines) {
   }
   return lines;
 }
+// 3D-glasses mark — blue (cyan) lens on the left, red on the right.
 const mark = (x, y, s) =>
-  `<rect x="${x}" y="${y}" width="${s / 2}" height="${s}" fill="${RED}"/><rect x="${x + s / 2}" y="${y}" width="${s / 2}" height="${s}" fill="${CYAN}"/>`;
+  `<rect x="${x}" y="${y}" width="${s / 2}" height="${s}" fill="${CYAN}"/><rect x="${x + s / 2}" y="${y}" width="${s / 2}" height="${s}" fill="${RED}"/>`;
 
 /** Text column on the left: brand, title, sub-line. */
 function textSvg({ title, sub, width = 560, titleSize = 54 }) {
