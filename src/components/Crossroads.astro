@@ -7,9 +7,6 @@
 // crossfades through them behind its text (one image fetched ahead at a time). The Studio sections
 // follow below (#studio) for anyone who scrolls past the question.
 
-// Six Tech Epochalypse: Overlord Mashup prints, cropped to the artwork (originals in /works/eterno-prints).
-const mashups = ['03', '19', '21', '25', '28', '36'].map((n) => `/images/studio-door/overlord-mashup-${n}.jpg`);
-
 type Link = { label: string; href: string; external?: boolean };
 type Door = { key: string; title: string; line: string; img: string; alt: string; slides?: string[]; enter: Link; links: Link[] };
 
@@ -34,9 +31,8 @@ const doors: Door[] = [
     key: 'studio',
     title: 'In the studio',
     line: 'Kinetic 3D portraits you can take apart and rebuild, and art you’re meant to touch.',
-    img: mashups[0],
-    alt: 'Tech Epochalypse: Overlord Mashup prints by Coldie, at Eterno Gallery',
-    slides: mashups,
+    img: '/images/studio-door/eterno-gallery-lisbon.jpg',
+    alt: 'Coldie at Eterno Gallery, Lisbon, in front of a wall of Decentral Eyes prints',
     enter: { label: 'Enter the studio', href: '#studio' },
     links: [
       { label: 'Eterno Gallery', href: '#current-series' },
