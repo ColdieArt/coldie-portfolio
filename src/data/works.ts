@@ -128,6 +128,8 @@ export const works: Work[] = [
     collectUrl: '',
     // TODO: insert SuperRare/OpenSea listing URL for this work
     marketplace: { name: 'SuperRare', url: '' },
+    // "View edition" — the original R.A.R.E. Art Labs record
+    marketplaceUrl: 'https://www.rareart.io/artwork/0xac293c5c2eca9c623c156d120e53b2a3650c173f',
   },
 
   // ───────────────────────── Stereoscopic ─────────────────────────
