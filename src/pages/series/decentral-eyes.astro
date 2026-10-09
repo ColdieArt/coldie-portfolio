@@ -87,7 +87,8 @@ const ERA_OVERRIDES: Record<string, EraKey> = {
   'sr-892a1e-4': 'motion', // Jack Dorsey — Safe Passage
   'sr-892a1e-5': 'motion', // Donald Trump — Crypto President
   'tech-epochalypse-moments': 'motion',
-  'not-one-satoshi': 'motion', // Michael Saylor
+  'not-one-satoshi': 'motion', // Michael Saylor — 3D GIF editions
+  'saylor-not-one-satoshi-1of1': 'motion', // Michael Saylor — 1/1 (3D Motion technique)
   'decentraleyes-mashup': 'generative',
   'decentral-eyes-vr-og-collage': 'generative',
 };
@@ -123,13 +124,12 @@ const techPortraits: Release[] = [
   };
 });
 
-const eras = ERAS.map((e) => {
-  let list = works.filter((r) => eraOf(r) === e.key);
-  if (e.key === 'kinetic') list = [...techPortraits, ...list];
-  const ys = list.map(releaseYear).filter((y): y is number => y != null);
-  const [lo, hi] = [Math.min(...ys), Math.max(...ys)];
-  return { ...e, list, label: lo === hi ? String(lo) : `${lo}–${hi}` };
-}).filter((e) => e.list.length);
+// One timeline: every work (plus the Tech Epochalypse portraits) in release order.
+// Eras become a filter, not a section break.
+const timeline = [...works, ...techPortraits].sort((a, b) => (a.date ?? '').localeCompare(b.date ?? ''));
+const eraFilters = ERAS.map((e) => ({ ...e, count: timeline.filter((r) => eraOf(r) === e.key).length })).filter(
+  (e) => e.count
+);
 
 const hero = works.find((r) => /\bdogg\b/i.test(r.title)) ?? topSale ?? works[0];
 
@@ -327,52 +327,51 @@ const FILE = 'src/data/copy/decentral-eyes.ts';
         </ul>
       </section>
 
-      <!-- ── Works by era ─────────────────────────────── -->
+      <!-- ── Works — one timeline, filter by era ──────── -->
       <section class="de-works" aria-labelledby="works">
-        <h2 id="works" class="de-h2 de-h2--big">The works</h2>
-        {eras.map((e) => (
-          <section class="de-era" aria-labelledby={`era-${e.key}`}>
-            <header class="de-era__head">
-              <p class="de-era__years">{e.label}</p>
-              <h3 id={`era-${e.key}`}>{e.title}</h3>
-              <p class="de-muted">{e.list.length} {e.list.length === 1 ? 'release' : 'releases'}</p>
-            </header>
-            {copy.eras[e.key]
-              ? <p class="de-prose de-era__text">{copy.eras[e.key]}</p>
-              : <CopySlot label={`Era — ${e.title}`} length="1–2 sentences" guidance={e.guide} field={`eras.${e.key}`} />}
-            <div class="de-grid">
-              {e.list.map((r) => {
-                const mk = market[r.id];
-                const slides = slideshows[r.id];
-                return (
-                  <article class="de-card" id={r.id}>
-                    {slides
-                      ? <RotatingBillboard images={slides} href={r.url} external ratio="1/1" fit="contain" interval={2600} />
-                      : <PlayableMedia poster={thumbs[r.id]} media={media[r.id]} title={r.title} size={sizes[r.id]} auto />}
-                    <div class="de-card__meta">
-                      <p class="de-card__date">{formatReleaseDate(r.date)} · {KIND_LABEL[r.kind]}{r.supply && r.supply > 1 ? ` · ${r.supply.toLocaleString('en-US')}` : ''}</p>
-                      <h4 class="de-card__title">{r.title.replace(/\s*-\s*Decentral Eyes\s*-?\s*/i, ' — ').replace(/^Decentral Eyes\s*-\s*/i, '').replace(/\s—\s*$/, '')}</h4>
-                      {r.badge && <p class="de-card__badge">{r.badge}</p>}
-                      {mk?.owner && (
-                        <p class="de-card__owner">
-                          {mk.owner.artist ? 'Held by the artist' : 'Collected by'}{' '}
-                          {!mk.owner.artist && <a href={`https://opensea.io/${mk.owner.address}`} target="_blank" rel="noopener">{ownerLabel(mk.owner)}</a>}
-                        </p>
-                      )}
-                      {(mk?.lastSale || mk?.listing) && (
-                        <p class="de-card__market">
-                          {mk.lastSale && <span>Last sale {fmtEth(mk.lastSale)}</span>}
-                          {mk.listing && <span class="de-card__ask">{mk.listing.kind === 'floor' ? 'Floor' : 'Ask'} {fmtEth(mk.listing)}</span>}
-                        </p>
-                      )}
-                      {r.url && <a class="de-card__link" href={r.url} target="_blank" rel="noopener">{marketName(r.url)} ↗</a>}
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
-          </section>
+        <div class="de-works__head">
+          <h2 id="works" class="de-h2 de-h2--big">The works</h2>
+          <div class="de-filter" role="group" aria-label="Filter the works by era">
+            <button type="button" class="de-filter__btn is-active" data-filter="all" aria-pressed="true">All <span class="de-filter__n">{timeline.length}</span></button>
+            {eraFilters.map((e) => (
+              <button type="button" class="de-filter__btn" data-filter={e.key} aria-pressed="false">{e.title} <span class="de-filter__n">{e.count}</span></button>
+            ))}
+          </div>
+        </div>
+        {eraFilters.map((e) => copy.eras[e.key] && (
+          <p class="de-prose de-era__text" data-era-desc={e.key} hidden>{copy.eras[e.key]}</p>
         ))}
+        <div class="de-grid" data-works-grid>
+          {timeline.map((r) => {
+            const mk = market[r.id];
+            const slides = slideshows[r.id];
+            return (
+              <article class="de-card" id={r.id} data-era={eraOf(r)}>
+                {slides
+                  ? <RotatingBillboard images={slides} href={r.url} external ratio="1/1" fit="contain" interval={2600} />
+                  : <PlayableMedia poster={thumbs[r.id]} media={media[r.id]} title={r.title} size={sizes[r.id]} auto />}
+                <div class="de-card__meta">
+                  <p class="de-card__date">{formatReleaseDate(r.date)} · {KIND_LABEL[r.kind]}{r.supply && r.supply > 1 ? ` · ${r.supply.toLocaleString('en-US')}` : ''}</p>
+                  <h4 class="de-card__title">{r.title.replace(/\s*-\s*Decentral Eyes\s*-?\s*/i, ' — ').replace(/^Decentral Eyes\s*-\s*/i, '').replace(/\s—\s*$/, '')}</h4>
+                  {r.badge && <p class="de-card__badge">{r.badge}</p>}
+                  {mk?.owner && (
+                    <p class="de-card__owner">
+                      {mk.owner.artist ? 'Held by the artist' : 'Collected by'}{' '}
+                      {!mk.owner.artist && <a href={`https://opensea.io/${mk.owner.address}`} target="_blank" rel="noopener">{ownerLabel(mk.owner)}</a>}
+                    </p>
+                  )}
+                  {(mk?.lastSale || mk?.listing) && (
+                    <p class="de-card__market">
+                      {mk.lastSale && <span>Last sale {fmtEth(mk.lastSale)}</span>}
+                      {mk.listing && <span class="de-card__ask">{mk.listing.kind === 'floor' ? 'Floor' : 'Ask'} {fmtEth(mk.listing)}</span>}
+                    </p>
+                  )}
+                  {r.url && <a class="de-card__link" href={r.url} target="_blank" rel="noopener">{marketName(r.url)} ↗</a>}
+                </div>
+              </article>
+            );
+          })}
+        </div>
       </section>
 
       <!-- ── Collectors ───────────────────────────────── -->
@@ -475,7 +474,21 @@ const FILE = 'src/data/copy/decentral-eyes.ts';
   .de-era { border-top: 1px solid var(--line); padding-top: 1.5rem; }
   .de-era__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 1.25rem; margin-bottom: 0.9rem; }
   .de-era__head h3 { font-family: var(--display); font-size: clamp(1.6rem, 3vw, 2.2rem); margin: 0; letter-spacing: 0.01em; }
-  .de-era__text { margin-bottom: 1.6rem; }
+  .de-era__text { margin-bottom: 1.6rem; max-width: 70ch; }
+
+  /* Works filter — eras become a filter over one date-ordered timeline. */
+  .de-works__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.75rem 1.5rem; margin-bottom: 1.5rem; }
+  .de-works__head .de-h2--big { margin: 0; }
+  .de-filter { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .de-filter__btn {
+    font-family: var(--sans); font-size: 0.7rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-soft); background: transparent; border: 1px solid var(--line); padding: 0.55em 0.95em; cursor: pointer;
+    line-height: 1; transition: color 0.2s, border-color 0.2s, background 0.2s;
+  }
+  .de-filter__btn:hover { color: var(--ink); border-color: var(--ink-mute); }
+  .de-filter__btn.is-active { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
+  .de-filter__n { opacity: 0.55; margin-left: 0.4em; }
+  .de-filter__btn.is-active .de-filter__n { opacity: 0.8; }
   /* Collector gallery: large images so the detail in each portrait reads. */
   .de-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 3rem 2rem; margin-top: 1.6rem; align-items: start; }
   .de-card { min-width: 0; scroll-margin-top: 110px; }
@@ -521,3 +534,23 @@ const FILE = 'src/data/copy/decentral-eyes.ts';
     .de-subjects { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.75rem 1.1rem; }
   }
 </style>
+
+<script>
+  // Era filter over the single works timeline: show all, or just one era's pieces.
+  const grid = document.querySelector<HTMLElement>('[data-works-grid]');
+  if (grid) {
+    const btns = [...document.querySelectorAll<HTMLButtonElement>('.de-filter__btn')];
+    const cards = [...grid.querySelectorAll<HTMLElement>('.de-card')];
+    const descs = [...document.querySelectorAll<HTMLElement>('[data-era-desc]')];
+    const apply = (f: string) => {
+      for (const b of btns) {
+        const on = b.dataset.filter === f;
+        b.classList.toggle('is-active', on);
+        b.setAttribute('aria-pressed', String(on));
+      }
+      for (const c of cards) c.hidden = f !== 'all' && c.dataset.era !== f;
+      for (const d of descs) d.hidden = d.dataset.eraDesc !== f;
+    };
+    for (const b of btns) b.addEventListener('click', () => apply(b.dataset.filter!));
+  }
+</script>
