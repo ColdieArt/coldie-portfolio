@@ -4,6 +4,7 @@
 // src/data/copy/decentral-eyes.ts and show as copy slots until written.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PlayableMedia from '../../components/PlayableMedia.astro';
+import RotatingBillboard from '../../components/RotatingBillboard.astro';
 import CopySlot from '../../components/CopySlot.astro';
 import { site } from '../../data/site';
 import { personLd, breadcrumbLd } from '../../data/jsonld';
@@ -13,6 +14,7 @@ import marketJson from '../../data/market.json';
 import thumbsJson from '../../data/thumbs.json';
 import mediaJson from '../../data/media.json';
 import thumbSizesJson from '../../data/thumb-sizes.json';
+import slideshowsJson from '../../data/slideshows.json';
 import { decentralEyesCopy as copy } from '../../data/copy/decentral-eyes';
 
 type Owner = { address: string; name: string | null; ens: string | null; artist: boolean };
@@ -22,6 +24,7 @@ const market = marketJson.releases as Record<string, Market>;
 const thumbs: Record<string, string> = { ...thumbsJson };
 const media = mediaJson as Record<string, { src: string; type: 'video' | 'gif' } | null>;
 const sizes = { ...thumbSizesJson } as Record<string, [number, number]>;
+const slideshows = slideshowsJson as Record<string, { src: string; alt: string }[]>;
 
 const SERIES = 'Decentral Eyes';
 const PATH = '/series/decentral-eyes';
@@ -340,9 +343,12 @@ const FILE = 'src/data/copy/decentral-eyes.ts';
             <div class="de-grid">
               {e.list.map((r) => {
                 const mk = market[r.id];
+                const slides = slideshows[r.id];
                 return (
                   <article class="de-card" id={r.id}>
-                    <PlayableMedia poster={thumbs[r.id]} media={media[r.id]} title={r.title} size={sizes[r.id]} auto />
+                    {slides
+                      ? <RotatingBillboard images={slides} href={r.url} external ratio="1/1" fit="contain" interval={2600} />
+                      : <PlayableMedia poster={thumbs[r.id]} media={media[r.id]} title={r.title} size={sizes[r.id]} auto />}
                     <div class="de-card__meta">
                       <p class="de-card__date">{formatReleaseDate(r.date)} · {KIND_LABEL[r.kind]}{r.supply && r.supply > 1 ? ` · ${r.supply.toLocaleString('en-US')}` : ''}</p>
                       <h4 class="de-card__title">{r.title.replace(/\s*-\s*Decentral Eyes\s*-?\s*/i, ' — ').replace(/^Decentral Eyes\s*-\s*/i, '').replace(/\s—\s*$/, '')}</h4>
