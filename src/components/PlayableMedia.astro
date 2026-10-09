@@ -13,12 +13,28 @@ interface Props {
   /** poster's intrinsic [width, height] — sets the box's aspect ratio before the image loads */
   size?: [number, number];
   eager?: boolean;
+  /** auto-animate when scrolled into view (no click), pausing off-screen; respects reduced-motion */
+  auto?: boolean;
 }
-const { poster, media, title, fit = 'natural', size, eager = false } = Astro.props;
+const { poster, media, title, fit = 'natural', size, eager = false, auto = false } = Astro.props;
 const ratio = fit === 'natural' && size ? `aspect-ratio: ${size[0]} / ${size[1]}` : undefined;
 const dims = size ? { width: size[0], height: size[1] } : {};
 ---
-{media
+{auto && media
+  ? (
+    <span
+      class:list={['pm', `pm--${fit}`, 'pm--auto']}
+      style={ratio}
+      data-pm-auto
+      data-pm-src={media.src}
+      data-pm-type={media.type}
+    >
+      {media.type === 'video'
+        ? <video class="pm__full" autoplay muted loop playsinline preload="none" poster={poster} {...dims} aria-label={`${title} — animated artwork by Coldie`}></video>
+        : <img class="pm__full" src={poster} data-poster alt={`${title} by Coldie`} {...dims} loading={eager ? 'eager' : 'lazy'} decoding="async" />}
+    </span>
+  )
+  : media
   ? (
     <button
       type="button"
@@ -46,7 +62,7 @@ const dims = size ? { width: size[0], height: size[1] } : {};
     position: relative; display: block; width: 100%; padding: 0; border: 0; overflow: hidden;
     background: var(--bg-raise); color: inherit; cursor: pointer; border-radius: var(--radius);
   }
-  .pm--still { cursor: default; }
+  .pm--still, .pm--auto { cursor: default; }
   .pm--contain { aspect-ratio: 1; }
   /* never crop the artwork: fill the box, keep proportions */
   .pm > img, .pm :global(video), .pm :global(.pm__full) {
@@ -81,9 +97,9 @@ const dims = size ? { width: size[0], height: size[1] } : {};
 </style>
 
 <script>
-  // One delegated listener for every PlayableMedia on the page.
+  // One delegated listener for every click-to-play PlayableMedia on the page.
   document.addEventListener('click', (e) => {
-    const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-pm-src]');
+    const btn = (e.target as HTMLElement).closest<HTMLElement>('button[data-pm-src]');
     if (!btn || btn.dataset.pmState) return;
     const { pmSrc: src, pmType: type } = btn.dataset;
     const poster = btn.querySelector('img');
@@ -119,4 +135,39 @@ const dims = size ? { width: size[0], height: size[1] } : {};
     el.addEventListener('error', () => delete btn.dataset.pmState, { once: true });
     if (type === 'video') (el as HTMLVideoElement).load();
   });
+
+  // Auto-animate: start the moment a piece scrolls into view, pause when it leaves.
+  // Media loads lazily (nothing downloads until near the viewport) and reduced-motion is honored.
+  const autoEls = document.querySelectorAll<HTMLElement>('[data-pm-auto]');
+  if (autoEls.length) {
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const { target, isIntersecting } of entries) {
+          const el = target as HTMLElement;
+          const src = el.dataset.pmSrc!;
+          if (el.dataset.pmType === 'video') {
+            const v = el.querySelector('video');
+            if (!v) continue;
+            if (isIntersecting) {
+              if (reduce) continue;
+              v.muted = true; // property form, so muted autoplay is always allowed
+              if (!v.src) v.src = src;
+              v.play().catch(() => {});
+            } else {
+              v.pause();
+            }
+          } else if (isIntersecting && !reduce) {
+            const img = el.querySelector<HTMLImageElement>('img[data-poster]');
+            if (img) {
+              img.src = src; // swap the still poster for the animated GIF
+              delete img.dataset.poster;
+            }
+          }
+        }
+      },
+      { rootMargin: '300px 0px' }
+    );
+    autoEls.forEach((el) => io.observe(el));
+  }
 </script>

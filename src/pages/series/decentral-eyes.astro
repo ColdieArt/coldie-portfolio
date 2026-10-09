@@ -269,7 +269,7 @@ const FILE = 'src/data/copy/decentral-eyes.ts';
           </dl>
         </div>
         <figure class="de-hero__media">
-          <PlayableMedia poster={thumbs[hero.id]} media={media[hero.id]} title={hero.title} size={sizes[hero.id]} eager />
+          <PlayableMedia poster={thumbs[hero.id]} media={media[hero.id]} title={hero.title} size={sizes[hero.id]} eager auto />
           <figcaption>
             <span>{hero.title}</span>
             {hero.badge && <span class="de-muted">{hero.badge}</span>}
@@ -342,7 +342,7 @@ const FILE = 'src/data/copy/decentral-eyes.ts';
                 const mk = market[r.id];
                 return (
                   <article class="de-card" id={r.id}>
-                    <PlayableMedia poster={thumbs[r.id]} media={media[r.id]} title={r.title} size={sizes[r.id]} />
+                    <PlayableMedia poster={thumbs[r.id]} media={media[r.id]} title={r.title} size={sizes[r.id]} auto />
                     <div class="de-card__meta">
                       <p class="de-card__date">{formatReleaseDate(r.date)} · {KIND_LABEL[r.kind]}{r.supply && r.supply > 1 ? ` · ${r.supply.toLocaleString('en-US')}` : ''}</p>
                       <h4 class="de-card__title">{r.title.replace(/\s*-\s*Decentral Eyes\s*-?\s*/i, ' — ').replace(/^Decentral Eyes\s*-\s*/i, '').replace(/\s—\s*$/, '')}</h4>
