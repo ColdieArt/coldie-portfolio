@@ -19,9 +19,9 @@ type Owner = { address: string; name: string | null; ens: string | null; artist:
 type Price = { amount: number; symbol: string; usd: number | null };
 type Market = { owner?: Owner | null; lastSale: (Price & { date?: string | null }) | null; listing: (Price & { kind: string }) | null };
 const market = marketJson.releases as Record<string, Market>;
-const thumbs: Record<string, string> = thumbsJson;
+const thumbs: Record<string, string> = { ...thumbsJson };
 const media = mediaJson as Record<string, { src: string; type: 'video' | 'gif' } | null>;
-const sizes = thumbSizesJson as Record<string, [number, number]>;
+const sizes = { ...thumbSizesJson } as Record<string, [number, number]>;
 
 const SERIES = 'Decentral Eyes';
 const PATH = '/series/decentral-eyes';
@@ -93,8 +93,36 @@ const eraOf = (r: Release): EraKey | undefined => {
   const y = releaseYear(r);
   return y == null ? undefined : ERAS.find((e) => y >= e.from && y <= e.to)?.key;
 };
+// Tech Epochalypse — the five kinetic 3D tech-overlord portraits. They live in the
+// standalone "Kinetic 3D" collection (not the Decentral Eyes release set), so the hub
+// shows them here as cards, newest technique of the series.
+const TECH_EPOCH_URL = 'https://opensea.io/collection/tech-epochalypse-decentral-eyes';
+const techPortraits: Release[] = [
+  { id: 'te-jensen-huang', title: 'Jensen Huang', img: 'jensen-huang', token: '1' },
+  { id: 'te-jeff-bezos', title: 'Jeff Bezos', img: 'jeff-bezos', token: '2' },
+  { id: 'te-sam-altman', title: 'Sam Altman', img: 'sam-altman', token: '3' },
+  { id: 'te-mark-zuckerberg', title: 'Mark Zuckerberg', img: 'mark-zuckerberg', token: '4' },
+  { id: 'te-elon-musk', title: 'Elon Musk', img: 'elon-musk', token: '5' },
+].map(({ id, title, img, token }) => {
+  thumbs[id] = `/works/tech-epochalypse/${img}.webp`;
+  sizes[id] = [700, 700];
+  return {
+    id,
+    title,
+    date: '2026-03-30',
+    kind: '1/1' as const,
+    supply: 1,
+    series: SERIES,
+    platform: 'OpenSea',
+    chain: 'Ethereum',
+    badge: 'Tech Epochalypse · Kinetic 3D',
+    url: `https://opensea.io/item/ethereum/0xea030bb4da83c7b470f6d6109880116459509553/${token}`,
+  };
+});
+
 const eras = ERAS.map((e) => {
-  const list = works.filter((r) => eraOf(r) === e.key);
+  let list = works.filter((r) => eraOf(r) === e.key);
+  if (e.key === 'kinetic') list = [...techPortraits, ...list];
   const ys = list.map(releaseYear).filter((y): y is number => y != null);
   const [lo, hi] = [Math.min(...ys), Math.max(...ys)];
   return { ...e, list, label: lo === hi ? String(lo) : `${lo}–${hi}` };
