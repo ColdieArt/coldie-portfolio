@@ -1,5 +1,4 @@
 ---
-import RansomHeading from './RansomHeading.astro';
 // Choose-your-own-adventure opening of the homepage: one question, three doors:
 // Where I've been · In the studio · Where I'm going.
 // Each door leads with one artwork and lists the areas of interest on its path; links
@@ -63,9 +62,7 @@ const doors: Door[] = [
 const ext = (l: Link) => (l.external ? { target: '_blank', rel: 'noopener' } : {});
 ---
 <section class="cx" aria-labelledby="cx-q">
-  <div class="cx__qwrap">
-    <RansomHeading as="h2" id="cx-q" text="Touch the art. Feel something." size="clamp(1.7rem, 4.8vw, 4.2rem)" />
-  </div>
+  <p class="cx__q" id="cx-q">Touch the art.</p>
   <div class="cx__doors">
     {doors.map((d) => (
       <article class="cx__door" data-door={d.key} aria-labelledby={`cx-${d.key}`}>
@@ -99,9 +96,14 @@ const ext = (l: Link) => (l.external ? { target: '_blank', rel: 'noopener' } : {
     min-height: calc(100svh - 64px); padding: clamp(1.25rem, 3vh, 2rem) clamp(0.75rem, 2vw, 1.5rem) clamp(2.75rem, 6vh, 3.5rem);
     background: #070707; color: var(--cx-ink);
   }
-  .cx__qwrap { margin: 0 0 clamp(0.6rem, 2vh, 1.2rem); text-align: center; }
-  /* ransom collage headline sits tighter than its default block margin here */
-  .cx__qwrap :global(.ransom) { margin: 0; }
+  /* Oversized headline that bleeds down over the top of the doors — expressive, eye-catching. */
+  .cx__q {
+    position: relative; z-index: 3; pointer-events: none;
+    margin: clamp(0.25rem, 1.5vh, 1rem) 0 -0.3em; text-align: center;
+    font-family: var(--display); text-transform: uppercase; letter-spacing: -0.01em; line-height: 0.82;
+    font-size: clamp(3.2rem, 13.5vw, 13rem); color: var(--cx-ink);
+    text-shadow: 0 6px 34px rgba(0, 0, 0, 0.55), 0 2px 5px rgba(0, 0, 0, 0.55);
+  }
   .cx__doors { flex: 1; display: flex; gap: clamp(6px, 0.8vw, 12px); min-height: 0; }
   .cx__door {
     position: relative; flex: 1 1 0; min-width: 0; overflow: hidden; border-radius: 2px;
