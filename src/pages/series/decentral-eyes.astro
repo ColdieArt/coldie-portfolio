@@ -135,16 +135,59 @@ const description =
   copy.lead ??
   `Decentral Eyes is Coldie’s stereoscopic 3D portrait series of crypto and tech figures, ${firstYear}–${lastYear}: ${works.length} releases across SuperRare, Nifty Gateway and OpenSea.`;
 const absolute = (p: string) => new URL(p, site.url).href;
-const collectionLd = {
-  '@context': 'https://schema.org',
-  '@type': 'CollectionPage',
-  name: 'Decentral Eyes by Coldie',
+
+// Everyone the series portrays — named entities for search and AI answer engines.
+const mentionedPeople = subjects.map((s) => ({ '@type': 'Person', name: s.name }));
+const heroImage = thumbs[hero.id] ? absolute(thumbs[hero.id]) : absolute('/og/decentral-eyes.png');
+const firstDate = works.map((r) => r.date).filter(Boolean).sort()[0] ?? `${firstYear}-01-01`;
+const lastModified = (marketJson as { fetchedAt?: string }).fetchedAt ?? undefined;
+const seriesKeywords = [
+  'Decentral Eyes', 'Coldie', 'stereoscopic 3D art', 'crypto art', 'NFT portrait series',
+  'blockchain art', 'anaglyph 3D', 'kinetic 3D', 'Ethereum art', 'SuperRare',
+  ...subjects.map((s) => s.name),
+].join(', ');
+
+// The series as a reusable entity, referenced by the page and each artwork.
+const seriesLd = {
+  '@type': 'CreativeWorkSeries',
+  '@id': `${site.url}${PATH}#series`,
+  name: 'Decentral Eyes',
+  alternateName: 'Decentral Eyes by Coldie',
   url: absolute(PATH),
   description,
   creator: { '@id': `${site.url}/#person` },
-  about: { '@type': 'CreativeWorkSeries', name: 'Decentral Eyes', creator: { '@id': `${site.url}/#person` } },
+  genre: ['Crypto art', 'Stereoscopic 3D art', 'Portraiture'],
+  artMedium: 'Stereoscopic 3D digital portraiture (anaglyph, parallax, kinetic 3D)',
+  keywords: seriesKeywords,
+  inLanguage: 'en',
+  temporalCoverage: `${firstDate.slice(0, 10)}/${lastYear}`,
+  dateCreated: firstDate.slice(0, 10),
+  numberOfItems: works.length,
+  image: heroImage,
+  about: mentionedPeople,
+};
+
+const collectionLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': `${site.url}${PATH}#page`,
+  name: 'Decentral Eyes by Coldie — stereoscopic 3D crypto portrait series',
+  url: absolute(PATH),
+  description,
+  inLanguage: 'en',
+  isPartOf: { '@type': 'WebSite', name: site.name, url: site.url },
+  creator: { '@id': `${site.url}/#person` },
+  author: { '@id': `${site.url}/#person` },
+  keywords: seriesKeywords,
+  datePublished: firstDate.slice(0, 10),
+  ...(lastModified ? { dateModified: lastModified } : {}),
+  primaryImageOfPage: { '@type': 'ImageObject', url: heroImage, caption: hero.title },
+  image: heroImage,
+  mentions: mentionedPeople,
+  about: seriesLd,
   hasPart: {
     '@type': 'ItemList',
+    name: 'Decentral Eyes releases',
     numberOfItems: works.length,
     itemListElement: works.map((r, i) => ({
       '@type': 'ListItem',
@@ -155,6 +198,8 @@ const collectionLd = {
         creator: { '@id': `${site.url}/#person` },
         dateCreated: r.date ?? undefined,
         artform: 'Digital art — stereoscopic 3D portrait',
+        artMedium: 'Stereoscopic 3D',
+        isPartOf: { '@id': `${site.url}${PATH}#series` },
         image: thumbs[r.id] ? absolute(thumbs[r.id]) : undefined,
         url: r.url,
         about: subjectOf(r) ? { '@type': 'Person', name: subjectOf(r)!.name } : undefined,
@@ -173,7 +218,7 @@ const faqLd = answered.length
 const FILE = 'src/data/copy/decentral-eyes.ts';
 ---
 <BaseLayout
-  title="Decentral Eyes — portrait series"
+  title={`Decentral Eyes — Stereoscopic 3D Crypto Portrait Series (${firstYear}–${lastYear})`}
   description={description}
   path={PATH}
   ogImage="/og/decentral-eyes.png"
