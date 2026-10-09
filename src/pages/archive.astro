@@ -979,10 +979,15 @@ const searchText = (r: Release) =>
   });
 
   // Deep links: /archive?q=Snowden pre-fills the search (used by series and subject pages);
-  // /archive?collector=0x… shows one collector's works.
+  // /archive?series=Decentral%20Eyes pre-selects a series; /archive?collector=0x… shows one collector's works.
   const params = new URLSearchParams(location.search);
   const initial = params.get('q');
   if (initial) q.value = initial;
+  const initialSeries = params.get('series');
+  if (initialSeries) {
+    const seriesSel = selects.find(([k]) => k === 'series')?.[1];
+    if (seriesSel && [...seriesSel.options].some((o) => o.value === initialSeries)) seriesSel.value = initialSeries;
+  }
   const initialCollector = params.get('collector')?.toLowerCase();
   if (initialCollector) {
     const btn = document.querySelector<HTMLElement>(`[data-collector="${CSS.escape(initialCollector)}"]`);
