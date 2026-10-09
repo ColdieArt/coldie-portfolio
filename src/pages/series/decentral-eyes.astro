@@ -280,7 +280,7 @@ const FILE = 'src/data/copy/decentral-eyes.ts';
       </section>
 
       <!-- ── Works by era ─────────────────────────────── -->
-      <section aria-labelledby="works">
+      <section class="de-works" aria-labelledby="works">
         <h2 id="works" class="de-h2 de-h2--big">The works</h2>
         {eras.map((e) => (
           <section class="de-era" aria-labelledby={`era-${e.key}`}>
@@ -425,11 +425,12 @@ const FILE = 'src/data/copy/decentral-eyes.ts';
   .de-era__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 1.25rem; margin-bottom: 0.9rem; }
   .de-era__head h3 { font-family: var(--display); font-size: clamp(1.6rem, 3vw, 2.2rem); margin: 0; letter-spacing: 0.01em; }
   .de-era__text { margin-bottom: 1.6rem; }
-  .de-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 2.25rem 1.25rem; margin-top: 1.4rem; align-items: start; }
+  /* Collector gallery: large images so the detail in each portrait reads. */
+  .de-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 3rem 2rem; margin-top: 1.6rem; align-items: start; }
   .de-card { min-width: 0; scroll-margin-top: 110px; }
-  .de-card__meta { padding-top: 0.65rem; }
-  .de-card__date { font-family: var(--sans); font-size: 0.6rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); margin: 0 0 0.3rem; }
-  .de-card__title { font-family: var(--serif); font-weight: 400; font-size: 1rem; line-height: 1.3; margin: 0; }
+  .de-card__meta { padding-top: 0.85rem; }
+  .de-card__date { font-family: var(--sans); font-size: 0.64rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); margin: 0 0 0.35rem; }
+  .de-card__title { font-family: var(--serif); font-weight: 400; font-size: 1.15rem; line-height: 1.3; margin: 0; }
   .de-card__badge { font-family: var(--sans); font-size: 0.66rem; color: var(--gold); margin: 0.25rem 0 0; }
   .de-card__owner { font-size: 0.78rem; color: var(--ink-mute); margin: 0.4rem 0 0; }
   .de-card__owner a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line); }
@@ -438,6 +439,10 @@ const FILE = 'src/data/copy/decentral-eyes.ts';
   .de-card__ask { color: var(--cyan); }
   .de-card__link { display: inline-block; margin-top: 0.45rem; font-family: var(--sans); font-size: 0.6rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-mute); text-decoration: none; }
   .de-card__link:hover { color: var(--ink); }
+  /* The gallery breaks past the reading column on large screens so the portraits dominate. */
+  @media (min-width: 1200px) {
+    .de-works { width: min(1840px, 94vw); margin-inline: calc(50% - min(1840px, 94vw) / 2); }
+  }
 
   /* Collectors */
   .de-collectorlist { list-style: none; margin: 0; padding: 0; columns: 3 220px; column-gap: 2rem; }
@@ -457,8 +462,11 @@ const FILE = 'src/data/copy/decentral-eyes.ts';
     .de-hero, .de-about { grid-template-columns: 1fr; }
     .de-hero__media { order: -1; }
   }
+  @media (max-width: 760px) {
+    .de-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 2rem 1.25rem; }
+  }
   @media (max-width: 520px) {
-    .de-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 0.9rem; }
+    .de-grid { grid-template-columns: 1fr; gap: 2rem; }
     .de-subjects { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
 </style>
