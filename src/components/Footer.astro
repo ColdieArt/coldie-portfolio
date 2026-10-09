@@ -4,6 +4,13 @@ import { provenance } from '../data/site';
 const year = 2026; // build year; static by design
 ---
 <footer class="foot section--flat">
+  <div class="wrap foot__signup">
+    <div class="foot__signup-copy">
+      <p class="foot__signup-h">Join the list</p>
+      <p class="muted small">New drops, exhibitions and releases — straight to your inbox. No spam.</p>
+    </div>
+    <a class="btn btn--solid foot__signup-btn" href={site.contactListUrl} target="_blank" rel="noopener">Sign up ↗</a>
+  </div>
   <div class="wrap foot__grid">
     <div>
       <p class="foot__name">Coldie</p>
@@ -47,6 +54,15 @@ const year = 2026; // build year; static by design
 
 <style>
   .foot { padding-block: clamp(3rem, 7vw, 5rem) 2rem; border-top: 1px solid var(--line-soft); }
+  .foot__signup {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 1rem 2rem; margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+    padding-bottom: clamp(2rem, 4vw, 3rem); border-bottom: 1px solid var(--line-soft);
+  }
+  .foot__signup-h { font-family: var(--serif); font-size: clamp(1.4rem, 3vw, 2rem); margin: 0 0 0.2em; color: var(--ink); }
+  .foot__signup-copy { max-width: 48ch; }
+  .foot__signup-btn { white-space: nowrap; flex: none; }
+  @media (max-width: 460px) { .foot__signup-btn { width: 100%; text-align: center; } }
   .foot__grid {
     display: grid;
     grid-template-columns: 1.6fr 1fr 1fr 1fr;

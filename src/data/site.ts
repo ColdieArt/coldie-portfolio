@@ -14,6 +14,8 @@ export const site = {
   location: 'Sacramento, California',
   // Official store (Shopify)
   storeUrl: 'https://coldie3d.myshopify.com',
+  // Mailing-list sign-up (Google Form).
+  contactListUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSe5LSqlVmTdblD5VsuO9-hAkzZqb0Yfm7ZRc0EO_IzecRWZjA/viewform',
   // Routing target for inquiries. Replace with the real inbox before launch.
   inquiryEmail: 'coldieart@gmail.com',
   galleryEmail: 'info@eternogallery.com', // [TO CONFIRM] Eterno Gallery contact
