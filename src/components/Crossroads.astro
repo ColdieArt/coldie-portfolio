@@ -62,7 +62,7 @@ const doors: Door[] = [
 const ext = (l: Link) => (l.external ? { target: '_blank', rel: 'noopener' } : {});
 ---
 <section class="cx" aria-labelledby="cx-q">
-  <p class="cx__q" id="cx-q">Where do you want to go?</p>
+  <p class="cx__q" id="cx-q">Touch the art. Feel something.</p>
   <div class="cx__doors">
     {doors.map((d) => (
       <article class="cx__door" data-door={d.key} aria-labelledby={`cx-${d.key}`}>
