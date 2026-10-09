@@ -304,7 +304,7 @@ const FILE = 'src/data/copy/decentral-eyes.ts';
       </section>
 
       <!-- ── Subjects ─────────────────────────────────── -->
-      <section aria-labelledby="subjects">
+      <section class="de-works" aria-labelledby="subjects">
         <div class="de-sechead">
           <h2 id="subjects" class="de-h2">Subjects</h2>
           <p class="de-muted">{subjects.length} people portrayed · each will get its own page</p>
@@ -457,13 +457,13 @@ const FILE = 'src/data/copy/decentral-eyes.ts';
   .de-about { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 4rem); }
 
   /* Subjects */
-  .de-subjects { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 1.4rem 1rem; }
+  .de-subjects { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 2.5rem 1.75rem; }
   .de-subject { display: block; text-decoration: none; color: inherit; }
-  .de-subject__img { display: block; aspect-ratio: 1; overflow: hidden; background: var(--bg-raise); margin-bottom: 0.55rem; }
+  .de-subject__img { display: block; aspect-ratio: 1; overflow: hidden; background: var(--bg-raise); margin-bottom: 0.7rem; }
   .de-subject__img img { width: 100%; height: 100%; object-fit: contain; display: block; filter: grayscale(0.35); transition: filter 0.3s, transform 0.4s; }
   .de-subject:hover img { filter: none; transform: scale(1.04); }
-  .de-subject__name { display: block; font-family: var(--serif); font-size: 0.98rem; line-height: 1.25; }
-  .de-subject__meta { display: block; font-family: var(--sans); font-size: 0.66rem; color: var(--ink-mute); margin-top: 0.15rem; }
+  .de-subject__name { display: block; font-family: var(--serif); font-size: 1.2rem; line-height: 1.25; }
+  .de-subject__meta { display: block; font-family: var(--sans); font-size: 0.74rem; color: var(--ink-mute); margin-top: 0.2rem; }
 
   /* Eras + cards */
   .de-era { border-top: 1px solid var(--line); padding-top: 1.5rem; }
@@ -512,6 +512,6 @@ const FILE = 'src/data/copy/decentral-eyes.ts';
   }
   @media (max-width: 520px) {
     .de-grid { grid-template-columns: 1fr; gap: 2rem; }
-    .de-subjects { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .de-subjects { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.75rem 1.1rem; }
   }
 </style>
