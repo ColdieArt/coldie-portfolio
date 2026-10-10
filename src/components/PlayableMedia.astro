@@ -32,6 +32,8 @@ const dims = size ? { width: size[0], height: size[1] } : {};
       {media.type === 'video'
         ? <video class="pm__full" autoplay muted loop playsinline preload="none" poster={poster} {...dims} aria-label={`${title} — animated artwork by Coldie`}></video>
         : <img class="pm__full" src={poster} data-poster alt={`${title} by Coldie`} {...dims} loading={eager ? 'eager' : 'lazy'} decoding="async" />}
+      <span class="pm__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg></span>
+      <span class="pm__badge">{media.type === 'video' ? 'Play' : 'Animate'}</span>
     </span>
   )
   : media
@@ -64,6 +66,14 @@ const dims = size ? { width: size[0], height: size[1] } : {};
   }
   .pm--still, .pm--auto { cursor: default; }
   .pm--contain { aspect-ratio: 1; }
+  /* Auto elements auto-play on desktop, so no tap overlay there. On phones they stay as
+     light posters with a tap-to-play affordance until the viewer taps. */
+  .pm--auto .pm__play, .pm--auto .pm__badge { display: none; }
+  @media (max-width: 760px) {
+    .pm--auto:not([data-pm-played]) { cursor: pointer; }
+    .pm--auto:not([data-pm-played]) .pm__play { display: grid; }
+    .pm--auto:not([data-pm-played]) .pm__badge { display: block; }
+  }
   /* never crop the artwork: fill the box, keep proportions */
   .pm > img, .pm :global(video), .pm :global(.pm__full) {
     display: block; width: 100%; height: 100%; object-fit: contain;
@@ -143,30 +153,49 @@ const dims = size ? { width: size[0], height: size[1] } : {};
   const autoEls = document.querySelectorAll<HTMLElement>('[data-pm-auto]');
   const conn = (navigator as unknown as { connection?: { saveData?: boolean } }).connection;
   const lightOnly = matchMedia('(max-width: 760px)').matches || !!conn?.saveData;
-  if (autoEls.length && !lightOnly) {
+
+  // Load + start a single auto element's media (shared by desktop auto-play and mobile tap).
+  const startAuto = (el: HTMLElement) => {
+    const src = el.dataset.pmSrc!;
+    if (el.dataset.pmType === 'video') {
+      const v = el.querySelector('video');
+      if (!v) return;
+      v.muted = true; // property form, so muted playback is always allowed
+      if (!v.src) v.src = src;
+      v.play().catch(() => {});
+    } else {
+      const img = el.querySelector<HTMLImageElement>('img[data-poster]');
+      if (img) {
+        img.src = src; // swap the still poster for the animated GIF
+        delete img.dataset.poster;
+      }
+    }
+    el.dataset.pmPlayed = ''; // hides the tap affordance
+  };
+
+  if (autoEls.length && lightOnly) {
+    // Phones / Save-Data: nothing heavy loads until the viewer taps the piece.
+    autoEls.forEach((el) =>
+      el.addEventListener('click', () => startAuto(el), { once: true })
+    );
+  } else if (autoEls.length) {
+    // Desktop: auto-play in view, pause off-screen.
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const io = new IntersectionObserver(
       (entries) => {
         for (const { target, isIntersecting } of entries) {
           const el = target as HTMLElement;
-          const src = el.dataset.pmSrc!;
           if (el.dataset.pmType === 'video') {
             const v = el.querySelector('video');
             if (!v) continue;
             if (isIntersecting) {
               if (reduce) continue;
-              v.muted = true; // property form, so muted autoplay is always allowed
-              if (!v.src) v.src = src;
-              v.play().catch(() => {});
+              startAuto(el);
             } else {
               v.pause();
             }
           } else if (isIntersecting && !reduce) {
-            const img = el.querySelector<HTMLImageElement>('img[data-poster]');
-            if (img) {
-              img.src = src; // swap the still poster for the animated GIF
-              delete img.dataset.poster;
-            }
+            startAuto(el);
           }
         }
       },
