@@ -222,7 +222,7 @@ export const currentSeriesList: CurrentSeriesBlock[] = [
     exhibitionTitle: 'Unpermissioned Self',
     exhibitionSlides: eternoSlides,
     blurb:
-      'Hand-fabricated 3D collage and magnetic portraits — on view and available now at Eterno Gallery, Lisbon.',
+      'Elon Musk kinetic 3D collage touchscreen, Tech Epochalypse overlord mashup prints and Jack Dorsey 3D kinetic magnetic portrait. All on display and available now at Eterno Gallery, Lisbon.',
     secondary: { label: 'About the kinetic work', href: '/kinetic' },
     eternoItems: [
       {
