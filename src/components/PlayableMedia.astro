@@ -138,8 +138,12 @@ const dims = size ? { width: size[0], height: size[1] } : {};
 
   // Auto-animate: start the moment a piece scrolls into view, pause when it leaves.
   // Media loads lazily (nothing downloads until near the viewport) and reduced-motion is honored.
+  // On phones / Save-Data we DON'T pull the heavy GIF/video — the light poster thumbnail stays,
+  // so images load fast and reliably instead of ~40 animated files saturating a mobile connection.
   const autoEls = document.querySelectorAll<HTMLElement>('[data-pm-auto]');
-  if (autoEls.length) {
+  const conn = (navigator as unknown as { connection?: { saveData?: boolean } }).connection;
+  const lightOnly = matchMedia('(max-width: 760px)').matches || !!conn?.saveData;
+  if (autoEls.length && !lightOnly) {
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const io = new IntersectionObserver(
       (entries) => {
