@@ -2,7 +2,6 @@
 import { pillars, type PillarKey } from '../data/site';
 import { featuredAllFor, curatedFor } from '../data/works';
 import RansomHeading from './RansomHeading.astro';
-import RotatingBillboard from './RotatingBillboard.astro';
 import DepthParallax from './DepthParallax.astro';
 import CollageBuilder from './CollageBuilder.astro';
 import WorkCard from './WorkCard.astro';
@@ -13,34 +12,14 @@ const meta = pillars[pillar];
 const featuredList = featuredAllFor(pillar);
 const curated = curatedFor(pillar);
 const num = String(index).padStart(2, '0');
-
-// "Unpermissioned Self" at Eterno Gallery, Lisbon — exhibition photos by Guillermo Vidal.
-const eternoImages = Array.from({ length: 9 }, (_, i) => ({
-  src: `/images/eterno/eterno-${String(i + 1).padStart(2, '0')}.jpg`,
-  alt: 'Coldie — “Unpermissioned Self” kinetic 3D collage at Eterno Gallery, Lisbon',
-}));
-const kineticFraming = 'framing' in meta ? (meta as { framing?: string }).framing : undefined;
 ---
 
 <section class="pillar" aria-labelledby={`pillar-${pillar}`}>
   <div class="wrap">
-    {pillar === 'kinetic' ? (
-      <header class="pillar__head pillar__head--kinetic">
-        <div class="pillar__intro">
-          <RansomHeading as="h3" id={`pillar-${pillar}`} text="3D Kinetic magnetic portraits" size="clamp(2rem, 5vw, 4.4rem)" />
-          <p class="pillar__exhibition">Unpermissioned Self</p>
-          {kineticFraming && <p class="pillar__desc">{kineticFraming}</p>}
-        </div>
-        <div class="pillar__slideshow">
-          <RotatingBillboard images={eternoImages} ratio="4/5" fit="cover" interval={3200} />
-        </div>
-      </header>
-    ) : (
-      <header class="pillar__head">
-        <RansomHeading as="h3" id={`pillar-${pillar}`} text="3D Kinetic magnetic portraits" size="clamp(2.6rem, 11vw, 10rem)" />
-        {'statement' in meta && meta.statement && <p class="pillar__statement">{meta.statement}</p>}
-      </header>
-    )}
+    <header class="pillar__head">
+      <RansomHeading as="h3" id={`pillar-${pillar}`} text="3D Kinetic magnetic portraits" size="clamp(2.6rem, 11vw, 10rem)" />
+      {'statement' in meta && meta.statement && <p class="pillar__statement">{meta.statement}</p>}
+    </header>
 
     {featuredList.map((featured) => (
       <figure class="pillar__featured">
@@ -94,28 +73,6 @@ const kineticFraming = 'framing' in meta ? (meta as { framing?: string }).framin
     margin: 1.1em 0 0; color: var(--ink-soft);
     font-family: var(--serif); font-style: italic;
     font-size: clamp(1.05rem, 1.6vw, 1.25rem); line-height: 1.5;
-  }
-
-  /* Kinetic header: headline + exhibition on the left, Eterno slideshow on the right. */
-  .pillar__head--kinetic {
-    display: grid; grid-template-columns: 1.05fr 0.95fr;
-    gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center; text-align: left;
-  }
-  .pillar__intro { min-width: 0; }
-  .pillar__exhibition {
-    margin: 0.7em 0 0.35em; font-family: var(--serif); font-style: italic;
-    font-size: clamp(1.4rem, 2.8vw, 2.3rem); line-height: 1.1; color: var(--accent);
-  }
-  .pillar__desc {
-    margin: 0; color: var(--ink-soft); font-family: var(--serif);
-    font-size: clamp(1.05rem, 1.6vw, 1.25rem); line-height: 1.5; max-width: 42ch;
-  }
-  .pillar__slideshow { min-width: 0; }
-  @media (max-width: 860px) {
-    .pillar__head--kinetic { grid-template-columns: 1fr; text-align: center; }
-    .pillar__desc { max-width: none; margin-inline: auto; }
-    /* definite width (not auto) so the billboard's absolutely-positioned slides don't collapse the grid item */
-    .pillar__slideshow { width: min(460px, 100%); justify-self: center; }
   }
 
   .pillar__featured {

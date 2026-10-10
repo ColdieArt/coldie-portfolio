@@ -19,20 +19,28 @@ const blocks = currentSeriesList.map((s) => ({
 
     {blocks.map((b) => (
       <div class="cs__block">
-        <div class="cs__intro">
-          <RansomHeading as="h2" text={b.name} />
-          <p class="lede cs__blurb">{b.blurb}</p>
-          {(b.primary || b.secondary) && (
-            <p class="cs__cta">
-              {b.primary && (
-                <a
-                  class="btn btn--solid"
-                  href={b.primary.href}
-                  {...(b.primary.external ? { target: '_blank', rel: 'noopener' } : {})}
-                >{b.primary.label}{b.primary.external ? ' ↗' : ''}</a>
-              )}
-              {b.secondary && <a class="link-arrow" href={b.secondary.href}>{b.secondary.label}</a>}
-            </p>
+        <div class:list={['cs__intro', b.exhibitionSlides && 'cs__intro--split']}>
+          <div class="cs__introtext">
+            <RansomHeading as="h2" text={b.name} />
+            {b.exhibitionTitle && <p class="cs__exhibition">{b.exhibitionTitle}</p>}
+            <p class="lede cs__blurb">{b.blurb}</p>
+            {(b.primary || b.secondary) && (
+              <p class="cs__cta">
+                {b.primary && (
+                  <a
+                    class="btn btn--solid"
+                    href={b.primary.href}
+                    {...(b.primary.external ? { target: '_blank', rel: 'noopener' } : {})}
+                  >{b.primary.label}{b.primary.external ? ' ↗' : ''}</a>
+                )}
+                {b.secondary && <a class="link-arrow" href={b.secondary.href}>{b.secondary.label}</a>}
+              </p>
+            )}
+          </div>
+          {b.exhibitionSlides && (
+            <div class="cs__slideshow">
+              <RotatingBillboard images={b.exhibitionSlides} ratio="4/5" fit="cover" interval={3200} />
+            </div>
           )}
         </div>
 
@@ -87,6 +95,20 @@ const blocks = currentSeriesList.map((s) => ({
   .cs__intro { max-width: 64ch; margin-bottom: clamp(2rem, 5vw, 3.5rem); }
   .cs__intro h2 { margin: 0 0 0.3em; }
   .cs__blurb { margin: 0 0 1.4em; }
+  /* Split intro: text on the left, exhibition slideshow on the right. */
+  .cs__intro--split {
+    max-width: none; display: grid; grid-template-columns: 1.05fr 0.95fr;
+    gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center;
+  }
+  .cs__introtext { min-width: 0; max-width: 60ch; }
+  .cs__exhibition {
+    margin: 0.15em 0 0.5em; font-family: var(--serif); font-style: italic;
+    font-size: clamp(1.4rem, 2.8vw, 2.3rem); line-height: 1.1; color: var(--accent);
+  }
+  .cs__slideshow { min-width: 0; width: min(460px, 100%); justify-self: center; }
+  @media (max-width: 860px) {
+    .cs__intro--split { grid-template-columns: 1fr; }
+  }
   .cs__cta { display: flex; gap: 1.2rem; align-items: center; flex-wrap: wrap; margin: 0; }
   .cs__grid {
     display: grid; grid-template-columns: repeat(3, 1fr);

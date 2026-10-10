@@ -185,6 +185,10 @@ type CurrentSeriesBlock = {
   primary?: { label: string; href: string; external?: boolean };
   /** optional secondary link */
   secondary?: { label: string; href: string };
+  /** exhibition title shown above the blurb */
+  exhibitionTitle?: string;
+  /** exhibition photos shown as a slideshow beside the intro */
+  exhibitionSlides?: { src: string; alt: string }[];
   /** Eterno items as compact preview-image + description rows, each linking out.
    *  An item with `prints` shows a small rotating billboard as its preview. */
   eternoItems?: {
@@ -206,9 +210,17 @@ const eternoPrints = Array.from({ length: 42 }, (_, k) => {
   };
 });
 
+// "Unpermissioned Self" — exhibition photos from Eterno Gallery, Lisbon (by Guillermo Vidal).
+const eternoSlides = Array.from({ length: 9 }, (_, i) => ({
+  src: `/images/eterno/eterno-${String(i + 1).padStart(2, '0')}.jpg`,
+  alt: 'Coldie — “Unpermissioned Self” kinetic 3D collage at Eterno Gallery, Lisbon',
+}));
+
 export const currentSeriesList: CurrentSeriesBlock[] = [
   {
     name: 'Kinetic 3D Collage',
+    exhibitionTitle: 'Unpermissioned Self',
+    exhibitionSlides: eternoSlides,
     blurb:
       'Hand-fabricated 3D collage and magnetic portraits — on view and available now at Eterno Gallery, Lisbon.',
     secondary: { label: 'About the kinetic work', href: '/kinetic' },
