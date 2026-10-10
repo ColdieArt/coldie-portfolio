@@ -93,10 +93,12 @@ const dims = size ? { width: size[0], height: size[1] } : {};
     color: var(--ink); background: rgb(20 20 20 / 0.6);
   }
   .pm:focus-visible { outline: 1px solid var(--ink); outline-offset: 2px; }
-  .pm[data-pm-state='loading']::after {
+  .pm[data-pm-state='loading']::after, .pm--auto[data-pm-loading]::after {
     content: ''; position: absolute; inset: auto 0 0 0; height: 2px; background: var(--ink);
-    animation: pm-load 1.1s ease-in-out infinite; transform-origin: left;
+    animation: pm-load 1.1s ease-in-out infinite; transform-origin: left; z-index: 3;
   }
+  /* while an auto piece is fetching its media, hide the tap overlay (the loading bar shows instead) */
+  .pm--auto[data-pm-loading] .pm__play, .pm--auto[data-pm-loading] .pm__badge { display: none; }
   .pm[data-pm-state='playing'] { cursor: default; }
   .pm[data-pm-state='playing'] .pm__play, .pm[data-pm-state] .pm__badge { display: none; }
   .pm__none {
@@ -155,29 +157,38 @@ const dims = size ? { width: size[0], height: size[1] } : {};
   const lightOnly = matchMedia('(max-width: 760px)').matches || !!conn?.saveData;
 
   // Load + start a single auto element's media (shared by desktop auto-play and mobile tap).
+  // Load-aware: the poster stays until the media is ready (no blank gap on slow IPFS GIFs),
+  // a loading bar shows while it fetches, and a failure restores the tap affordance for a retry.
   const startAuto = (el: HTMLElement) => {
+    if (el.dataset.pmPlayed !== undefined || el.dataset.pmLoading !== undefined) return;
     const src = el.dataset.pmSrc!;
+    el.dataset.pmLoading = ''; // feedback + loading bar; blocks double-trigger
+    const fail = () => { delete el.dataset.pmLoading; delete el.dataset.pmPlayed; };
+    const ready = () => { delete el.dataset.pmLoading; el.dataset.pmPlayed = ''; };
     if (el.dataset.pmType === 'video') {
       const v = el.querySelector('video');
-      if (!v) return;
+      if (!v) { delete el.dataset.pmLoading; return; }
       v.muted = true; // property form, so muted playback is always allowed
+      v.addEventListener('loadeddata', () => { ready(); v.play().catch(() => {}); }, { once: true });
+      v.addEventListener('error', fail, { once: true });
       if (!v.src) v.src = src;
-      v.play().catch(() => {});
+      v.load();
+      v.play().catch(() => {}); // the tap gesture also lets it start as soon as it can
     } else {
       const img = el.querySelector<HTMLImageElement>('img[data-poster]');
-      if (img) {
-        img.src = src; // swap the still poster for the animated GIF
-        delete img.dataset.poster;
-      }
+      if (!img) { delete el.dataset.pmLoading; return; }
+      // Preload the GIF, then swap — so the poster never blanks out while it fetches.
+      const pre = new Image();
+      pre.onload = () => { img.src = src; delete img.dataset.poster; ready(); };
+      pre.onerror = fail;
+      pre.src = src;
     }
-    el.dataset.pmPlayed = ''; // hides the tap affordance
   };
 
   if (autoEls.length && lightOnly) {
     // Phones / Save-Data: nothing heavy loads until the viewer taps the piece.
-    autoEls.forEach((el) =>
-      el.addEventListener('click', () => startAuto(el), { once: true })
-    );
+    // Not {once} — a failed load restores the button so the viewer can tap again.
+    autoEls.forEach((el) => el.addEventListener('click', () => startAuto(el)));
   } else if (autoEls.length) {
     // Desktop: auto-play in view, pause off-screen.
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
