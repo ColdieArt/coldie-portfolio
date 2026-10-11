@@ -109,7 +109,6 @@ const artWorks: MediaItem[] = [
 const artInstalled: MediaItem[] = [
   ...([
     [6555, 432, 760, 'Palace of the Cosmos · 2012', 'Stereoscopic 3D anaglyph gel transfer on burnt canvas'],
-    [6556, 602, 760, 'Ascension Above / Ascension Below · 2013', 'Stereoscopic 3D anaglyph gel transfer with gold leaf on burnt canvas'],
     [6577, 579, 760, 'Phased Reality · 2014', 'Gel transfer on canvas'],
     [6583, 760, 646, 'The Day We’ve All Been Waiting For · 2017', 'Archival print'],
   ] as const).map(([n, w, h, caption, medium]) => ({
@@ -119,7 +118,6 @@ const artInstalled: MediaItem[] = [
   ...([
     ['20160705_205810', 393, 700, 'Underground Energy · 2013', 'Stereoscopic 3D lenticular with LED lights on light box'],
     ['20160813_192707', 700, 393, 'Pyramid on Mars · 2013', 'Stereoscopic 3D lenticular with LED lights on light box'],
-    ['20160930_194044', 700, 393, 'Welcome Home · 2014', 'Gel transfer with color-changing LED lights on burnt canvas'],
   ] as const).map(([f, w, h, caption, medium]) => ({
     src: `/clips/prenft/light-${f}.jpg`,
     video: `/clips/prenft/light-${f}.mp4`,
@@ -381,13 +379,11 @@ const imagesLd = {
     </div>
 
     <div class="wrap">
-      <MediaGrid items={artWorks} label="Anaglyph works on canvas" cols={3} />
+      <MediaGrid items={[...artWorks, ...artInstalled]} label="Stereoscopic fine art — anaglyph, lenticular and lit works on canvas and light box" cols={3} />
       <p class="been__glasses been__glasses--center">
         <span class="been__glasses-icon" aria-hidden="true"></span>
         Grab your blue/red 3D glasses
       </p>
-      <h3 class="been__sub-h been__sub-h--gap">On the wall</h3>
-      <MediaGrid items={artInstalled} label="Anaglyph canvases installed, and light-up works on video" cols={3} />
 
       <figure class="fa__interview">
         <YouTubeLite id="kMIMr8Ro9So" title="Coldie — first interview (2011)" />
