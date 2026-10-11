@@ -100,11 +100,11 @@ const lawWeb = [
 ].map(([file, title]) => ({ src: `/images/prenft/la-weekly/web/${file}.jpg`, title }));
 
 const artWorks: MediaItem[] = [
-  { src: '/images/prenft/fine-art/welcome-home.gif', thumb: '/images/prenft/fine-art/welcome-home.gif', w: 760, h: 580, alt: 'Welcome Home, anaglyph collage on canvas: silhouettes walking toward a city, animated', caption: 'Welcome Home' },
-  img('fine-art', 'home-ufo-crop-circle', 563, 760, 'Home, anaglyph collage on canvas with a UFO and crop circle', 'Home · 2016 national juried exhibition'),
-  img('fine-art', 'yosemite-falls', 564, 760, 'Yosemite Falls, anaglyph collage on canvas with burned edges', 'Yosemite Falls'),
-  img('fine-art', 'ascension-above-below', 582, 760, 'Ascension: Above / Ascension: Below, anaglyph cityscape on canvas with burned edges', 'Ascension: Above / Ascension: Below · 2018 national juried exhibition'),
-  img('fine-art', 'music-apocalypse', 593, 760, 'Music Apocalypse, anaglyph collage with helicopters and a record over a city', 'Music Apocalypse'),
+  { src: '/images/prenft/fine-art/welcome-home.gif', thumb: '/images/prenft/fine-art/welcome-home.gif', w: 760, h: 580, alt: 'Welcome Home by Coldie — gel transfer with color-changing LED lights on burnt canvas, animated', caption: 'Welcome Home · 2014', medium: 'Gel transfer with color-changing LED lights on burnt canvas' },
+  { ...img('fine-art', 'home-ufo-crop-circle', 563, 760, 'Home by Coldie — stereoscopic 3D anaglyph gel transfer', 'Home · 2013'), medium: 'Stereoscopic 3D anaglyph gel transfer' },
+  { ...img('fine-art', 'yosemite-falls', 564, 760, 'Yosemite Falls by Coldie — stereoscopic 3D anaglyph gel transfer on burnt canvas', 'Yosemite Falls · 2013'), medium: 'Stereoscopic 3D anaglyph gel transfer on burnt canvas' },
+  { ...img('fine-art', 'ascension-above-below', 582, 760, 'Ascension Above / Ascension Below by Coldie — stereoscopic 3D anaglyph gel transfer with gold leaf on burnt canvas', 'Ascension Above / Ascension Below · 2013'), medium: 'Stereoscopic 3D anaglyph gel transfer with gold leaf on burnt canvas' },
+  { ...img('fine-art', 'music-apocalypse', 593, 760, 'Music Apocalypse by Coldie — stereoscopic 3D anaglyph gel transfer with gold leaf', 'Music Apocalypse · 2012'), medium: 'Stereoscopic 3D anaglyph gel transfer with gold leaf' },
 ];
 const artInstalled: MediaItem[] = [
   ...([
