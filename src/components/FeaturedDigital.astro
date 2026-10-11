@@ -8,6 +8,7 @@ const works = [
     collection: 'Stereoscopic 3D',
     img: '/works/normie-3d/normie-3d.gif',
     url: 'https://coldie.normies.art/',
+    cta: 'Collected by Adam Weitsman',
   },
   {
     title: 'Michael Saylor',
@@ -27,12 +28,6 @@ const works = [
     img: '/works/digital/en-marcha.webp',
     url: 'https://www.transient.xyz/nfts/ethereum/0x034220c41322ff03db1c643da2ce991440a29bdd/2',
   },
-  {
-    title: 'Gary Gensler',
-    collection: 'Decentral Eyes',
-    img: '/works/digital/gensler.webp',
-    url: 'https://manifold.xyz/@coldie/id/4278798576',
-  },
 ];
 ---
 <section id="featured-digital" class="fd section--flat" aria-labelledby="fd-h">
@@ -49,14 +44,14 @@ const works = [
     <ul class="fd__grid" aria-label="Featured digital works">
       {works.map((w) => (
         <li class="fd__card">
-          <a href={w.url} target="_blank" rel="noopener" aria-label={`${w.title} — ${w.collection}. Collect`}>
+          <a href={w.url} target="_blank" rel="noopener" aria-label={`${w.title} — ${w.collection}. ${w.cta ?? 'Collect'}`}>
             <span class="fd__frame">
               <img src={w.img} alt={`${w.title} — ${w.collection}, digital work by Coldie`} loading="lazy" decoding="async" width="900" height="900" />
             </span>
             <span class="fd__meta">
               <span class="fd__title">{w.title}</span>
               <span class="fd__coll">{w.collection}</span>
-              <span class="fd__cta">Collect ↗</span>
+              <span class="fd__cta">{w.cta ?? 'Collect ↗'}</span>
             </span>
           </a>
         </li>
