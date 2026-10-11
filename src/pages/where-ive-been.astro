@@ -107,15 +107,25 @@ const artWorks: MediaItem[] = [
   img('fine-art', 'music-apocalypse', 593, 760, 'Music Apocalypse, anaglyph collage with helicopters and a record over a city', 'Music Apocalypse'),
 ];
 const artInstalled: MediaItem[] = [
-  ...([[6547, 636, 760], [6555, 432, 760], [6556, 602, 760], [6577, 579, 760], [6583, 760, 646]] as const).map(([n, w, h]) =>
-    img('fine-art', `installed-${n}`, w, h, 'Anaglyph canvas by Coldie installed on a gallery wall', 'Installed')),
-  ...['20160705_205810', '20160813_192707', '20160930_194044'].map((f, k) => ({
+  ...([
+    [6547, 636, 760, 'Underground Energy · 2013'],
+    [6555, 432, 760, 'Palace of the Cosmos · 2012'],
+    [6556, 602, 760, 'Ascension Above / Ascension Below · 2013'],
+    [6577, 579, 760, 'Phased Reality · 2014'],
+    [6583, 760, 646, 'The Day We’ve All Been Waiting For · 2017'],
+  ] as const).map(([n, w, h, caption]) =>
+    img('fine-art', `installed-${n}`, w, h, `${caption.split(' · ')[0]} — stereoscopic 3D anaglyph on canvas by Coldie, installed on a gallery wall`, caption)),
+  ...([
+    ['20160705_205810', 393, 700, 'Underground Energy · 2013'],
+    ['20160813_192707', 700, 393, 'Pyramid on Mars · 2013'],
+    ['20160930_194044', 700, 393, 'Welcome Home · 2014'],
+  ] as const).map(([f, w, h, caption]) => ({
     src: `/clips/prenft/light-${f}.jpg`,
     video: `/clips/prenft/light-${f}.mp4`,
-    w: k === 0 ? 393 : 700,
-    h: k === 0 ? 700 : 393,
-    alt: 'Video of an anaglyph canvas with a light-up element, 2016',
-    caption: 'Lit from within · 2016',
+    w,
+    h,
+    alt: `${caption.split(' · ')[0]} — anaglyph canvas by Coldie, lit from within`,
+    caption,
   })),
 ];
 
