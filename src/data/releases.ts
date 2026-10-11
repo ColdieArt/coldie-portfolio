@@ -1014,6 +1014,21 @@ const allReleases: Release[] = [
     source: 'site',
   },
   {
+    id: 'normie-3d',
+    title: 'Normie 3D',
+    date: '2026-10-11',
+    kind: '1/1',
+    supply: 1,
+    series: 'Collaborations',
+    platform: 'Normies',
+    chain: 'Ethereum',
+    url: 'https://coldie.normies.art/',
+    cover: '/works/normie-3d/normie-3d.gif',
+    description:
+      'A stereoscopic 3D Normie: an anaglyph and wigglegram built from two Normies — #9967 as the left eye and #8702 as the right — in Coldie’s Decentral Eyes 3D style.',
+    source: 'site',
+  },
+  {
     id: 'en-marcha',
     title: 'En Marcha',
     date: '2026-09-11',
