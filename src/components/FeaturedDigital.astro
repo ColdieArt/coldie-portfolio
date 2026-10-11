@@ -17,10 +17,17 @@ const works = [
     url: 'https://www.transient.xyz/nfts/ethereum/0x383788c0a5a6f4cc8f1bcd3993742db6b3332850/211',
   },
   {
-    title: 'Jeff Bezos',
-    collection: 'Tech Epochalypse',
-    img: '/works/digital/bezos.webp',
-    url: 'https://www.transient.xyz/nfts/ethereum/0xea030bb4da83c7b470f6d6109880116459509553/26',
+    title: 'Tech Epochalypse',
+    collection: 'Five overlords · Kinetic 3D',
+    img: '/works/tech-epochalypse/jensen-huang.webp',
+    frames: [
+      '/works/tech-epochalypse/jensen-huang.webp',
+      '/works/tech-epochalypse/jeff-bezos.webp',
+      '/works/tech-epochalypse/sam-altman.webp',
+      '/works/tech-epochalypse/mark-zuckerberg.webp',
+      '/works/tech-epochalypse/elon-musk.webp',
+    ],
+    url: 'https://www.knowyouroverlord.art/kinetic-3d-patronage',
   },
   {
     title: 'En Marcha',
@@ -47,6 +54,7 @@ const works = [
           <a href={w.url} target="_blank" rel="noopener" aria-label={`${w.title} — ${w.collection}. ${w.cta ?? 'Collect'}`}>
             <span class="fd__frame">
               <img src={w.img} alt={`${w.title} — ${w.collection}, digital work by Coldie`} loading="lazy" decoding="async" width="900" height="900" />
+              {w.frames && <img class="fd__next" alt="" aria-hidden="true" decoding="async" data-fd-frames={JSON.stringify(w.frames)} />}
             </span>
             <span class="fd__meta">
               <span class="fd__title">{w.title}</span>
@@ -84,7 +92,7 @@ const works = [
   }
   .fd__card a { text-decoration: none; display: block; color: inherit; }
   .fd__frame {
-    display: block; overflow: hidden; border-radius: var(--radius);
+    position: relative; display: block; overflow: hidden; border-radius: var(--radius);
     border: 1px solid var(--line-soft); background: #141414;
     box-shadow: 5px 5px 0 color-mix(in srgb, var(--cyan) 20%, transparent);
     transition: box-shadow 0.25s ease;
@@ -93,6 +101,12 @@ const works = [
     width: 100%; aspect-ratio: 1; object-fit: contain; display: block;
     transition: transform 0.6s cubic-bezier(0.22,0.61,0.36,1);
   }
+  /* crossfade layer for a card that cycles through several frames */
+  .fd__next {
+    position: absolute; inset: 0; width: 100%; height: 100%; aspect-ratio: auto;
+    opacity: 0; transition: opacity 0.8s ease;
+  }
+  .fd__next.is-in { opacity: 1; }
   .fd__card a:hover .fd__frame { box-shadow: 5px 5px 0 color-mix(in srgb, var(--red) 28%, transparent); }
   .fd__card a:hover .fd__frame img { transform: scale(1.04); }
 
@@ -116,3 +130,28 @@ const works = [
   @media (max-width: 420px) { .fd__grid { grid-template-columns: 1fr; } }
   @media (prefers-reduced-motion: reduce) { .fd__frame img { transition: none; } }
 </style>
+
+<script>
+  // Cards with `data-fd-frames` crossfade through their frames: preload the next,
+  // fade it in over the base, then copy it down. Pauses off-screen / reduced-motion.
+  document.querySelectorAll<HTMLImageElement>('[data-fd-frames]').forEach((next) => {
+    const base = next.previousElementSibling as HTMLImageElement;
+    const frames: string[] = JSON.parse(next.dataset.fdFrames || '[]');
+    if (!base || frames.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let i = 0, timer = 0, visible = true;
+    const advance = () => {
+      if (!visible || document.hidden) return;
+      const k = (i + 1) % frames.length;
+      const pre = new Image();
+      pre.onload = () => {
+        next.src = frames[k];
+        requestAnimationFrame(() => next.classList.add('is-in'));
+        window.setTimeout(() => { base.src = frames[k]; next.classList.remove('is-in'); i = k; }, 800);
+      };
+      pre.src = frames[k];
+    };
+    const start = () => { if (!timer) timer = window.setInterval(advance, 3000); };
+    const stop = () => { clearInterval(timer); timer = 0; };
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; visible ? start() : stop(); }).observe(base);
+  });
+</script>
