@@ -470,7 +470,8 @@ const imagesLd = {
   .reviews__title:hover, .reviews__title:focus-visible { text-decoration: underline; text-underline-offset: 0.18em; }
   .reviews__all { text-align: center; margin: 1.4rem auto 0; max-width: none; }
   .been__sub-h--gap { margin-top: clamp(3rem, 7vw, 5rem); }
-  .been__glasses--center { display: flex; justify-content: center; }
+  /* higher specificity so it beats the base .been__glasses (defined later); also tightens the gaps */
+  .been__glasses.been__glasses--center { display: flex; justify-content: center; margin: 0.5rem 0 0.85rem; }
   .been__center { text-align: center; }
 
   .web-strip {
