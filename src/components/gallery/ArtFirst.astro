@@ -154,6 +154,7 @@ const altOf = (g: (typeof galleryItems)[number]) =>
           <select data-sort>
             <option value="old">Oldest first</option>
             <option value="new">Newest first</option>
+            <option value="price-asc">Price, low → high</option>
             <option value="price">Price, high → low</option>
           </select>
         </label>
@@ -727,9 +728,15 @@ const altOf = (g: (typeof galleryItems)[number]) =>
     const sort = sortSel.value;
     const vis = tiles.filter((t) => { const ok = match(t); t.hidden = !ok; return ok; });
     const order: HTMLElement[] = [];
-    if (sort === 'price') {
+    if (sort === 'price' || sort === 'price-asc') {
       yearTiles.forEach((y) => (y.hidden = true));
-      order.push(...[...tiles].sort((a, b) => Number(b.dataset.price ?? -1) - Number(a.dataset.price ?? -1)));
+      const asc = sort === 'price-asc';
+      // unpriced works always sort to the end (whichever direction)
+      order.push(...[...tiles].sort((a, b) => {
+        const pa = a.dataset.price ? Number(a.dataset.price) : (asc ? Infinity : -Infinity);
+        const pb = b.dataset.price ? Number(b.dataset.price) : (asc ? Infinity : -Infinity);
+        return asc ? pa - pb : pb - pa;
+      }));
     } else {
       const dir = sort === 'old' ? 1 : -1;
       const ys = [...yearTiles].sort((a, b) => {
@@ -749,7 +756,7 @@ const altOf = (g: (typeof galleryItems)[number]) =>
     }
     rowsEl.append(...order);
     shown = order.filter((t) => t.dataset.tile && !t.hidden).map((t) => t.dataset.tile!);
-    yearLinks.forEach((a) => a.toggleAttribute('data-off', sort === 'price' || yearTiles.find((y) => y.dataset.yeartile === a.dataset.yearLink)?.dataset.n === '0'));
+    yearLinks.forEach((a) => a.toggleAttribute('data-off', sort.startsWith('price') || yearTiles.find((y) => y.dataset.yeartile === a.dataset.yearLink)?.dataset.n === '0'));
     empty.hidden = vis.length > 0;
   };
 

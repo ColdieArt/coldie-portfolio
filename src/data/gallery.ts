@@ -106,7 +106,7 @@ function toItem(r: Release) {
           usd: mk.listing.usd ? `≈ $${mk.listing.usd.toLocaleString('en-US')}` : null,
         }
       : null,
-    price: mk?.listing?.amount ?? null,
+    price: mk?.listing?.amount ?? mk?.lastSale?.amount ?? null,
     burned: !!r.burned,
     desc: desc ? clip(desc) : null,
     /** described as stereoscopic or anaglyph, adjusted by hand (ALSO_3D / NOT_3D) — the "3D" filter */
