@@ -304,10 +304,10 @@ const searchText = (r: Release) =>
               <select id="rel-sort">
                 <option value="oldest">Oldest first</option>
                 <option value="newest">Newest first</option>
-                <option value="price-asc" disabled data-price-sort>Price: low → high</option>
-                <option value="price-desc" disabled data-price-sort>Price: high → low</option>
+                <option value="price-asc" data-price-sort>Price: low → high</option>
+                <option value="price-desc" data-price-sort>Price: high → low</option>
               </select>
-              <small class="rel__hint" id="rel-sort-hint">Check “For sale only” to sort by price.</small>
+              <small class="rel__hint" id="rel-sort-hint" hidden>Price = current listing, or last sale.</small>
             </label>
           </div>
           <p class="rel__colltag" id="rel-collector" hidden>
@@ -393,7 +393,7 @@ const searchText = (r: Release) =>
                       data-chain={r.chain}
                       data-forsale={market[r.id]?.listing ? '1' : undefined}
                       data-owner={market[r.id]?.owner?.address}
-                      data-price={market[r.id]?.listing?.amount}
+                      data-price={market[r.id]?.listing?.amount ?? market[r.id]?.lastSale?.amount}
                       data-year={g.key}
                     >
                       <time class="rel__date" datetime={r.date ?? undefined}>{formatReleaseDate(r.date)}</time>
@@ -495,7 +495,7 @@ const searchText = (r: Release) =>
           </li>
         ))}
       </ol>
-      <ol class="rel__entries rel__flat" id="rel-flat" hidden aria-label="For sale, sorted by price"></ol>
+      <ol class="rel__entries rel__flat" id="rel-flat" hidden aria-label="Releases sorted by price"></ol>
           </div>
       <p class="rel__empty muted" id="rel-empty" hidden>No releases match your search.</p>
 
@@ -938,13 +938,13 @@ const searchText = (r: Release) =>
     );
   }
 
-  /** Timeline by date, or one flat list by listing price (price sorts need "For sale only"). */
+  /** Timeline by date, or one flat list by price (current listing, else last sale). */
   function layout() {
-    priceOptions.forEach((o) => (o.disabled = !forSale.checked));
-    sortHint.hidden = forSale.checked;
-    if (!forSale.checked && sort.value.startsWith('price')) sort.value = 'oldest';
-
     const byPrice = sort.value.startsWith('price');
+    priceOptions.forEach((o) => (o.disabled = false));
+    sortHint.hidden = !byPrice; // explain what "price" means only while sorting by it
+
+
     timeline.toggleAttribute('data-newest', sort.value === 'newest');
     if (byPrice) {
       const dir = sort.value === 'price-asc' ? 1 : -1;
