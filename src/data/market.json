@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-08",
+  "fetchedAt": "2026-10-12",
   "releases": {
     "vitalik-variant-03": {
       "owner": {
@@ -25,7 +25,7 @@
         "kind": "floor",
         "amount": 0.5,
         "symbol": "ETH",
-        "usd": 1282
+        "usd": 1244
       }
     },
     "gandinsky-3d-1": {
@@ -158,7 +158,7 @@
         "kind": "floor",
         "amount": 0.1,
         "symbol": "ETH",
-        "usd": 256
+        "usd": 249
       }
     },
     "decentral-eyes-vr-og-collage": {
@@ -201,9 +201,9 @@
       },
       "listing": {
         "kind": "floor",
-        "amount": 0.131603,
+        "amount": 0.098924,
         "symbol": "ETH",
-        "usd": 337
+        "usd": 246
       }
     },
     "filthy-fiat": {
@@ -226,9 +226,9 @@
       },
       "listing": {
         "kind": "floor",
-        "amount": 0.0255,
+        "amount": 0.0244,
         "symbol": "ETH",
-        "usd": 65
+        "usd": 61
       }
     },
     "swaps": {
@@ -249,7 +249,12 @@
         "usd": 357,
         "date": "2024-03-13"
       },
-      "listing": null
+      "listing": {
+        "kind": "floor",
+        "amount": 0.5,
+        "symbol": "ETH",
+        "usd": 1243
+      }
     },
     "trompepe": {
       "description": "Curated Fake Rares Collection: This vault contains 1  TROMPEPE from the [BTC blockchain](https://xchain.io/asset/TROMPEPE) .\n\nFake Rares emerged in 2021 and are viewed as the natural successor to the iconic Rare Pepe collection. Through their organic evolution, Fake Rares have attracted numerous esteemed NFT artists who aim to enrich the Pepe community. To add your Fake Rare to the collection, you must burn 1 FAKEASF upon your submission's approval. Currently, the collection boasts over 15 thriving series, with intentions to persist until all FAKEASF cards are burnt.\n\n[View on Emblem.vision](https://emblem.vision/vault/4703605804406566907235904826712670206595426577060870115580303229942781956241)",
@@ -283,7 +288,7 @@
         "kind": "floor",
         "amount": 0.99,
         "symbol": "ETH",
-        "usd": 2538
+        "usd": 2464
       }
     },
     "chronicles-2019": {
@@ -294,16 +299,16 @@
     "market-psychology": {
       "description": "Visualizing the psychology of a market cycle, I have created a generative series that brings emotion and energy to the turbulent world of investing. The phases of each cycle speak to each of us in unique ways. It is also a roadmap to life. It is a fractal that repeats. We live in this cycle throughout and must understand that nothing is forever. Understanding this cycle brings peace and understanding that can be powerful knowledge for life itself.\r\n\r\nAesthetically themed to have the feel of a vinyl record cover, the square format fits the vibe and energy that ties together my love for art and music culture. Blending of distressed, grungy design, typography, and color theory have assemble a unique generative art collection.\r\n\r\nOwners of this blueprint my print their artwork for personal use. \r\nResolution 3840px x 3840px, 12\" x 12\" @ 320 PDI",
       "lastSale": {
-        "amount": 0.0058,
+        "amount": 0.01586,
         "symbol": "ETH",
-        "usd": 14,
-        "date": "2026-09-16"
+        "usd": 40,
+        "date": "2026-10-09"
       },
       "listing": {
         "kind": "floor",
-        "amount": 0.015819,
+        "amount": 0.015719,
         "symbol": "ETH",
-        "usd": 41
+        "usd": 39
       }
     },
     "alotta-money": {
@@ -318,7 +323,7 @@
         "kind": "floor",
         "amount": 0.05884,
         "symbol": "ETH",
-        "usd": 151
+        "usd": 146
       }
     },
     "deyes-assembled": {
@@ -333,7 +338,7 @@
         "kind": "floor",
         "amount": 6,
         "symbol": "ETH",
-        "usd": 15382
+        "usd": 14934
       }
     },
     "talking-heads": {
@@ -346,9 +351,9 @@
       },
       "listing": {
         "kind": "floor",
-        "amount": 0.193599,
+        "amount": 0.199,
         "symbol": "ETH",
-        "usd": 496
+        "usd": 495
       }
     },
     "uae-first-immersion": {
@@ -373,7 +378,7 @@
         "kind": "floor",
         "amount": 0.0666,
         "symbol": "ETH",
-        "usd": 171
+        "usd": 166
       }
     },
     "async-energetic-body": {
@@ -433,9 +438,9 @@
       },
       "listing": {
         "kind": "floor",
-        "amount": 0.04197,
+        "amount": 0.04195,
         "symbol": "ETH",
-        "usd": 108
+        "usd": 104
       }
     },
     "fake-rares-filthy-pepe": {
@@ -450,7 +455,7 @@
         "kind": "buy",
         "amount": 0.25,
         "symbol": "ETH",
-        "usd": 641
+        "usd": 622
       }
     },
     "sin-king-ship": {
@@ -465,7 +470,7 @@
         "kind": "buy",
         "amount": 0.0599999,
         "symbol": "ETH",
-        "usd": 154
+        "usd": 149
       }
     },
     "tech-epochalypse": {
@@ -475,7 +480,7 @@
         "kind": "floor",
         "amount": 5,
         "symbol": "ETH",
-        "usd": 12818
+        "usd": 12445
       }
     },
     "tech-epochalypse-moments": {
@@ -490,7 +495,7 @@
         "kind": "floor",
         "amount": 0.0998999,
         "symbol": "ETH",
-        "usd": 256
+        "usd": 249
       }
     },
     "not-one-satoshi": {
@@ -505,20 +510,8 @@
         "kind": "floor",
         "amount": 0.059,
         "symbol": "ETH",
-        "usd": 151
+        "usd": 147
       }
-    },
-    "en-marcha": {
-      "owner": {
-        "address": "0x6f66b95a0c512f3497fb46660e0bc3b94b989f8d",
-        "name": null,
-        "username": null,
-        "ens": null,
-        "artist": false
-      },
-      "description": "En Marcha is a digital kinetic 3D mural inspired by the works of Diego Rivera and Museo Anahuacalli. During my residency for the Digital Encounters project, curated by 8NAP and Superchief, I was offered the unique opportunity to experience a variety of Rivera’s murals with his Grandsons as personal guides. This in-depth connection to the works and his lineage resonated deeply. Having come into the residency with an initial concept in mind, I was taken aback and pivoted to honor Rivera’s mural work and collection of cultural artifacts he collected during his life.\n\nThe vision for this work is to invite the viewer to take control and have an experience. By allowing the viewer to ‘touch the art’ they become impassioned, curious, and inquisitive about the objects being used. I integrated my favorite artifacts and the museum itself as elements in the mural. I photographed every element in the mural during my tour of Museo Anahuacalli and Rivera's private vault collection of Mexican artifacts. Each element is hand-embellished with textures consistent with my collage practice to blend my aesthetic with the cultural artifacts to create an integrated, interactive art experience.\n\nAs part of the interactive mural experience, I created a variety of visual effects that that relate directly to Diego Rivera’s murals and Museo Anahuacalli. Two of my favorite murals, Dream of a Sunday Afternoon in Alameda Park and Fertile Land are represented, as well as the three realms / levels the museum was constructed to embody. I hope this work creates a deeper connection with viewers who interact with the work and educate about Museo Anahuacalli and Diego Rivera.",
-      "lastSale": null,
-      "listing": null
     },
     "sr-41a322-501": {
       "owner": {
@@ -2765,7 +2758,7 @@
       "description": "As the CEO of Coinbase, Brian has remained at the forefront of onboarding the masses to crypto. He has notably spearheaded the development of Base, Coinbase's layer 2 solution on the Ethereum network. Base is quickly becoming a market leader, providing new opportunities for decentralized commerce and innovation. This artwork combines 10 distinct images to form a decentralized, animated stereoscopic 3D portrait.",
       "lastSale": null,
       "listing": null,
-      "heldSince": "2025-06-04",
+      "heldSince": "2025-06-07",
       "heldVia": "TRANSFER_NFT"
     },
     "sr-892a1e-4": {
