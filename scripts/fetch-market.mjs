@@ -275,9 +275,9 @@ const MANUAL_HELD = {
   'gandinsky-3d-2': '2020-04-26',
   'buffett-decentral-eyes-v03': '2020-09-23',
   'buffett-decentral-eyes-v04': '2020-09-23',
-  'buffett-filthy-fiat-ordinal': '2025-12-18',
   // Intentionally undated (no collector badge): vitalik-variant-03 & saylor-not-one-satoshi-1of1
-  // (held by the artist); rare-pyramid-on-mars, rare-underground-energy & en-marcha (editions).
+  // (held by the artist); rare-pyramid-on-mars, rare-underground-energy & en-marcha (editions);
+  // buffett-filthy-fiat-ordinal (Bitcoin ordinal — holder unknown, nothing to attribute a badge to).
 };
 let heldCount = 0;
 for (const r of releases) {

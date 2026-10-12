@@ -2795,14 +2795,6 @@
       "listing": null,
       "heldSince": "2025-01-23",
       "heldVia": "TRANSFER_NFT"
-    },
-    "buffett-filthy-fiat-ordinal": {
-      "owner": null,
-      "description": null,
-      "lastSale": null,
-      "listing": null,
-      "heldSince": "2025-12-18",
-      "heldVia": "manual"
     }
   }
 }
