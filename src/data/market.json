@@ -1254,7 +1254,9 @@
         "amount": 50,
         "symbol": "ETH",
         "usd": 122788
-      }
+      },
+      "heldSince": "2019-03-17",
+      "heldVia": "MINT"
     },
     "sr-41a322-2408": {
       "owner": {
@@ -1271,7 +1273,9 @@
         "amount": 50,
         "symbol": "ETH",
         "usd": 122788
-      }
+      },
+      "heldSince": "2019-03-17",
+      "heldVia": "MINT"
     },
     "sr-41a322-2409": {
       "owner": {
@@ -1288,7 +1292,9 @@
         "amount": 50,
         "symbol": "ETH",
         "usd": 122788
-      }
+      },
+      "heldSince": "2019-03-17",
+      "heldVia": "MINT"
     },
     "sr-41a322-2463": {
       "owner": {
@@ -1305,7 +1311,9 @@
         "amount": 200,
         "symbol": "ETH",
         "usd": 491152
-      }
+      },
+      "heldSince": "2019-03-20",
+      "heldVia": "MINT"
     },
     "sr-41a322-2613": {
       "owner": {
@@ -1479,7 +1487,9 @@
       },
       "description": "Punk Andreas happened while making the 3D lenticular physical version for release at Bitcoin 2019 Conference.",
       "lastSale": null,
-      "listing": null
+      "listing": null,
+      "heldSince": "2023-04-19",
+      "heldVia": "TRANSFER_NFT"
     },
     "sr-41a322-3553": {
       "owner": {
@@ -2280,7 +2290,9 @@
       },
       "description": "Some things have changed with the miner's stack and the way the world looks around him. Life on the river is the same; hard work mixed with opportunity and preparation.\n\nThis artwork is created exclusively for the Pranksyland Proof of Work Virtual Crypto Mining Experience in Cryptovoxels. The buyer of the parcel will be transferred this artwork. \n\nhttps://www.cryptovoxels.com/parcels/764",
       "lastSale": null,
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-02-14",
+      "heldVia": "TRANSFER_NFT"
     },
     "sr-b932a7-13173": {
       "owner": {
@@ -2549,7 +2561,9 @@
       },
       "description": "Hard work is not easy, but it opens the possibility for great rewards. Watching the clouds go by helps to stay grounded and in the moment...\nProof of Work - Genesis, animated video, 808 x 1080. Conceived in 2018, minted in 2021. Artwork was originally tokenized as ERC-20 on R.A.R.E. ART LABS on September 26, 2018. The edition of 10 went unsold for over a year. I decided to burn all unsold tokens on October 30, 2019 when ERC-721 became the technology standard for NFT tokens. It is now being offered as a 1/1 in the original size to honor the genesis animated artwork that draws parallels and forms fractals between computers mining for 'proof of work' cryptocurrency and gold miners panning for gold in the rivers of the California gold rush where I grew up. The present work features in “Bonhams & SuperRare: CryptOGs, The Pioneers of NFT Art, June 21st-30th 2021”, Lot 1” and can be found at the following link: https://www.bonhams.com/auctions/27285/lot/1",
       "lastSale": null,
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-07-27",
+      "heldVia": "TRANSFER_NFT"
     },
     "sr-b932a7-29552": {
       "owner": {
@@ -2620,7 +2634,9 @@
         "amount": 194.175,
         "symbol": "ETH",
         "usd": 476900
-      }
+      },
+      "heldSince": "2022-03-23",
+      "heldVia": "MINT"
     },
     "sr-b932a7-33750": {
       "owner": {
@@ -2655,7 +2671,9 @@
         "amount": 20,
         "symbol": "ETH",
         "usd": 49115
-      }
+      },
+      "heldSince": "2022-09-15",
+      "heldVia": "MINT"
     },
     "sr-b932a7-37870": {
       "owner": {
@@ -2672,7 +2690,9 @@
         "amount": 12,
         "symbol": "ETH",
         "usd": 29469
-      }
+      },
+      "heldSince": "2022-09-15",
+      "heldVia": "MINT"
     },
     "sr-b932a7-37871": {
       "owner": {
@@ -2689,7 +2709,9 @@
         "amount": 12,
         "symbol": "ETH",
         "usd": 29469
-      }
+      },
+      "heldSince": "2022-09-15",
+      "heldVia": "MINT"
     },
     "sr-b932a7-43335": {
       "owner": {
@@ -2706,7 +2728,9 @@
         "amount": 15,
         "symbol": "ETH",
         "usd": 36836
-      }
+      },
+      "heldSince": "2023-02-25",
+      "heldVia": "MINT"
     },
     "sr-892a1e-2": {
       "owner": {
@@ -2718,7 +2742,9 @@
       },
       "description": "Chair of the SEC Gary Gensler has been single-handedly attacking crypto and squirming in testimony as he attemps to  prop up the traditional cartel financial system. His face changes shape, but the intent remains.",
       "lastSale": null,
-      "listing": null
+      "listing": null,
+      "heldSince": "2025-01-27",
+      "heldVia": "TRANSFER_NFT"
     },
     "sr-892a1e-3": {
       "owner": {
@@ -2730,7 +2756,9 @@
       },
       "description": "As the CEO of Coinbase, Brian has remained at the forefront of onboarding the masses to crypto. He has notably spearheaded the development of Base, Coinbase's layer 2 solution on the Ethereum network. Base is quickly becoming a market leader, providing new opportunities for decentralized commerce and innovation. This artwork combines 10 distinct images to form a decentralized, animated stereoscopic 3D portrait.",
       "lastSale": null,
-      "listing": null
+      "listing": null,
+      "heldSince": "2025-06-04",
+      "heldVia": "TRANSFER_NFT"
     },
     "sr-892a1e-4": {
       "owner": {
@@ -2742,7 +2770,9 @@
       },
       "description": "Jack Dorsey is an American entrepreneur and the co-founder of Twitter and Block Inc. As a strong advocate for Bitcoin and decentralized technologies, Jack has integrated these into Block’s ecosystem and supports various Bitcoin initiatives. His eccentric image, commitment to decentralization and involvement in controversial causes, like the rumored donation to Julian Assange, defines his unique persona.\n\nThis ‘Safe Passage’ variant is created by combining a variety of photos of Dorsey along with his tweet to Julian Assange (“safe passage through”) which was sent at the same moment 8 BTC were transferred to Assange for his plane flight home. The photos were all recombined to created a decentralized 3D collage portrait in a glitch style which symbolizes the matrix that Assange is traveling through with the support of his friend Jack.",
       "lastSale": null,
-      "listing": null
+      "listing": null,
+      "heldSince": "2024-07-16",
+      "heldVia": "TRANSFER_NFT"
     },
     "sr-892a1e-5": {
       "owner": {
@@ -2754,7 +2784,9 @@
       },
       "description": "Minted on Inauguration Day 1/20/2025, never before has a sitting president aligned with Bitcoin and crypto overall the way Trump has done through a variety of drops across multiple chains. The lastest meme coin drop $TRUMP on Solana turns out after much hype to look to be a shitter. While he has floated the idea of a Strategic Bitcoin Reserve for the United States Government, at this time it has not become a reality. He also has not released Ross on Day One which was a driving force for his support within the Bitcoin community. Will Trump follow through with his campaign promises? Time will tell. \n\nThe play on words within this piece...\n\nThis Decentral Eyes portrait is created using a variety of visual assets that are recombined to created a decentralized animated portrait.",
       "lastSale": null,
-      "listing": null
+      "listing": null,
+      "heldSince": "2025-01-23",
+      "heldVia": "TRANSFER_NFT"
     }
   }
 }

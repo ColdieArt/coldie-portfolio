@@ -90,23 +90,45 @@ function fromSuperRare(a) {
 // "Held since" (diamond hands): the date of the most recent SALE of a 1/1. Per the
 // rule, only a sale resets the clock — plain wallet-to-wallet transfers (e.g. moving
 // to a vault) do not. SuperRare's artwork detail endpoint returns the full typed
-// event history, so we take the newest sale-type event. Returns null if never sold.
+// event history, so we take the newest sale-type event. A token that has never sold
+// has been held since it was minted (heldVia 'MINT') — an even stronger signal.
 const SALE_EVENTS = new Set([
   'TAKE_LISTING', 'TAKE_OFFER', 'ACCEPT_OFFER', 'ACCEPT_BID',
   'SETTLE_AUCTION', 'AUCTION_SETTLED', 'SOLD', 'SALE',
 ]);
-async function superrareHeldSince(contract, tokenId) {
+// Collapse a collector's own wallets to one identity (name, name2, namevault,
+// name_vault, name.eth, name_space) so a vault move isn't read as an acquisition.
+const heldRoot = (name) => {
+  if (!name) return '';
+  const s = name.toLowerCase().replace(/\.(eth|btc|xyz)$/, '').replace(/[._-]?(vault|space)$/, '').replace(/[._-]?\d+$/, '').replace(/[._-]+$/, '');
+  return s.length >= 3 ? s : name.toLowerCase();
+};
+async function superrareHeldSince(contract, tokenId, owner) {
   const input = encodeURIComponent(JSON.stringify({ 0: { json: { universalTokenId: `1-${contract.toLowerCase()}-${tokenId}` } } }));
   const res = await fetch(`https://superrare.com/api/trpc/artwork.getAdpData?batch=1&input=${input}`, {
     headers: UA, signal: AbortSignal.timeout(45000),
   });
   if (!res.ok) throw new Error(`${res.status}`);
-  const events = (await res.json())[0]?.result?.data?.json?.events?.events;
-  if (!Array.isArray(events)) throw new Error('no event history');
-  const sale = events
-    .filter((e) => SALE_EVENTS.has(e.eventType) && e.createdAt)
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
-  return sale ? { heldSince: sale.createdAt.slice(0, 10), heldVia: sale.eventType } : null;
+  const events = ((await res.json())[0]?.result?.data?.json?.events?.events ?? [])
+    .filter((e) => e.createdAt)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  if (!events.length) throw new Error('no event history');
+  // A typed SuperRare sale is the cleanest signal; it also correctly ignores later
+  // vault moves. Most recent one wins.
+  const sale = events.find((e) => SALE_EVENTS.has(e.eventType));
+  if (sale) return { heldSince: sale.createdAt.slice(0, 10), heldVia: sale.eventType };
+  // No typed sale — the current owner acquired it via a transfer (a secondary sale on
+  // another marketplace, or SuperRare's V1 escrow). Use the transfer into their wallet
+  // (recipient = patient), skipping self/vault moves.
+  const oAddr = owner?.address?.toLowerCase();
+  const oRoot = heldRoot(owner?.username || owner?.name || owner?.ens);
+  const addrOf = (p) => p?.defaultAddress?.toLowerCase() ?? '';
+  const isOwner = (p) => (!!oAddr && addrOf(p) === oAddr) || (!!oRoot && heldRoot(p?.profile?.username) === oRoot);
+  const acq = events.find((e) => e.eventType === 'TRANSFER_NFT' && isOwner(e.patient) && !isOwner(e.agent));
+  if (acq) return { heldSince: acq.createdAt.slice(0, 10), heldVia: 'TRANSFER_NFT' };
+  // Only the mint (or no transfer to the current owner) — e.g. a piece the artist still holds.
+  const mint = events[events.length - 1];
+  return { heldSince: mint.createdAt.slice(0, 10), heldVia: 'MINT' };
 }
 
 // ── OpenSea ──────────────────────────────────────────────────
@@ -250,7 +272,7 @@ for (const r of releases) {
   if (!m || !(r.kind === '1/1' && (r.supply ?? 1) === 1)) continue;
   try {
     if (r.source === 'superrare' && r.contract && r.tokenId) {
-      const h = await superrareHeldSince(r.contract, r.tokenId);
+      const h = await superrareHeldSince(r.contract, r.tokenId, m.owner);
       if (h) { m.heldSince = h.heldSince; m.heldVia = h.heldVia; heldCount++; }
       await sleep(400);
     } else if (m.lastSale?.date) {
