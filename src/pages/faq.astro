@@ -64,8 +64,69 @@ const faqs: { q: string; a: string }[] = [
   },
 ];
 
+// Glossary of the stereoscopic / 3D vocabulary used across the work. Short, accurate
+// definitions double as a DefinedTermSet so each term can be cited on its own.
+const glossary: { term: string; def: string }[] = [
+  {
+    term: 'Stereoscopy',
+    def: 'The technique of creating the illusion of depth by presenting two slightly different images — one to each eye. First demonstrated in the 1830s, it is the basis of all 3D photography and film; Coldie calls it “a 170-year-old way of seeing.”',
+  },
+  {
+    term: 'Stereoscopic pair',
+    def: 'The two source images — a left-eye view and a right-eye view — that a stereoscopic artwork is built from. When the brain fuses them, the scene reads in real depth.',
+  },
+  {
+    term: 'Anaglyph 3D',
+    def: 'A stereoscopic method that encodes the left- and right-eye images in two colors (typically red and cyan) so matching red/blue 3D glasses separate them. Many Decentral Eyes portraits are anaglyphs, shown with 3D glasses.',
+  },
+  {
+    term: 'Lenticular',
+    def: 'A print technique that lays an array of tiny lenses over interlaced images, so the picture shifts, animates, or shows depth as you move around it — no glasses required.',
+  },
+  {
+    term: 'Parallax',
+    def: 'The apparent shift of nearer and farther objects as the viewpoint moves. Layering elements and animating that shift lets Coldie build depth on a screen without glasses.',
+  },
+  {
+    term: 'Wigglegram',
+    def: 'An animated image that rapidly alternates between the left- and right-eye views, producing a “wiggle” that reads as 3D without glasses. Coldie has released wigglegram editions.',
+  },
+  {
+    term: 'Binocular disparity',
+    def: 'The small difference between what the left and right eyes see, caused by their separation. The brain reads this disparity as depth — the perceptual basis of all stereoscopy.',
+  },
+  {
+    term: 'Convergence',
+    def: 'The inward angling of the eyes to fix on a single point. Stereoscopic images are composed so the eyes converge naturally, placing elements in front of or behind the picture plane.',
+  },
+  {
+    term: 'Autostereoscopy (glasses-free 3D)',
+    def: 'Any method that delivers a 3D effect without special eyewear — lenticular prints, parallax animation, wigglegrams, or holographic displays.',
+  },
+  {
+    term: 'Volumetric',
+    def: 'Describing art or capture that represents true three-dimensional volume — depth in every direction — rather than a flat image with simulated depth.',
+  },
+  {
+    term: 'Interaxial distance',
+    def: 'The distance between the two lenses (or eyes) capturing a stereo pair. A wider interaxial exaggerates the depth effect; a narrower one flattens it.',
+  },
+  {
+    term: 'Picture plane',
+    def: 'The flat surface of the artwork itself. Stereoscopic work places elements in front of it (“popping out”) or behind it (“into the window”).',
+  },
+  {
+    term: 'Kinetic 3D collage',
+    def: 'Coldie’s physical, rearrangeable 3D portraiture: magnetic cut-out pieces mounted at different depths that the viewer can move and re-compose — “touch the art.”',
+  },
+  {
+    term: 'Gel transfer',
+    def: 'A hand process that lifts a printed image into a thin, flexible film which is then layered onto a surface. Coldie uses it — often on burnt canvas — in his stereoscopic fine-art works.',
+  },
+];
+
 const description =
-  'Answers about Coldie, the stereoscopic-3D and kinetic artist who minted the first 3D artwork on a blockchain in 2018: the Decentral Eyes series, how to view the 3D effect, auctions at Christie’s, Sotheby’s and Bonhams, Front Row 3D, and where to collect.';
+  'Answers about Coldie, the stereoscopic-3D and kinetic artist who minted the first 3D artwork on a blockchain in 2018 — the Decentral Eyes series, auctions at Christie’s, Sotheby’s and Bonhams, Front Row 3D, where to collect — plus a glossary of 3D terms: anaglyph, lenticular, parallax, wigglegram and more.';
 
 const faqLd = {
   '@context': 'https://schema.org',
@@ -82,6 +143,22 @@ const faqLd = {
   })),
 };
 
+const glossaryLd = {
+  '@context': 'https://schema.org',
+  '@type': 'DefinedTermSet',
+  '@id': `${site.url}${PATH}#glossary`,
+  name: 'Glossary of stereoscopic 3D art terms',
+  description: 'Definitions of the stereoscopic and 3D vocabulary used across Coldie’s work.',
+  about: { '@id': `${site.url}/#person` },
+  inLanguage: 'en',
+  hasDefinedTerm: glossary.map((g) => ({
+    '@type': 'DefinedTerm',
+    name: g.term,
+    description: g.def,
+    inDefinedTermSet: { '@id': `${site.url}${PATH}#glossary` },
+  })),
+};
+
 // Deep links that let search and AI tools (and people) follow the facts to their source.
 const explore = [
   { label: 'Decentral Eyes — the 3D portrait series', href: '/series/decentral-eyes' },
@@ -95,7 +172,7 @@ const explore = [
   title="Coldie FAQ — Stereoscopic 3D & Crypto Art, Answered"
   description={description}
   path={PATH}
-  jsonld={[personLd(), faqLd, breadcrumbLd([{ name: 'Home', path: '/' }, { name: 'FAQ', path: PATH }])]}
+  jsonld={[personLd(), faqLd, glossaryLd, breadcrumbLd([{ name: 'Home', path: '/' }, { name: 'FAQ', path: PATH }])]}
 >
   <article class="faqp">
     <div class="wrap faqp__wrap">
@@ -117,6 +194,19 @@ const explore = [
           </div>
         ))}
       </dl>
+
+      <section class="faqp__glossary" id="glossary" aria-labelledby="glossary-h">
+        <h2 class="faqp__gloss-h" id="glossary-h">Glossary of 3D terms</h2>
+        <p class="faqp__gloss-intro muted">The stereoscopic and 3D vocabulary behind the work — from anaglyph and lenticular to wigglegrams and parallax.</p>
+        <dl class="faqp__gloss-list">
+          {glossary.map((g) => (
+            <div class="faqp__gloss-item">
+              <dt class="faqp__term">{g.term}</dt>
+              <dd class="faqp__def">{g.def}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
 
       <nav class="faqp__explore" aria-label="Explore the work">
         <h2 class="faqp__explore-h">Follow the work</h2>
@@ -148,6 +238,18 @@ const explore = [
     font-size: clamp(1.2rem, 2.2vw, 1.55rem); line-height: 1.2; color: var(--ink);
   }
   .faqp__a { margin: 0; color: var(--ink-soft); font-size: 1.05rem; line-height: 1.65; max-width: 68ch; }
+
+  .faqp__glossary { margin-top: clamp(2.5rem, 6vw, 4rem); }
+  .faqp__gloss-h { font-size: clamp(1.6rem, 3.4vw, 2.3rem); margin: 0 0 0.3em; }
+  .faqp__gloss-intro { margin: 0 0 1.5rem; max-width: 60ch; }
+  .faqp__gloss-list { margin: 0; }
+  .faqp__gloss-item { padding: clamp(1rem, 2.2vw, 1.35rem) 0; border-top: 1px solid var(--line-soft); }
+  .faqp__gloss-item:last-child { border-bottom: 1px solid var(--line-soft); }
+  .faqp__term {
+    margin: 0 0 0.3em; font-family: var(--sans); font-weight: 600;
+    font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink);
+  }
+  .faqp__def { margin: 0; color: var(--ink-soft); font-size: 1rem; line-height: 1.6; max-width: 68ch; }
 
   .faqp__explore { margin-top: clamp(2.5rem, 6vw, 4rem); }
   .faqp__explore-h {
