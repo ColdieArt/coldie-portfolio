@@ -101,6 +101,7 @@ function toItem(r: Release) {
     badge: r.badge ?? null,
     url: r.url ?? null,
     links: r.links ?? null,
+    provenance: r.provenance ?? null,
     market: r.url ? marketName(r.url) : null,
     page: r.slug ? `/work/${r.slug}` : null,
     owner: o && !o.artist ? { label: collectorLabel(o), href: ownerUrl(r, o) } : null,

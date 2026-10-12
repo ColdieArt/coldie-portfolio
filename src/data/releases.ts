@@ -55,6 +55,8 @@ export type Release = {
   url?: string;
   /** secondary links (Nifty Gateway page, Deca, auction lot…) */
   links?: { label: string; url: string }[];
+  /** auction / exhibition provenance, shown as a labeled list like the work page */
+  provenance?: { label: string; href?: string; ariaLabel?: string }[];
   contract?: string;
   tokenId?: string;
   /** sheet's "Twitter Sales Bot" column */
@@ -1087,6 +1089,11 @@ const SR_EXTRAS: Record<string, Partial<Release>> = {
     series: 'Collaborations',
     slug: 'uap-unidentified-art-phenomenon',
     badge: "with Hackatao · Sotheby's",
+    provenance: [{
+      label: "Sotheby’s — Inside the World of MaxStealth (2022) · $69,300",
+      href: 'https://www.sothebys.com/en/buy/auction/2022/inside-the-world-of-maxstealth-a-timeless-collection/uap-unidentified-art-phenomenon',
+      ariaLabel: "UAP — Unidentified Art Phenomenon at Sotheby’s, Inside the World of MaxStealth",
+    }],
   },
   '0xb932a70a57673d89f4acffbe830e8ed7f75fb9e0:12380': {
     related: { id: 'rare-lost-vitalik-2018', label: 'The burned 2018 original on R.A.R.E. Art Labs' },
@@ -1098,8 +1105,35 @@ const SR_EXTRAS: Record<string, Partial<Release>> = {
   '0x41a322b28d0ff354040e2cbc676f0320d8c8850d:1007': {
     slug: '3d-light-painting-03',
     badge: "Sold at Sotheby's",
-    notes: "Sold at Sotheby's in “Inside the World of MaxStealth — A Timeless Collection” (2022) for $13,860.",
-    links: [{ label: "Sotheby’s lot", url: 'https://www.sothebys.com/en/buy/auction/2022/inside-the-world-of-maxstealth-a-timeless-collection/3d-light-painting-03' }],
+    provenance: [{
+      label: "Sotheby’s — Inside the World of MaxStealth (2022) · $13,860",
+      href: 'https://www.sothebys.com/en/buy/auction/2022/inside-the-world-of-maxstealth-a-timeless-collection/3d-light-painting-03',
+      ariaLabel: "3D Light Painting 03 at Sotheby’s, Inside the World of MaxStealth",
+    }],
+  },
+  '0x41a322b28d0ff354040e2cbc676f0320d8c8850d:4132': {
+    badge: "Sold at Sotheby's",
+    provenance: [{
+      label: "Sotheby’s — R-Evolutionaries: Digital Art Through the Decade (2024) · $16,510",
+      href: 'https://www.sothebys.com/en/buy/auction/2024/r-evolutionaries-digital-art-through-the-decade/kitty-decentral-eyes',
+      ariaLabel: "Kitty — Decentral Eyes at Sotheby’s, R-Evolutionaries",
+    }],
+  },
+  '0xb932a70a57673d89f4acffbe830e8ed7f75fb9e0:12517': {
+    badge: "Sold at Sotheby's",
+    provenance: [{
+      label: "Sotheby’s — Contemporary Discoveries (2024) · $25,400",
+      href: 'https://www.sothebys.com/en/buy/auction/2024/contemporary-discoveries-4/warren-buffet-decentral-eyes-variant-02-token-id',
+      ariaLabel: "Warren Buffett — Decentral Eyes V02 at Sotheby’s, Contemporary Discoveries",
+    }],
+  },
+  '0xb932a70a57673d89f4acffbe830e8ed7f75fb9e0:29660': {
+    badge: "Sold at Sotheby's",
+    provenance: [{
+      label: "Sotheby’s — Digital Art Day Auction (2024) · $1,560",
+      href: 'https://www.sothebys.com/en/buy/auction/2024/digital-art-day-auction-3/ath-euphoria-choose-your-own-adventure-3-4',
+      ariaLabel: "ATH Euphoria 3/4 at Sotheby’s, Digital Art Day Auction",
+    }],
   },
 };
 

@@ -533,6 +533,22 @@ const searchText = (r: Release) =>
                       );
                     })()}
                     {r.notes && <p class="rel__notes small muted">{r.notes}</p>}
+                    {r.provenance?.length && (
+                      <dl class="rel__prov">
+                        <dt>Provenance</dt>
+                        <dd>
+                          <ul>
+                            {r.provenance.map((p) => (
+                              <li>
+                                {p.href ? (
+                                  <a href={p.href} aria-label={p.ariaLabel ?? p.label} title={p.ariaLabel ?? p.label} {...(p.href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>{p.label}{p.href.startsWith('http') ? ' ↗' : ''}</a>
+                                ) : p.label}
+                              </li>
+                            ))}
+                          </ul>
+                        </dd>
+                      </dl>
+                    )}
                     {(r.url || r.links?.length || r.related) && (
                       <p class="rel__links small">
                         {r.url && <a class="rel__market" href={r.url} target="_blank" rel="noopener">View on {marketName(r.url)} ↗</a>}
@@ -930,6 +946,14 @@ const searchText = (r: Release) =>
   .rel__chip--tbc, .rel__chip--confirm { color: var(--ink-mute); border-style: dashed; }
 
   .rel__notes { margin: 0.55rem 0 0; }
+  /* Provenance — same treatment as the work pages: a labeled bulleted list. */
+  .rel__prov { margin: 0.65rem 0 0; }
+  .rel__prov dt { font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 0.3rem; }
+  .rel__prov dd { margin: 0; }
+  .rel__prov ul { margin: 0; padding-left: 1.1em; font-size: 0.86rem; }
+  .rel__prov li { margin: 0.1rem 0; }
+  .rel__prov a { color: var(--ink); text-decoration: none; }
+  .rel__prov a:hover { color: var(--red); }
   .rel__links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; margin: 0.55rem 0 0; }
   .rel__links a { text-decoration: none; color: var(--ink-soft); }
   .rel__links a:hover { color: var(--red); }
