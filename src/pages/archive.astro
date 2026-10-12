@@ -87,8 +87,23 @@ const shortAddr = (a: string) => `${a.slice(0, 6)}…${a.slice(-4)}`;
 const ownerUrl = (r: Release, o: Owner) =>
   r.source === 'superrare' && o.username ? `https://superrare.com/${o.username}` : `https://opensea.io/${o.address}`;
 const ownerLabel = (o: Owner) => o.ens ?? (o.name && !o.name.startsWith('0x') ? o.name : shortAddr(o.address));
+
+// Collectors who hold Coldie 1/1s across more than one wallet. Each group counts as
+// one collector — tenure, piece count and the leaderboard combine, and filtering by
+// any member shows the whole group. Add pairs here as you learn them (lowercase).
+const COLLECTOR_GROUPS: { label: string; wallets: string[] }[] = [
+  { label: 'j1mmy', wallets: ['0x8ad272ac86c6c88683d9a60eb8ed57e6c304bb0c', '0xf22742f06e4f6d68a8d0b49b9f270bb56affab38'] },
+  { label: 'snow', wallets: ['0xa362a9676db12606d339d10433c1af3618bca1d4', '0x6b3ab283947afb581a461770d7c52d47b2624788'] },
+];
+const walletToGroup = new Map<string, { label: string; wallets: string[] }>();
+for (const g of COLLECTOR_GROUPS) for (const w of g.wallets) walletToGroup.set(w.toLowerCase(), g);
+/** The wallet a collector's holdings all filter under — the group's first wallet, or itself. */
+const canonAddr = (addr: string) => (walletToGroup.get(addr.toLowerCase())?.wallets[0] ?? addr).toLowerCase();
+/** The name to show for a wallet — the group's shared label, or the wallet's own. */
+const canonLabel = (o: Owner) => walletToGroup.get(o.address.toLowerCase())?.label ?? ownerLabel(o);
+
 const collectorCount = new Set(
-  Object.values(market).flatMap((m) => (m.owner && !m.owner.artist ? [m.owner.address] : []))
+  Object.values(market).flatMap((m) => (m.owner && !m.owner.artist ? [canonAddr(m.owner.address)] : []))
 ).size;
 // "On the record" facts, computed from the data so they stay accurate
 const BONHAMS_LOT =
@@ -101,7 +116,8 @@ const forSaleCount = sortedReleases.filter((r) => market[r.id]?.listing).length;
 // ── Diamond-hands leaderboard: collectors ranked by total tenure ─────────────
 // Sum of years held across every 1/1 a collector currently holds (only a sale
 // resets a token's clock). Grouped by wallet; vault wallets count on their own.
-type Hold = { label: string; href: string; address: string; count: number; total: number; longest: number; genesis: number };
+type HeldWork = { id: string; title: string; years: number; genesis: boolean };
+type Hold = { label: string; href: string; address: string; total: number; longest: number; genesis: number; works: HeldWork[] };
 const holdByCollector = new Map<string, Hold>();
 for (const r of sortedReleases) {
   const o = market[r.id]?.owner;
@@ -109,15 +125,17 @@ for (const r of sortedReleases) {
   const d = diamondHold(market[r.id]?.heldSince);
   if (!d) continue;
   const genesis = releaseYear(r) === 2018 && d.sinceYear <= 2019;
-  const e = holdByCollector.get(o.address) ?? { label: ownerLabel(o), href: ownerUrl(r, o), address: o.address, count: 0, total: 0, longest: 0, genesis: 0 };
-  e.count += 1;
+  const key = canonAddr(o.address);
+  const e = holdByCollector.get(key) ?? { label: canonLabel(o), href: ownerUrl(r, o), address: key, total: 0, longest: 0, genesis: 0, works: [] };
   e.total += d.years;
   e.longest = Math.max(e.longest, d.years);
   if (genesis) e.genesis += 1;
-  holdByCollector.set(o.address, e);
+  e.works.push({ id: r.id, title: r.title, years: d.years, genesis });
+  holdByCollector.set(key, e);
 }
+for (const e of holdByCollector.values()) e.works.sort((a, b) => b.years - a.years);
 const leaderboard = [...holdByCollector.values()]
-  .sort((a, b) => b.total - a.total || b.longest - a.longest || b.count - a.count)
+  .sort((a, b) => b.works.length - a.works.length || b.longest - a.longest || b.total - a.total)
   .slice(0, 10);
 const gemsFor = (yrs: number) => '💎'.repeat(yrs >= 5 ? 3 : yrs >= 3 ? 2 : 1);
 
@@ -288,17 +306,35 @@ const searchText = (r: Release) =>
           </summary>
           <ol class="rel__board">
             {leaderboard.map((c, i) => (
-              <li class="rel__boardrow">
-                <span class="rel__boardrank">{i + 1}</span>
-                <span class="rel__boardgems" aria-hidden="true">{gemsFor(c.longest)}</span>
-                <button type="button" class="rel__boardname" data-collector={c.address} data-collector-label={c.label} title={`Show everything held by ${c.label}`}>{c.label}</button>
-                <span class="rel__boardmeta">
-                  <span>{c.count} {c.count === 1 ? 'work' : 'works'}</span>
-                  <span>~{c.total} {c.total === 1 ? 'yr' : 'yrs'} total</span>
-                  <span class="rel__boardmeta-long">longest {c.longest} yr{c.longest === 1 ? '' : 's'}</span>
-                  {c.genesis > 0 && <span class="rel__boardgenesis">✦ {c.genesis} genesis</span>}
-                </span>
-                <a class="rel__boardext" href={c.href} target="_blank" rel="noopener" aria-label={`${c.label} profile`}>↗</a>
+              <li>
+                <details class="rel__boardrow">
+                  <summary class="rel__boardsum">
+                    <span class="rel__boardrank">{i + 1}</span>
+                    <span class="rel__boardgems" aria-hidden="true">{gemsFor(c.longest)}</span>
+                    <span class="rel__boardname">{c.label}</span>
+                    <span class="rel__boardmeta">
+                      <span>{c.works.length} {c.works.length === 1 ? 'work' : 'works'}</span>
+                      <span class="rel__boardmeta-long">longest {c.longest} yr{c.longest === 1 ? '' : 's'}</span>
+                      {c.genesis > 0 && <span class="rel__boardgenesis">✦ {c.genesis} genesis</span>}
+                    </span>
+                  </summary>
+                  <div class="rel__boardbody">
+                    <ul class="rel__boardworks">
+                      {c.works.map((w) => (
+                        <li>
+                          <a href={`#w-${w.id}`}>
+                            <span class="rel__boardwork-title">{w.genesis && <span class="rel__boardwork-g" aria-hidden="true">✦ </span>}{w.title}</span>
+                            <span class="rel__boardwork-yrs">{w.years} yr{w.years === 1 ? '' : 's'}</span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                    <div class="rel__boardactions">
+                      <button type="button" class="rel__boardfilter" data-collector={c.address} data-collector-label={c.label}>Filter the archive to {c.label} →</button>
+                      <a class="rel__boardext" href={c.href} target="_blank" rel="noopener">Profile ↗</a>
+                    </div>
+                  </div>
+                </details>
               </li>
             ))}
           </ol>
@@ -444,6 +480,7 @@ const searchText = (r: Release) =>
                       data-chain={r.chain}
                       data-forsale={market[r.id]?.listing ? '1' : undefined}
                       data-owner={market[r.id]?.owner?.address}
+                      data-owner-group={market[r.id]?.owner ? canonAddr(market[r.id].owner!.address) : undefined}
                       data-price={market[r.id]?.listing?.amount ?? market[r.id]?.lastSale?.amount}
                       data-year={g.key}
                     >
@@ -475,7 +512,7 @@ const searchText = (r: Release) =>
                         {market[r.id]?.owner && (
                       <p class="rel__collector">
                         <span class="rel__collectorlabel">{market[r.id].owner!.artist ? 'Held by the artist' : 'Collector'}</span>
-                        <button type="button" class="rel__collectorbtn" data-collector={market[r.id].owner!.address} data-collector-label={ownerLabel(market[r.id].owner!)} title={`Show everything held by ${ownerLabel(market[r.id].owner!)}`}>
+                        <button type="button" class="rel__collectorbtn" data-collector={canonAddr(market[r.id].owner!.address)} data-collector-label={canonLabel(market[r.id].owner!)} title={`Show everything held by ${canonLabel(market[r.id].owner!)}`}>
                           {ownerLabel(market[r.id].owner!)}
                         </button>
                         <a class="rel__collectorext" href={ownerUrl(r, market[r.id].owner!)} target="_blank" rel="noopener" aria-label={`${ownerLabel(market[r.id].owner!)} profile`} title={market[r.id].owner!.address}>↗</a>
@@ -841,18 +878,30 @@ const searchText = (r: Release) =>
   .rel__diamonds[open] .rel__diamonds-sum::after { transform: rotate(90deg); }
   .rel__diamonds-title { font-family: var(--serif); font-size: clamp(1.05rem, 2vw, 1.3rem); }
   .rel__diamonds-sub { flex-basis: 100%; }
-  .rel__board { list-style: none; margin: 0; padding: 0 clamp(0.5rem, 1.5vw, 1rem) clamp(0.6rem, 1.5vw, 1rem); display: grid; gap: 1px; }
-  .rel__boardrow { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.7rem; padding: 0.6rem clamp(0.5rem, 1.2vw, 0.9rem); border-top: 1px solid var(--line-soft); }
+  .rel__board { list-style: none; margin: 0; padding: 0 clamp(0.5rem, 1.5vw, 1rem) clamp(0.6rem, 1.5vw, 1rem); display: grid; gap: 0; }
+  .rel__boardrow { border-top: 1px solid var(--line-soft); }
+  .rel__boardsum { cursor: pointer; list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.7rem; padding: 0.65rem clamp(0.5rem, 1.2vw, 0.9rem); }
+  .rel__boardsum::-webkit-details-marker { display: none; }
+  .rel__boardsum::after { content: '▸'; color: var(--ink-mute); font-size: 0.8rem; transition: transform 0.2s; }
+  .rel__boardrow[open] .rel__boardsum::after { transform: rotate(90deg); }
   .rel__boardrank { font-variant-numeric: tabular-nums; color: var(--ink-mute); font-size: 0.8rem; min-width: 1.4em; text-align: right; }
   .rel__boardgems { font-size: 0.82rem; letter-spacing: -0.06em; }
-  .rel__boardname { background: none; border: 0; padding: 0; cursor: pointer; color: var(--ink); font-family: var(--serif); font-size: 1rem; text-align: left; }
-  .rel__boardname:hover { color: var(--red); text-decoration: underline; }
+  .rel__boardname { color: var(--ink); font-family: var(--serif); font-size: 1rem; }
   .rel__boardmeta { display: inline-flex; flex-wrap: wrap; gap: 0.3rem 0.9rem; margin-left: auto; font-size: 0.78rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
   .rel__boardmeta-long { color: var(--ink-mute); }
   .rel__boardgenesis { color: #d8a53a; }
-  .rel__boardext { color: var(--ink-mute); text-decoration: none; }
+  .rel__boardbody { padding: 0 clamp(0.5rem, 1.2vw, 0.9rem) 0.9rem 2.3rem; }
+  .rel__boardworks { list-style: none; margin: 0 0 0.75rem; padding: 0; display: grid; gap: 1px; }
+  .rel__boardworks a { display: flex; justify-content: space-between; gap: 1rem; padding: 0.4rem 0; font-size: 0.86rem; color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line-soft); }
+  .rel__boardworks a:hover { color: var(--ink); }
+  .rel__boardwork-yrs { color: var(--ink-mute); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .rel__boardwork-g { color: #d8a53a; }
+  .rel__boardactions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.2rem; }
+  .rel__boardfilter { background: none; border: 1px solid var(--line); border-radius: 999px; padding: 0.35rem 0.85rem; cursor: pointer; color: var(--ink); font-size: 0.8rem; }
+  .rel__boardfilter:hover { border-color: var(--ink); background: color-mix(in srgb, var(--ink) 6%, transparent); }
+  .rel__boardext { color: var(--ink-mute); text-decoration: none; font-size: 0.8rem; }
   .rel__boardext:hover { color: var(--ink); }
-  @media (max-width: 560px) { .rel__boardmeta { margin-left: 0; flex-basis: 100%; } }
+  @media (max-width: 560px) { .rel__boardmeta { margin-left: 0; flex-basis: 100%; padding-left: 2.3rem; } }
   .rel__body { min-width: 0; }
   .rel__thumb {
     position: relative; container-type: inline-size;
@@ -999,7 +1048,7 @@ const searchText = (r: Release) =>
         terms.every((t) => d.search!.includes(t)) &&
         active.every(([k, el]) => (k === 'series' ? (d.series ?? '').split('|').includes(el.value) : d[k] === el.value)) &&
         (!forSale.checked || d.forsale === '1') &&
-        (!collector || d.owner === collector);
+        (!collector || (d.ownerGroup ?? d.owner) === collector);
       entry.hidden = !ok;
       if (ok) {
         total++;
