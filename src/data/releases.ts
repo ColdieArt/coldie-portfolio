@@ -578,6 +578,11 @@ const allReleases: Release[] = [
     tokenId: '77713812',
     slug: 'warren-buffett-filthy-fiat',
     badge: "Christie's · inscription #77713812, paired with the physical sculpture",
+    provenance: [{
+      label: "Christie’s — First Open | Post-War and Contemporary Art (2024)",
+      href: 'https://onlineonly.christies.com.cn/s/first-open-post-war-contemporary-art/coldie-b-1982-286/245196',
+      ariaLabel: "Warren Buffett — Filthy Fiat at Christie’s, First Open | Post-War and Contemporary Art",
+    }],
     thumbSrc: '/works/warren-buffett/ordinal.webp', // the inscription's 12 recursive layers, composited
     description:
       "1/1 recursive Ordinal inscribed for primary sale with Christie's NYC “First Open | Post-War and Contemporary Art” auction, December 3–18, 2024. The digital artwork is composed of 10 recursive portrait elements that build the Warren Buffett portrait. Its collage elements include US dollar bills Coldie buried in the ground for two years as a SHTF stash; moisture contaminated them with mold, leaving them very fragile. This unintentional generative art by nature began the Filthy Fiat series, and this is the series' first 1/1. The digital artwork is paired with a physical 1/1 magnetic 3D portrait whose individual pieces can be moved around and customized.",
@@ -1081,7 +1086,11 @@ const SR_EXTRAS: Record<string, Partial<Release>> = {
   '0xb932a70a57673d89f4acffbe830e8ed7f75fb9e0:25441': {
     slug: 'proof-of-work-genesis',
     badge: 'Bonhams',
-    links: [{ label: 'Bonhams lot', url: BONHAMS_POW }],
+    provenance: [{
+      label: 'Bonhams — Bonhams & SuperRare: CryptOGs (2021)',
+      href: BONHAMS_POW,
+      ariaLabel: 'Proof of Work — Genesis at Bonhams, Bonhams & SuperRare: CryptOGs',
+    }],
     notes: 'Conceived 2018, minted June 16, 2021.',
     related: { id: 'rare-proof-of-work-2018', label: 'The burned 2018 original on R.A.R.E. Art Labs' },
   },
