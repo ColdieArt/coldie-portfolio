@@ -8,7 +8,7 @@ import mediaJson from './media.json';
 import marketJson from './market.json';
 import { works } from './works';
 import { sortedReleases, releaseYear, formatReleaseDate, KIND_LABEL, bySeriesOrder, seriesOf, withCovers, withManualListings, diamondHold, type Release } from './releases';
-import { COLLECTOR_GROUPS } from './collectors';
+import { COLLECTOR_GROUPS, ARTIST_DIAMOND } from './collectors';
 
 type Price = { amount: number; symbol: string; usd: number | null };
 type Owner = { address: string; name: string | null; username: string | null; ens: string | null; artist: boolean };
@@ -78,7 +78,7 @@ export type GalleryItem = ReturnType<typeof toItem>;
 function toItem(r: Release) {
   const mk = market[r.id];
   const o = mk?.owner;
-  const diamondItem = o && !o.artist ? diamondHold(mk?.heldSince) : null;
+  const diamondItem = o && (!o.artist || ARTIST_DIAMOND.has(r.id)) ? diamondHold(mk?.heldSince) : null;
   const [w, h] = sizes[r.id] ?? [480, 480];
   const desc = r.description ?? mk?.description ?? (r.slug ? captions.get(r.slug) : undefined) ?? null;
   return {

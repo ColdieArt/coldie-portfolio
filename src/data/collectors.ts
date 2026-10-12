@@ -3,6 +3,13 @@
 // the canonical one (use the current holder), the label is how they're shown, and
 // filtering by any member wallet surfaces the whole group. Add groups as you learn them
 // (addresses lowercase).
+// Pieces the artist bought back from a collector and still holds. Normally an
+// artist-held piece shows no collector badge, but a buy-back is a real diamond-hands
+// hold, so these carry one (dated from the buy-back). Map release id -> true.
+export const ARTIST_DIAMOND = new Set<string>([
+  'sr-41a322-501', // Vitalik Buterin V01 — bought back from vk_crypto for 17.5 ETH, 2021-02-08
+]);
+
 export const COLLECTOR_GROUPS: { label: string; wallets: string[] }[] = [
   { label: 'j1mmy', wallets: ['0x8ad272ac86c6c88683d9a60eb8ed57e6c304bb0c', '0xf22742f06e4f6d68a8d0b49b9f270bb56affab38'] },
   { label: 'snow', wallets: ['0xa362a9676db12606d339d10433c1af3618bca1d4', '0x6b3ab283947afb581a461770d7c52d47b2624788'] },

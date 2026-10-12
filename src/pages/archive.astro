@@ -23,7 +23,7 @@ import {
   diamondHold,
   type Release,
 } from '../data/releases';
-import { COLLECTOR_GROUPS } from '../data/collectors';
+import { COLLECTOR_GROUPS, ARTIST_DIAMOND } from '../data/collectors';
 
 const desc = `Coldie has minted crypto art on Ethereum since May 2018, starting with the first stereoscopic artwork on a blockchain. Explore all ${sortedReleases.length} releases, their collectors and sales.`;
 
@@ -519,7 +519,7 @@ const searchText = (r: Release) =>
                         )}
                       </p>
                     )}
-                    {market[r.id]?.owner && !market[r.id].owner!.artist && (() => {
+                    {market[r.id]?.owner && (!market[r.id].owner!.artist || ARTIST_DIAMOND.has(r.id)) && (() => {
                       const d = diamondHold(market[r.id].heldSince);
                       if (!d) return null;
                       const genesis = releaseYear(r) === 2018 && 2019 >= d.sinceYear;
