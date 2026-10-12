@@ -1187,6 +1187,29 @@ export function formatReleaseDate(date: string | null | undefined): string {
   return d ? `${mon} ${Number(d)}, ${y}` : `${mon} ${y}`;
 }
 
+/**
+ * Diamond-hands tier for a collector's tenure. `heldSince` is the date of the
+ * token's most recent sale (see market.json / fetch-market); only a sale resets
+ * the clock, so a holder who moved wallets still reads as long-held. Returns null
+ * below one year (no badge) or when there's no date.
+ */
+export function diamondHold(heldSince: string | null | undefined, now: Date = new Date()) {
+  if (!heldSince) return null;
+  const since = new Date(`${heldSince}T00:00:00Z`);
+  if (Number.isNaN(+since)) return null;
+  const years = (now.getTime() - since.getTime()) / (365.25 * 24 * 3600 * 1000);
+  if (years < 1) return null;
+  const tier = years >= 5 ? 3 : years >= 3 ? 2 : 1;
+  const whole = Math.floor(years);
+  return {
+    years: whole,
+    tier,
+    gems: '💎'.repeat(tier),
+    sinceYear: Number(heldSince.slice(0, 4)),
+    label: `Held ${whole}+ yr${whole === 1 ? '' : 's'}`,
+  };
+}
+
 export const KIND_LABEL: Record<ReleaseKind, string> = {
   '1/1': '1/1',
   edition: 'Edition',

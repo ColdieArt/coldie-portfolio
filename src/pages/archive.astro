@@ -20,6 +20,7 @@ import {
   seriesOf,
   withCovers,
   withManualListings,
+  diamondHold,
   type Release,
 } from '../data/releases';
 
@@ -68,6 +69,8 @@ type Market = {
   description: string | null;
   lastSale: (Price & { date?: string | null }) | null;
   listing: (Price & { kind: 'buy' | 'floor' | 'reserve' | 'auction' }) | null;
+  heldSince?: string | null;
+  heldVia?: string | null;
 };
 const market = withManualListings(marketJson.releases as Record<string, Market>);
 const marketAsOf = formatReleaseDate(marketJson.fetchedAt);
@@ -431,6 +434,15 @@ const searchText = (r: Release) =>
                         {ownerLabel(market[r.id].owner!) !== shortAddr(market[r.id].owner!.address) && (
                           <span class="rel__addr">{shortAddr(market[r.id].owner!.address)}</span>
                         )}
+                        {!market[r.id].owner!.artist && (() => {
+                          const d = diamondHold(market[r.id].heldSince);
+                          return d && (
+                            <span class={`rel__diamond rel__diamond--t${d.tier}`} title={`Held since ${formatReleaseDate(market[r.id].heldSince)} — only a sale resets the clock`}>
+                              <span class="rel__diamond-gems" aria-hidden="true">{d.gems}</span>
+                              <span class="rel__diamond-txt">{d.label}</span>
+                            </span>
+                          );
+                        })()}
                       </p>
                     )}
                     {r.notes && <p class="rel__notes small muted">{r.notes}</p>}
@@ -753,6 +765,19 @@ const searchText = (r: Release) =>
   .rel__colltag button { padding: 0 0.2rem; background: none; border: 0; cursor: pointer; color: var(--ink-mute); font-size: 1rem; line-height: 1; }
   .rel__colltag button:hover { color: var(--ink); }
   .rel__addr { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.72rem; color: var(--ink-mute); }
+  /* Diamond-hands badge: a collector's tenure (last sale → now). Tiers 1/3/5yr+. */
+  .rel__diamond {
+    display: inline-flex; align-items: center; gap: 0.3em;
+    padding: 0.1em 0.5em 0.14em; border-radius: 999px;
+    font-family: var(--type); font-size: 0.64rem; letter-spacing: 0.06em; text-transform: uppercase;
+    white-space: nowrap; cursor: help;
+    color: var(--cyan);
+    background: color-mix(in srgb, var(--cyan) 11%, transparent);
+    border: 1px solid color-mix(in srgb, var(--cyan) 32%, transparent);
+  }
+  .rel__diamond-gems { font-size: 0.74em; letter-spacing: -0.05em; filter: saturate(1.15); }
+  .rel__diamond--t2 { color: #9aa7ff; background: color-mix(in srgb, #9aa7ff 12%, transparent); border-color: color-mix(in srgb, #9aa7ff 34%, transparent); }
+  .rel__diamond--t3 { color: #e9c7ff; background: color-mix(in srgb, #e9c7ff 13%, transparent); border-color: color-mix(in srgb, #e9c7ff 38%, transparent); }
   .rel__body { min-width: 0; }
   .rel__thumb {
     position: relative; container-type: inline-size;
