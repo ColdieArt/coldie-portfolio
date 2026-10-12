@@ -263,13 +263,32 @@ for (const r of releases) {
 }
 
 // ── Held since (diamond hands) ───────────────────────────────
-// Attach a last-sale date to every 1/1: SuperRare pieces from their event history,
+// Attach a "held since" date to every 1/1: SuperRare pieces from their event history,
 // OpenSea pieces from the item's last-sale date (which already excludes transfers).
 // Non-critical — a failure keeps the previous value and never aborts the run.
+//
+// Manual overrides for 1/1s we can't fetch automatically — off-platform pieces on
+// Transient, Gamma ordinals, Normies or RareArt — or any outlier to correct by hand.
+// Map a release id to the date the current collector acquired it ('YYYY-MM-DD').
+const MANUAL_HELD = {
+  // 'en-marcha': '2024-06-01',
+  // 'saylor-not-one-satoshi-1of1': '2024-...',
+  // 'normie-3d': '2026-...',
+  // 'buffett-filthy-fiat-ordinal': '...',
+  // 'gandinsky-3d-1': '...',
+  // 'gandinsky-3d-2': '...',
+  // 'buffett-decentral-eyes-v03': '...',
+  // 'buffett-decentral-eyes-v04': '...',
+  // 'pascal-gauthier-coindesk': '...',
+  // 'rare-pyramid-on-mars': '...',
+  // 'rare-underground-energy': '...',
+  // 'rare-bitcoin-split-cut': '...',
+};
 let heldCount = 0;
 for (const r of releases) {
   const m = out[r.id];
   if (!m || !(r.kind === '1/1' && (r.supply ?? 1) === 1)) continue;
+  if (MANUAL_HELD[r.id]) { m.heldSince = MANUAL_HELD[r.id]; m.heldVia = 'manual'; heldCount++; continue; }
   try {
     if (r.source === 'superrare' && r.contract && r.tokenId) {
       const h = await superrareHeldSince(r.contract, r.tokenId, m.owner);
