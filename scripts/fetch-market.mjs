@@ -87,6 +87,28 @@ function fromSuperRare(a) {
   };
 }
 
+// "Held since" (diamond hands): the date of the most recent SALE of a 1/1. Per the
+// rule, only a sale resets the clock — plain wallet-to-wallet transfers (e.g. moving
+// to a vault) do not. SuperRare's artwork detail endpoint returns the full typed
+// event history, so we take the newest sale-type event. Returns null if never sold.
+const SALE_EVENTS = new Set([
+  'TAKE_LISTING', 'TAKE_OFFER', 'ACCEPT_OFFER', 'ACCEPT_BID',
+  'SETTLE_AUCTION', 'AUCTION_SETTLED', 'SOLD', 'SALE',
+]);
+async function superrareHeldSince(contract, tokenId) {
+  const input = encodeURIComponent(JSON.stringify({ 0: { json: { universalTokenId: `1-${contract.toLowerCase()}-${tokenId}` } } }));
+  const res = await fetch(`https://superrare.com/api/trpc/artwork.getAdpData?batch=1&input=${input}`, {
+    headers: UA, signal: AbortSignal.timeout(45000),
+  });
+  if (!res.ok) throw new Error(`${res.status}`);
+  const events = (await res.json())[0]?.result?.data?.json?.events?.events;
+  if (!Array.isArray(events)) throw new Error('no event history');
+  const sale = events
+    .filter((e) => SALE_EVENTS.has(e.eventType) && e.createdAt)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
+  return sale ? { heldSince: sale.createdAt.slice(0, 10), heldVia: sale.eventType } : null;
+}
+
 // ── OpenSea ──────────────────────────────────────────────────
 
 const MARKER = '(window[Symbol.for("urql_transport")] ??= []).push(';
@@ -218,6 +240,30 @@ for (const r of releases) {
   if (m && !(r.kind === '1/1' && (r.supply ?? 1) === 1)) delete m.owner;
 }
 
+// ── Held since (diamond hands) ───────────────────────────────
+// Attach a last-sale date to every 1/1: SuperRare pieces from their event history,
+// OpenSea pieces from the item's last-sale date (which already excludes transfers).
+// Non-critical — a failure keeps the previous value and never aborts the run.
+let heldCount = 0;
+for (const r of releases) {
+  const m = out[r.id];
+  if (!m || !(r.kind === '1/1' && (r.supply ?? 1) === 1)) continue;
+  try {
+    if (r.source === 'superrare' && r.contract && r.tokenId) {
+      const h = await superrareHeldSince(r.contract, r.tokenId);
+      if (h) { m.heldSince = h.heldSince; m.heldVia = h.heldVia; heldCount++; }
+      await sleep(400);
+    } else if (m.lastSale?.date) {
+      m.heldSince = m.lastSale.date;
+      m.heldVia = 'sale';
+      heldCount++;
+    }
+  } catch (e) {
+    failed.push(`held ${r.id}: ${e.message}`);
+    if (previous[r.id]?.heldSince) { m.heldSince = previous[r.id].heldSince; m.heldVia = previous[r.id].heldVia; }
+  }
+}
+
 // ── ENS (reverse records, batched) ───────────────────────────
 const REVERSE_RECORDS = '0x3671aE578E63FdF66ad4F3E12CC0c0d71Ac7510C';
 async function ensNames(addresses) {
@@ -266,6 +312,7 @@ const n = (f) => Object.values(out).filter(f).length;
 console.log(
   `\n${Object.keys(out).length} releases · ${n((m) => m.description)} descriptions · ` +
     `${n((m) => m.lastSale)} last sales · ${n((m) => m.listing)} listed · ` +
-    `${n((m) => m.owner)} 1/1 owners (${n((m) => m.owner?.ens)} with ENS)`
+    `${n((m) => m.owner)} 1/1 owners (${n((m) => m.owner?.ens)} with ENS) · ` +
+    `${n((m) => m.heldSince)} held-since dates`
 );
 if (failed.length) console.log('Failed:\n  ' + failed.join('\n  '));

@@ -526,7 +526,9 @@
         "symbol": "ETH",
         "usd": 29961
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-02-08",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-606": {
       "owner": {
@@ -542,7 +544,9 @@
         "symbol": "ETH",
         "usd": 748
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-11-13",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-618": {
       "owner": {
@@ -558,7 +562,9 @@
         "symbol": "ETH",
         "usd": 157204
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2024-03-28",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-645": {
       "owner": {
@@ -579,7 +585,9 @@
         "amount": 1337,
         "symbol": "ETH",
         "usd": 3283351
-      }
+      },
+      "heldSince": "2019-05-17",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-709": {
       "owner": {
@@ -595,7 +603,9 @@
         "symbol": "ETH",
         "usd": 93
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-04-22",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-726": {
       "owner": {
@@ -616,7 +626,9 @@
         "amount": 50,
         "symbol": "ETH",
         "usd": 122788
-      }
+      },
+      "heldSince": "2018-11-13",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-740": {
       "owner": {
@@ -632,7 +644,9 @@
         "symbol": "ETH",
         "usd": 23
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2018-10-09",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-776": {
       "owner": {
@@ -648,7 +662,9 @@
         "symbol": "ETH",
         "usd": 29
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2018-10-13",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-777": {
       "owner": {
@@ -664,7 +680,9 @@
         "symbol": "ETH",
         "usd": 1563
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-11-15",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-878": {
       "owner": {
@@ -680,7 +698,9 @@
         "symbol": "ETH",
         "usd": 56
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-11-14",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-879": {
       "owner": {
@@ -696,7 +716,9 @@
         "symbol": "ETH",
         "usd": 31
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2018-11-05",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-929": {
       "owner": {
@@ -712,7 +734,9 @@
         "symbol": "ETH",
         "usd": 34451
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-05-01",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-934": {
       "owner": {
@@ -728,7 +752,9 @@
         "symbol": "ETH",
         "usd": 421393
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-08-26",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-1005": {
       "owner": {
@@ -744,7 +770,9 @@
         "symbol": "ETH",
         "usd": 73
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-01-03",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-1006": {
       "owner": {
@@ -760,7 +788,9 @@
         "symbol": "ETH",
         "usd": 73
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-01-03",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-1007": {
       "owner": {
@@ -776,7 +806,9 @@
         "symbol": "ETH",
         "usd": 18748
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-01-17",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-1036": {
       "owner": {
@@ -792,7 +824,9 @@
         "symbol": "ETH",
         "usd": 618
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-05-28",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-1063": {
       "owner": {
@@ -808,7 +842,9 @@
         "symbol": "ETH",
         "usd": 103
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-03-06",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-1098": {
       "owner": {
@@ -824,7 +860,9 @@
         "symbol": "ETH",
         "usd": 1416
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-09-29",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-1117": {
       "owner": {
@@ -840,7 +878,9 @@
         "symbol": "ETH",
         "usd": 1
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-01-11",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-1119": {
       "owner": {
@@ -856,7 +896,9 @@
         "symbol": "ETH",
         "usd": 11484
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-03-14",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-1120": {
       "owner": {
@@ -872,7 +914,9 @@
         "symbol": "ETH",
         "usd": 22
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-01-27",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-1121": {
       "owner": {
@@ -888,7 +932,9 @@
         "symbol": "ETH",
         "usd": 28
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-09-16",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-1132": {
       "owner": {
@@ -904,7 +950,9 @@
         "symbol": "ETH",
         "usd": 2729
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-02-13",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-1201": {
       "owner": {
@@ -920,7 +968,9 @@
         "symbol": "ETH",
         "usd": 19152
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-03-25",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-1324": {
       "owner": {
@@ -936,7 +986,9 @@
         "symbol": "ETH",
         "usd": 151
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-01-08",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-1373": {
       "owner": {
@@ -952,7 +1004,9 @@
         "symbol": "ETH",
         "usd": 1834
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-02-21",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-1381": {
       "owner": {
@@ -968,7 +1022,9 @@
         "symbol": "ETH",
         "usd": 1002
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-12-27",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-1410": {
       "owner": {
@@ -984,7 +1040,9 @@
         "symbol": "ETH",
         "usd": 3544
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-10-15",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-1504": {
       "owner": {
@@ -1000,7 +1058,9 @@
         "symbol": "ETH",
         "usd": 2348
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-04-15",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-1510": {
       "owner": {
@@ -1016,7 +1076,9 @@
         "symbol": "ETH",
         "usd": 137
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-04-08",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-1641": {
       "owner": {
@@ -1037,7 +1099,9 @@
         "amount": 500,
         "symbol": "ETH",
         "usd": 1227880
-      }
+      },
+      "heldSince": "2019-09-07",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-1690": {
       "owner": {
@@ -1053,7 +1117,9 @@
         "symbol": "ETH",
         "usd": 68
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-03-07",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-1790": {
       "owner": {
@@ -1074,7 +1140,9 @@
         "amount": 66.666,
         "symbol": "ETH",
         "usd": 163716
-      }
+      },
+      "heldSince": "2021-03-24",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-1925": {
       "owner": {
@@ -1090,7 +1158,9 @@
         "symbol": "ETH",
         "usd": 7329
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-02-27",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-1942": {
       "owner": {
@@ -1106,7 +1176,9 @@
         "symbol": "ETH",
         "usd": 1109
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-11-17",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-1990": {
       "owner": {
@@ -1127,7 +1199,9 @@
         "amount": 550,
         "symbol": "ETH",
         "usd": 1350668
-      }
+      },
+      "heldSince": "2021-02-14",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-2149": {
       "owner": {
@@ -1143,7 +1217,9 @@
         "symbol": "ETH",
         "usd": 372254
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-08-13",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-2239": {
       "owner": {
@@ -1159,7 +1235,9 @@
         "symbol": "ETH",
         "usd": 63789
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-03-25",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-2406": {
       "owner": {
@@ -1243,7 +1321,9 @@
         "symbol": "ETH",
         "usd": 242386
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2022-04-09",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-2692": {
       "owner": {
@@ -1259,7 +1339,9 @@
         "symbol": "ETH",
         "usd": 44965
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-03-11",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-2767": {
       "owner": {
@@ -1275,7 +1357,9 @@
         "symbol": "ETH",
         "usd": 13448
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2024-12-18",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-2768": {
       "owner": {
@@ -1291,7 +1375,9 @@
         "symbol": "ETH",
         "usd": 280
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-02-10",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-2878": {
       "owner": {
@@ -1307,7 +1393,9 @@
         "symbol": "ETH",
         "usd": 90
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-09-10",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-2969": {
       "owner": {
@@ -1323,7 +1411,9 @@
         "symbol": "ETH",
         "usd": 111
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-05-02",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-3002": {
       "owner": {
@@ -1339,7 +1429,9 @@
         "symbol": "ETH",
         "usd": 39891
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-03-25",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-3386": {
       "owner": {
@@ -1355,7 +1447,9 @@
         "symbol": "ETH",
         "usd": 273
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-06-20",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-3422": {
       "owner": {
@@ -1371,7 +1465,9 @@
         "symbol": "ETH",
         "usd": 28843
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-02-16",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-3448": {
       "owner": {
@@ -1404,7 +1500,9 @@
         "amount": 550,
         "symbol": "ETH",
         "usd": 1023776
-      }
+      },
+      "heldSince": "2019-11-13",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-3600": {
       "owner": {
@@ -1420,7 +1518,9 @@
         "symbol": "ETH",
         "usd": 133
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-10-17",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-3678": {
       "owner": {
@@ -1436,7 +1536,9 @@
         "symbol": "ETH",
         "usd": 371
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-11-13",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-3776": {
       "owner": {
@@ -1452,7 +1554,9 @@
         "symbol": "ETH",
         "usd": 203158
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2024-04-24",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-3804": {
       "owner": {
@@ -1468,7 +1572,9 @@
         "symbol": "ETH",
         "usd": 555
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-11-17",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-41a322-4132": {
       "owner": {
@@ -1484,7 +1590,9 @@
         "symbol": "ETH",
         "usd": 299731
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-10-01",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-4171": {
       "owner": {
@@ -1500,7 +1608,9 @@
         "symbol": "ETH",
         "usd": 253
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-09-09",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-4241": {
       "owner": {
@@ -1516,7 +1626,9 @@
         "symbol": "ETH",
         "usd": 250403
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-08-03",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-41a322-4362": {
       "owner": {
@@ -1532,7 +1644,9 @@
         "symbol": "ETH",
         "usd": 989
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-09-04",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-4612": {
       "owner": {
@@ -1548,7 +1662,9 @@
         "symbol": "ETH",
         "usd": 299
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-09-25",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-4758": {
       "owner": {
@@ -1564,7 +1680,9 @@
         "symbol": "ETH",
         "usd": 54876
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2022-02-13",
+      "heldVia": "SETTLE_AUCTION"
     },
     "sr-b932a7-4759": {
       "owner": {
@@ -1580,7 +1698,9 @@
         "symbol": "ETH",
         "usd": 44919
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2022-07-20",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-b932a7-4818": {
       "owner": {
@@ -1596,7 +1716,9 @@
         "symbol": "ETH",
         "usd": 71762
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-03-25",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-b932a7-4841": {
       "owner": {
@@ -1612,7 +1734,9 @@
         "symbol": "ETH",
         "usd": 257
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-10-14",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-4942": {
       "owner": {
@@ -1628,7 +1752,9 @@
         "symbol": "ETH",
         "usd": 161
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-10-25",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-4960": {
       "owner": {
@@ -1644,7 +1770,9 @@
         "symbol": "ETH",
         "usd": 10658
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-03-15",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-b932a7-4982": {
       "owner": {
@@ -1660,7 +1788,9 @@
         "symbol": "ETH",
         "usd": 57
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-11-06",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-b932a7-5001": {
       "owner": {
@@ -1676,7 +1806,9 @@
         "symbol": "ETH",
         "usd": 120483
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-07-06",
+      "heldVia": "SETTLE_AUCTION"
     },
     "sr-b932a7-5335": {
       "owner": {
@@ -1692,7 +1824,9 @@
         "symbol": "ETH",
         "usd": 847
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-12-16",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-5411": {
       "owner": {
@@ -1713,7 +1847,9 @@
         "amount": 404,
         "symbol": "ETH",
         "usd": 753153
-      }
+      },
+      "heldSince": "2020-08-27",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-b932a7-5524": {
       "owner": {
@@ -1729,7 +1865,9 @@
         "symbol": "ETH",
         "usd": 428
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-12-15",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-5839": {
       "owner": {
@@ -1745,7 +1883,9 @@
         "symbol": "ETH",
         "usd": 150
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-12-09",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-6111": {
       "owner": {
@@ -1761,7 +1901,9 @@
         "symbol": "ETH",
         "usd": 385
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2019-12-21",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-6466": {
       "owner": {
@@ -1777,7 +1919,9 @@
         "symbol": "ETH",
         "usd": 4563
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2026-05-01",
+      "heldVia": "SETTLE_AUCTION"
     },
     "sr-b932a7-6548": {
       "owner": {
@@ -1793,7 +1937,9 @@
         "symbol": "ETH",
         "usd": 4107
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2026-05-01",
+      "heldVia": "SETTLE_AUCTION"
     },
     "sr-b932a7-6738": {
       "owner": {
@@ -1809,7 +1955,9 @@
         "symbol": "ETH",
         "usd": 4563
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2026-05-01",
+      "heldVia": "SETTLE_AUCTION"
     },
     "sr-b932a7-7168": {
       "owner": {
@@ -1825,7 +1973,9 @@
         "symbol": "ETH",
         "usd": 6701
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-01-23",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-7375": {
       "owner": {
@@ -1841,7 +1991,9 @@
         "symbol": "ETH",
         "usd": 1395
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-02-05",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-7972": {
       "owner": {
@@ -1857,7 +2009,9 @@
         "symbol": "ETH",
         "usd": 449
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-02-20",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-7973": {
       "owner": {
@@ -1873,7 +2027,9 @@
         "symbol": "ETH",
         "usd": 1287
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-02-20",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-7983": {
       "owner": {
@@ -1889,7 +2045,9 @@
         "symbol": "ETH",
         "usd": 261
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-02-20",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-8005": {
       "owner": {
@@ -1905,7 +2063,9 @@
         "symbol": "ETH",
         "usd": 519
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-02-20",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-8013": {
       "owner": {
@@ -1921,7 +2081,9 @@
         "symbol": "ETH",
         "usd": 260
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-02-20",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-8617": {
       "owner": {
@@ -1937,7 +2099,9 @@
         "symbol": "ETH",
         "usd": 2165
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-03-09",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-8750": {
       "owner": {
@@ -1953,7 +2117,9 @@
         "symbol": "ETH",
         "usd": 475
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-03-17",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-9343": {
       "owner": {
@@ -1969,7 +2135,9 @@
         "symbol": "ETH",
         "usd": 18880
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-10-30",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-9933": {
       "owner": {
@@ -1985,7 +2153,9 @@
         "symbol": "ETH",
         "usd": 2898
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-05-07",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-10251": {
       "owner": {
@@ -2001,7 +2171,9 @@
         "symbol": "ETH",
         "usd": 3155
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-05-21",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-10934": {
       "owner": {
@@ -2022,7 +2194,9 @@
         "amount": 21,
         "symbol": "ETH",
         "usd": 58684
-      }
+      },
+      "heldSince": "2020-07-16",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-11358": {
       "owner": {
@@ -2038,7 +2212,9 @@
         "symbol": "ETH",
         "usd": 1907
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-07-16",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-12122": {
       "owner": {
@@ -2054,7 +2230,9 @@
         "symbol": "ETH",
         "usd": 129187
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2024-03-27",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-12380": {
       "owner": {
@@ -2070,7 +2248,9 @@
         "symbol": "ETH",
         "usd": 8594
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-08-14",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-12517": {
       "owner": {
@@ -2086,7 +2266,9 @@
         "symbol": "ETH",
         "usd": 88665
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-02-23",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-b932a7-13146": {
       "owner": {
@@ -2114,7 +2296,9 @@
         "symbol": "ETH",
         "usd": 146412
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2022-08-09",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-13545": {
       "owner": {
@@ -2130,7 +2314,9 @@
         "symbol": "ETH",
         "usd": 3016
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-09-12",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-14461": {
       "owner": {
@@ -2146,7 +2332,9 @@
         "symbol": "ETH",
         "usd": 7065
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-11-30",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-16046": {
       "owner": {
@@ -2162,7 +2350,9 @@
         "symbol": "ETH",
         "usd": 11116
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-11-29",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-16980": {
       "owner": {
@@ -2178,7 +2368,9 @@
         "symbol": "ETH",
         "usd": 10952
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-12-08",
+      "heldVia": "SETTLE_AUCTION"
     },
     "sr-b932a7-17296": {
       "owner": {
@@ -2194,7 +2386,9 @@
         "symbol": "ETH",
         "usd": 6162
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-12-21",
+      "heldVia": "SETTLE_AUCTION"
     },
     "sr-b932a7-17479": {
       "owner": {
@@ -2210,7 +2404,9 @@
         "symbol": "ETH",
         "usd": 5044
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-12-23",
+      "heldVia": "SETTLE_AUCTION"
     },
     "sr-b932a7-17485": {
       "owner": {
@@ -2226,7 +2422,9 @@
         "symbol": "ETH",
         "usd": 5215
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-12-22",
+      "heldVia": "SETTLE_AUCTION"
     },
     "sr-b932a7-17491": {
       "owner": {
@@ -2242,7 +2440,9 @@
         "symbol": "ETH",
         "usd": 5215
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-12-22",
+      "heldVia": "SETTLE_AUCTION"
     },
     "sr-b932a7-17789": {
       "owner": {
@@ -2258,7 +2458,9 @@
         "symbol": "ETH",
         "usd": 22065
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2024-07-16",
+      "heldVia": "TAKE_OFFER"
     },
     "sr-b932a7-18295": {
       "owner": {
@@ -2274,7 +2476,9 @@
         "symbol": "ETH",
         "usd": 30505
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-01-16",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-b932a7-18843": {
       "owner": {
@@ -2295,7 +2499,9 @@
         "amount": 40,
         "symbol": "ETH",
         "usd": 98230
-      }
+      },
+      "heldSince": "2021-02-08",
+      "heldVia": "SETTLE_AUCTION"
     },
     "sr-b932a7-20200": {
       "owner": {
@@ -2311,7 +2517,9 @@
         "symbol": "ETH",
         "usd": 21708
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-07-24",
+      "heldVia": "TAKE_LISTING"
     },
     "sr-b932a7-23151": {
       "owner": {
@@ -2327,7 +2535,9 @@
         "symbol": "ETH",
         "usd": 6723
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2026-09-29",
+      "heldVia": "SETTLE_AUCTION"
     },
     "sr-b932a7-25441": {
       "owner": {
@@ -2355,7 +2565,9 @@
         "symbol": "ETH",
         "usd": 213215
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-10-18",
+      "heldVia": "SETTLE_AUCTION"
     },
     "sr-b932a7-29660": {
       "owner": {
@@ -2371,7 +2583,9 @@
         "symbol": "ETH",
         "usd": 111185
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-10-24",
+      "heldVia": "SETTLE_AUCTION"
     },
     "sr-b932a7-30778": {
       "owner": {
@@ -2387,7 +2601,9 @@
         "symbol": "ETH",
         "usd": 779149
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-12-06",
+      "heldVia": "SETTLE_AUCTION"
     },
     "sr-9f65f8-75": {
       "owner": {
@@ -2420,7 +2636,9 @@
         "symbol": "ETH",
         "usd": 56464
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2022-05-02",
+      "heldVia": "SETTLE_AUCTION"
     },
     "sr-b932a7-37869": {
       "owner": {
