@@ -545,7 +545,9 @@ const allReleases: Release[] = [
     url: 'https://opensea.io/collection/decentraleyesmashup-by-coldie',
     contract: '0xc143bbfcDBdBEd6d454803804752a064A622C1F3',
     salesBot: true,
-    notes: 'Sheet note: "1000 = 1/1".',
+    description:
+      'A generative spin on the “Decentral Eyes” portrait series, this mashup collection remixes many of Coldie’s favorite subjects in 623 unique portraits with layers from the likes of Vitalik Buterin, Edward Snowden, Warren Buffett, and more. 100 editions were burned as part of the DEyes Ascended collection (2023), leaving the series at 523.',
+    notes: 'Genesis ASYNC Blueprints release, alongside XCOPY’s “Grifters” and Alotta Money’s “Thousand Headers Coterie.”',
     source: 'sheet:editions',
   },
 
