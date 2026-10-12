@@ -271,24 +271,26 @@ for (const r of releases) {
 // Transient, Gamma ordinals, Normies or RareArt — or any outlier to correct by hand.
 // Map a release id to the date the current collector acquired it ('YYYY-MM-DD').
 const MANUAL_HELD = {
-  // 'en-marcha': '2024-06-01',
-  // 'saylor-not-one-satoshi-1of1': '2024-...',
-  // 'normie-3d': '2026-...',
-  // 'buffett-filthy-fiat-ordinal': '...',
-  // 'gandinsky-3d-1': '...',
-  // 'gandinsky-3d-2': '...',
-  // 'buffett-decentral-eyes-v03': '...',
-  // 'buffett-decentral-eyes-v04': '...',
-  // 'pascal-gauthier-coindesk': '...',
-  // 'rare-pyramid-on-mars': '...',
-  // 'rare-underground-energy': '...',
-  // 'rare-bitcoin-split-cut': '...',
+  'gandinsky-3d-1': '2021-04-03',
+  'gandinsky-3d-2': '2020-04-26',
+  'buffett-decentral-eyes-v03': '2020-09-23',
+  'buffett-decentral-eyes-v04': '2020-09-23',
+  'buffett-filthy-fiat-ordinal': '2025-12-18',
+  // Intentionally undated (no collector badge): vitalik-variant-03 & saylor-not-one-satoshi-1of1
+  // (held by the artist); rare-pyramid-on-mars, rare-underground-energy & en-marcha (editions).
 };
 let heldCount = 0;
 for (const r of releases) {
+  if (!(r.kind === '1/1' && (r.supply ?? 1) === 1)) continue;
+  if (MANUAL_HELD[r.id]) {
+    const m = (out[r.id] ??= { owner: null, description: null, lastSale: null, listing: null });
+    m.heldSince = MANUAL_HELD[r.id];
+    m.heldVia = 'manual';
+    heldCount++;
+    continue;
+  }
   const m = out[r.id];
-  if (!m || !(r.kind === '1/1' && (r.supply ?? 1) === 1)) continue;
-  if (MANUAL_HELD[r.id]) { m.heldSince = MANUAL_HELD[r.id]; m.heldVia = 'manual'; heldCount++; continue; }
+  if (!m) continue;
   try {
     if (r.source === 'superrare' && r.contract && r.tokenId) {
       const h = await superrareHeldSince(r.contract, r.tokenId, m.owner);

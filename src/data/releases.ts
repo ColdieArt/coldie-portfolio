@@ -314,6 +314,7 @@ const allReleases: Release[] = [
     id: 'rare-bitcoin-split-cut',
     title: 'Bitcoin Split-Cut Shirt & Artwork Combo - 001',
     date: '2019-06-24',
+    hidden: true, // hidden from the archive database and grid by request
     kind: '1/1',
     supply: 1,
     platform: 'R.A.R.E. Art Labs',

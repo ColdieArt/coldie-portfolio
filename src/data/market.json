@@ -43,7 +43,9 @@
         "usd": 60328,
         "date": null
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2021-04-03",
+      "heldVia": "manual"
     },
     "gandinsky-3d-2": {
       "owner": {
@@ -60,7 +62,9 @@
         "usd": 776,
         "date": null
       },
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-04-26",
+      "heldVia": "manual"
     },
     "gandinsky-3d-3": {
       "owner": {
@@ -114,7 +118,9 @@
       },
       "description": "Warren Buffett – Decentral Eyes – Variant 03 by Coldie",
       "lastSale": null,
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-09-23",
+      "heldVia": "manual"
     },
     "buffett-decentral-eyes-v04": {
       "owner": {
@@ -126,7 +132,9 @@
       },
       "description": "Warren Buffett – Decentral Eyes – Variant 04 by Coldie",
       "lastSale": null,
-      "listing": null
+      "listing": null,
+      "heldSince": "2020-09-23",
+      "heldVia": "manual"
     },
     "buffett-decentral-eyes-v05": {
       "description": "Warren Buffett – Decentral Eyes – Variant 05 by Coldie",
@@ -2787,6 +2795,14 @@
       "listing": null,
       "heldSince": "2025-01-23",
       "heldVia": "TRANSFER_NFT"
+    },
+    "buffett-filthy-fiat-ordinal": {
+      "owner": null,
+      "description": null,
+      "lastSale": null,
+      "listing": null,
+      "heldSince": "2025-12-18",
+      "heldVia": "manual"
     }
   }
 }
