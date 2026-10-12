@@ -30,6 +30,32 @@ const SERIES = 'Decentral Eyes';
 const PATH = '/series/decentral-eyes';
 const works = sortedReleases.filter((r) => r.series === SERIES);
 
+// ── Glossary deep-links ───────────────────────────────────────
+// Link the first mention of each 3D term in the technique prose to its entry in
+// the /faq glossary (anchors defined there). Longest phrase first so "kinetic 3D
+// collage" wins over a bare "kinetic". Each term links once across the section.
+const GLOSSARY_LINKS: [RegExp, string][] = [
+  [/\bkinetic 3D collage\b/i, 'kinetic-3d-collage'],
+  [/\bstereoscopic 3D\b/i, 'stereoscopy'],
+  [/\banaglyph\b/i, 'anaglyph-3d'],
+  [/\bparallax\b/i, 'parallax'],
+];
+const escHtml = (s: string) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+function linkGlossary(text: string, used: Set<string>): string {
+  let out = escHtml(text);
+  for (const [re, slug] of GLOSSARY_LINKS) {
+    if (used.has(slug)) continue;
+    out = out.replace(re, (m) => {
+      used.add(slug);
+      return `<a class="de-glosslink" href="/faq#term-${slug}">${m}</a>`;
+    });
+  }
+  return out;
+}
+const techniqueUsed = new Set<string>();
+const techniqueHtml = (copy.technique ?? []).map((p) => linkGlossary(p, techniqueUsed));
+
 // ── Derived facts ─────────────────────────────────────────────
 const years = works.map(releaseYear).filter((y): y is number => y != null);
 const firstYear = Math.min(...years);
@@ -296,7 +322,7 @@ const FILE = 'src/data/copy/decentral-eyes.ts';
         <div>
           <h2 class="de-h2">How a portrait is made</h2>
           {copy.technique
-            ? copy.technique.map((p) => <p class="de-prose">{p}</p>)
+            ? techniqueHtml.map((html) => <p class="de-prose" set:html={html} />)
             : <CopySlot
                 label="Technique"
                 length="1–2 paragraphs · 80–150 words"
@@ -459,6 +485,18 @@ const FILE = 'src/data/copy/decentral-eyes.ts';
   .de-sechead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 1.5rem; margin-bottom: 1.1rem; }
   .de-sechead .de-h2 { margin: 0; }
   .de-prose { font-family: var(--serif); font-size: 1.08rem; line-height: 1.65; max-width: 62ch; margin: 0 0 1em; }
+  /* Glossary deep-links sit in prose where the brand color tokens are remapped
+     low-contrast, so the affordance is built from currentColor to stay readable. */
+  .de-glosslink {
+    color: inherit; text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+    text-underline-offset: 3px; text-decoration-thickness: 1px;
+    transition: text-decoration-color 0.2s ease, text-decoration-thickness 0.2s ease;
+  }
+  .de-glosslink:hover,
+  .de-glosslink:focus-visible {
+    text-decoration-color: currentColor; text-decoration-thickness: 2px;
+  }
   .de-about { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 4rem); }
 
   /* Subjects */

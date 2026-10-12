@@ -12,6 +12,9 @@ import { personLd, breadcrumbLd } from '../data/jsonld';
 
 const PATH = '/faq';
 
+// Shared slug so glossary anchors (#term-…) match the links other pages point at.
+const termSlug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
 // Answers are plain text so the visible page and the schema match exactly.
 const faqs: { q: string; a: string }[] = [
   {
@@ -153,8 +156,10 @@ const glossaryLd = {
   inLanguage: 'en',
   hasDefinedTerm: glossary.map((g) => ({
     '@type': 'DefinedTerm',
+    '@id': `${site.url}${PATH}#term-${termSlug(g.term)}`,
     name: g.term,
     description: g.def,
+    url: `${site.url}${PATH}#term-${termSlug(g.term)}`,
     inDefinedTermSet: { '@id': `${site.url}${PATH}#glossary` },
   })),
 };
@@ -200,7 +205,7 @@ const explore = [
         <p class="faqp__gloss-intro muted">The stereoscopic and 3D vocabulary behind the work — from anaglyph and lenticular to wigglegrams and parallax.</p>
         <dl class="faqp__gloss-list">
           {glossary.map((g) => (
-            <div class="faqp__gloss-item">
+            <div class="faqp__gloss-item" id={`term-${termSlug(g.term)}`}>
               <dt class="faqp__term">{g.term}</dt>
               <dd class="faqp__def">{g.def}</dd>
             </div>
@@ -243,7 +248,13 @@ const explore = [
   .faqp__gloss-h { font-size: clamp(1.6rem, 3.4vw, 2.3rem); margin: 0 0 0.3em; }
   .faqp__gloss-intro { margin: 0 0 1.5rem; max-width: 60ch; }
   .faqp__gloss-list { margin: 0; }
-  .faqp__gloss-item { padding: clamp(1rem, 2.2vw, 1.35rem) 0; border-top: 1px solid var(--line-soft); }
+  .faqp__gloss-item { padding: clamp(1rem, 2.2vw, 1.35rem) 0; border-top: 1px solid var(--line-soft); scroll-margin-top: 90px; }
+  .faqp__gloss-item:target {
+    background: color-mix(in srgb, var(--cyan) 12%, transparent);
+    box-shadow: inset 3px 0 0 var(--cyan);
+    border-radius: 0 6px 6px 0;
+  }
+  .faqp__gloss-item:target .faqp__term { color: var(--cyan); }
   .faqp__gloss-item:last-child { border-bottom: 1px solid var(--line-soft); }
   .faqp__term {
     margin: 0 0 0.3em; font-family: var(--sans); font-weight: 600;
