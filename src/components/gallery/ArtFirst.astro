@@ -605,7 +605,7 @@ const altOf = (g: (typeof galleryItems)[number]) =>
   type Item = {
     id: string; title: string; year: number | null; date: string; img: string | null; lg: string | null; ar: number;
     media: { src: string; type: 'video' | 'gif' } | null; kind: string; kindLabel: string; series: string | null;
-    platform: string; chain: string; badge: string | null; url: string | null; market: string | null; page: string | null;
+    platform: string; chain: string; badge: string | null; url: string | null; links: { label: string; url: string }[] | null; market: string | null; page: string | null;
     owner: { label: string; href: string } | null; sale: string | null;
     listing: { kind: string; cta: string; price: string; usd: string | null } | null; price: number | null; burned: boolean; desc: string | null;
     diamond: { years: number; tier: number; gems: string; sinceYear: number; label: string } | null; genesis: boolean;
@@ -933,6 +933,7 @@ const altOf = (g: (typeof galleryItems)[number]) =>
     v('desc').textContent = it.desc ?? '';
     v('links').innerHTML = [
       it.page && `<a href="${esc(it.page)}">Full story →</a>`,
+      ...(it.links ?? []).map((l) => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`),
       `<a href="/archive?view=list#w-${esc(it.id)}">Provenance &amp; sales</a>`,
     ].filter(Boolean).join('');
     history.replaceState(null, '', `#w-${it.id}`);

@@ -1097,7 +1097,9 @@ const SR_EXTRAS: Record<string, Partial<Release>> = {
   },
   '0x41a322b28d0ff354040e2cbc676f0320d8c8850d:1007': {
     slug: '3d-light-painting-03',
-    badge: "Sotheby's",
+    badge: "Sold at Sotheby's",
+    notes: "Sold at Sotheby's in “Inside the World of MaxStealth — A Timeless Collection” (2022) for $13,860.",
+    links: [{ label: "Sotheby’s lot", url: 'https://www.sothebys.com/en/buy/auction/2022/inside-the-world-of-maxstealth-a-timeless-collection/3d-light-painting-03' }],
   },
 };
 
