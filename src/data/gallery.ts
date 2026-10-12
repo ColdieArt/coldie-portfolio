@@ -8,6 +8,7 @@ import mediaJson from './media.json';
 import marketJson from './market.json';
 import { works } from './works';
 import { sortedReleases, releaseYear, formatReleaseDate, KIND_LABEL, bySeriesOrder, seriesOf, withCovers, withManualListings, diamondHold, type Release } from './releases';
+import { COLLECTOR_GROUPS } from './collectors';
 
 type Price = { amount: number; symbol: string; usd: number | null };
 type Owner = { address: string; name: string | null; username: string | null; ens: string | null; artist: boolean };
@@ -31,6 +32,10 @@ const fmtEth = (p: Price) =>
   `${p.amount.toLocaleString('en-US', { maximumFractionDigits: p.amount < 1 ? 4 : 2 })} ${p.symbol}`;
 const shortAddr = (a: string) => `${a.slice(0, 6)}…${a.slice(-4)}`;
 const ownerLabel = (o: Owner) => o.ens ?? (o.name && !o.name.startsWith('0x') ? o.name : shortAddr(o.address));
+// A collector's shared label when they hold across several wallets (data/collectors.ts).
+const walletLabel = new Map<string, string>();
+for (const g of COLLECTOR_GROUPS) for (const w of g.wallets) walletLabel.set(w.toLowerCase(), g.label);
+const collectorLabel = (o: Owner) => walletLabel.get(o.address.toLowerCase()) ?? ownerLabel(o);
 const ownerUrl = (r: Release, o: Owner) =>
   r.source === 'superrare' && o.username ? `https://superrare.com/${o.username}` : `https://opensea.io/${o.address}`;
 const marketName = (url: string) =>
@@ -97,7 +102,7 @@ function toItem(r: Release) {
     url: r.url ?? null,
     market: r.url ? marketName(r.url) : null,
     page: r.slug ? `/work/${r.slug}` : null,
-    owner: o && !o.artist ? { label: ownerLabel(o), href: ownerUrl(r, o) } : null,
+    owner: o && !o.artist ? { label: collectorLabel(o), href: ownerUrl(r, o) } : null,
     /** Coldie still holds the token (so a listing is his own primary sale) */
     artistOwned: !!o?.artist,
     /** Diamond-hands: how long the current collector has held (null = artist/<1yr/no sale) */
