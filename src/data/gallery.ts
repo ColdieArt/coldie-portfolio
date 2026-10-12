@@ -7,7 +7,7 @@ import sizesJson from './thumb-sizes.json';
 import mediaJson from './media.json';
 import marketJson from './market.json';
 import { works } from './works';
-import { sortedReleases, releaseYear, formatReleaseDate, KIND_LABEL, bySeriesOrder, seriesOf, withCovers, withManualListings, type Release } from './releases';
+import { sortedReleases, releaseYear, formatReleaseDate, KIND_LABEL, bySeriesOrder, seriesOf, withCovers, withManualListings, diamondHold, type Release } from './releases';
 
 type Price = { amount: number; symbol: string; usd: number | null };
 type Owner = { address: string; name: string | null; username: string | null; ens: string | null; artist: boolean };
@@ -16,6 +16,8 @@ type Market = {
   description: string | null;
   lastSale: (Price & { date?: string | null }) | null;
   listing: (Price & { kind: 'buy' | 'floor' | 'reserve' | 'auction' }) | null;
+  heldSince?: string | null;
+  heldVia?: string | null;
 };
 
 const thumbs = withCovers<string>(thumbsJson);
@@ -71,6 +73,7 @@ export type GalleryItem = ReturnType<typeof toItem>;
 function toItem(r: Release) {
   const mk = market[r.id];
   const o = mk?.owner;
+  const diamondItem = o && !o.artist ? diamondHold(mk?.heldSince) : null;
   const [w, h] = sizes[r.id] ?? [480, 480];
   const desc = r.description ?? mk?.description ?? (r.slug ? captions.get(r.slug) : undefined) ?? null;
   return {
@@ -97,6 +100,10 @@ function toItem(r: Release) {
     owner: o && !o.artist ? { label: ownerLabel(o), href: ownerUrl(r, o) } : null,
     /** Coldie still holds the token (so a listing is his own primary sale) */
     artistOwned: !!o?.artist,
+    /** Diamond-hands: how long the current collector has held (null = artist/<1yr/no sale) */
+    diamond: diamondItem,
+    /** 2018 original still held by a collector since the genesis era (2018–2019) */
+    genesis: !!(diamondItem && releaseYear(r) === 2018 && diamondItem.sinceYear <= 2019),
     sale: mk?.lastSale ? `${fmtEth(mk.lastSale)}${mk.lastSale.date ? ` · ${formatReleaseDate(mk.lastSale.date)}` : ''}` : null,
     listing: mk?.listing
       ? {

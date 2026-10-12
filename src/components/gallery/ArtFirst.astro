@@ -201,6 +201,15 @@ const altOf = (g: (typeof galleryItems)[number]) =>
               <img src={g.lg ?? g.img} alt={altOf(g)} loading="lazy" decoding="async" />
               {g.burned && <span class="g-tile__burn">Burned</span>}
               {g.listing && <span class="g-tile__tag"><i aria-hidden="true"></i>{g.listing.price}</span>}
+              {g.diamond && (
+                <span
+                  class={`g-tile__diamond g-tile__diamond--t${g.diamond.tier}${g.genesis ? ' is-genesis' : ''}`}
+                  title={g.genesis ? `Genesis holder — held since ${g.year}` : `${g.diamond.label} — diamond hands (only a sale resets the clock)`}
+                  aria-label={g.genesis ? `Genesis holder, ${g.diamond.label}` : g.diamond.label}
+                >
+                  <span aria-hidden="true">{g.genesis ? '✦ ' : ''}{g.diamond.gems}</span>
+                </span>
+              )}
               {g.media?.type === 'video' && <span class="g-tile__motion" aria-hidden="true"></span>}
               <span class="g-tile__cap">
                 <span class="g-tile__title">{g.title}</span>
@@ -493,7 +502,22 @@ const altOf = (g: (typeof galleryItems)[number]) =>
     padding: 0.32rem 0.65rem; border-radius: 999px; background: rgb(0 0 0 / 0.6); backdrop-filter: blur(10px);
     font-size: 0.66rem; font-weight: 500; font-variant-numeric: tabular-nums;
   }
-  .g-tile__motion { position: absolute; top: 0.85rem; right: 0.85rem; width: 0; height: 0; border-left: 7px solid rgb(255 255 255 / 0.75); border-block: 5px solid transparent; filter: drop-shadow(0 0 4px #000); transition: opacity 0.3s; }
+  .g-tile__diamond {
+    position: absolute; top: 0.7rem; right: 0.7rem; z-index: 2;
+    display: inline-flex; align-items: center; line-height: 1;
+    padding: 0.26rem 0.44rem; border-radius: 999px;
+    background: rgb(0 0 0 / 0.55); backdrop-filter: blur(10px);
+    font-size: 0.72rem; letter-spacing: -0.06em;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cyan) 50%, transparent);
+  }
+  .g-tile__diamond--t2 { box-shadow: inset 0 0 0 1px color-mix(in srgb, #9aa7ff 55%, transparent); }
+  .g-tile__diamond--t3 { box-shadow: inset 0 0 0 1px color-mix(in srgb, #e9c7ff 58%, transparent); }
+  .g-tile__diamond.is-genesis {
+    color: #ffd98a; letter-spacing: 0.02em;
+    background: rgb(20 14 0 / 0.62);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, #ffd98a 62%, transparent);
+  }
+  .g-tile__motion { position: absolute; bottom: 0.85rem; right: 0.85rem; width: 0; height: 0; border-left: 7px solid rgb(255 255 255 / 0.75); border-block: 5px solid transparent; filter: drop-shadow(0 0 4px #000); transition: opacity 0.3s; }
   .g-tile:hover .g-tile__motion { opacity: 0; }
   .g-tile__burn { position: absolute; top: 0.7rem; left: 0.7rem; padding: 0.25rem 0.55rem; background: #c21; color: #fff; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; transform: rotate(-3deg); }
   .g-tile:focus-visible { outline: 2px solid var(--g-ink); outline-offset: 3px; }
@@ -547,6 +571,10 @@ const altOf = (g: (typeof galleryItems)[number]) =>
   .g-viewer__facts dt { font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--g-mute); padding-top: 0.2rem; }
   .g-viewer__facts dd { margin: 0; font-variant-numeric: tabular-nums; }
   .g-viewer__facts a { color: var(--g-ink); text-decoration: none; border-bottom: 1px solid var(--g-line); }
+  .g-held { display: inline-flex; align-items: center; gap: 0.35em; color: var(--cyan); font-weight: 500; }
+  .g-held--t2 { color: #9aa7ff; }
+  .g-held--t3 { color: #e9c7ff; }
+  .g-held.is-genesis { color: #ffd98a; }
   .g-viewer__desc { margin: 0 0 1.5rem; font-family: var(--serif); font-size: 0.98rem; line-height: 1.65; color: #cfcac0; white-space: pre-line; }
   .g-viewer__links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; margin: 0; }
   .g-viewer__links a { color: var(--g-mute); font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; text-decoration: none; }
@@ -580,6 +608,7 @@ const altOf = (g: (typeof galleryItems)[number]) =>
     platform: string; chain: string; badge: string | null; url: string | null; market: string | null; page: string | null;
     owner: { label: string; href: string } | null; sale: string | null;
     listing: { kind: string; cta: string; price: string; usd: string | null } | null; price: number | null; burned: boolean; desc: string | null;
+    diamond: { years: number; tier: number; gems: string; sinceYear: number; label: string } | null; genesis: boolean;
   };
 
   const root = document.querySelector<HTMLElement>('[data-g]')!;
@@ -893,6 +922,10 @@ const altOf = (g: (typeof galleryItems)[number]) =>
         : `<a class="g-ghost" href="mailto:coldieart@gmail.com?subject=${encodeURIComponent(`Inquiry: ${it.title}`)}">Inquire about this work</a>`;
     const facts: [string, string][] = [];
     if (it.owner) facts.push(['Collector', `<a href="${esc(it.owner.href)}" target="_blank" rel="noopener">${esc(it.owner.label)}</a>`]);
+    if (it.diamond) facts.push([
+      it.genesis ? 'Genesis holder' : 'Diamond hands',
+      `<span class="g-held g-held--t${it.diamond.tier}${it.genesis ? ' is-genesis' : ''}">${it.genesis ? '✦ ' : ''}${it.diamond.gems} ${it.diamond.years}+ yrs</span>`,
+    ]);
     if (it.sale) facts.push(['Last sale', esc(it.sale)]);
     facts.push(['Edition', esc(it.kindLabel)]);
     facts.push(['Minted on', `${esc(it.platform)} · ${esc(it.chain)}`]);
