@@ -27,6 +27,7 @@ type Avail = {
   where?: string; // e.g. "Eterno Gallery, Lisbon"
   note?: string;
   wide?: boolean; // landscape media: 16:9 frame, spans two columns on wide screens
+  interactive?: { src: string; title: string }; // live artwork, preloaded in the background, revealed on click
   customize?: { title: string; line: string; options: { label: string; src: string; alt: string }[] };
   layouts?: { title: string; line: string; slides: { src: string; alt: string }[] }; // slideshow of alternate arrangements
   provenance?: string[];
@@ -64,6 +65,11 @@ const works: Avail[] = [
     desc: 'An interactive kinetic 3D mural inspired by Diego Rivera and Museo Anahuacalli, made during the 8NAP Digital Encounters residency. Touch it, move the pieces, step inside the collage.',
     image: '/works/digital/en-marcha.webp',
     alt: 'En Marcha, an interactive kinetic 3D mural by Coldie',
+    interactive: {
+      src: 'https://ipfs2.seadn.io/ipfs/bafybeihz2miflux2g7uobrgobrqnzz74cllitoew57njalwqraudriqpra/media',
+      title: 'En Marcha, interactive kinetic 3D mural by Coldie',
+    },
+    wide: true,
     cta: { label: 'Collect on Transient', href: 'https://www.transient.xyz/nfts/ethereum/0x034220c41322ff03db1c643da2ce991440a29bdd/2', external: true },
   },
   ...eterno.map<Avail>((i) => ({
@@ -149,9 +155,18 @@ const groups: { kind: Avail['kind']; title: string; line: string }[] = [
           {works.filter((w) => w.kind === g.kind).map((w) => (
             <li class={w.wide ? 'av-card av-card--wide' : 'av-card'}>
               <div class="av-card__frame" data-av-frame>
+                {w.interactive && (
+                  <iframe class="av-live__iframe" title={w.interactive.title} data-src={w.interactive.src} allow="accelerometer; gyroscope; fullscreen" allowfullscreen tabindex="-1" data-av-live></iframe>
+                )}
                 {w.video
                   ? <video src={w.video} poster={w.image} muted loop playsinline preload="none" data-av-autoplay aria-label={w.alt}></video>
                   : <img src={w.image} alt={w.alt} loading="lazy" decoding="async" />}
+                {w.interactive && (
+                  <button type="button" class="av-live__start" data-av-start aria-label={`Start ${w.title}, interactive artwork`}>
+                    <span class="av-live__play" aria-hidden="true">▶</span>
+                    <span class="av-live__label" data-av-label>Click to start · touch the art</span>
+                  </button>
+                )}
                 {w.customize && <img class="av-card__swap" alt="" hidden data-av-swap />}
                 <span class="av-card__tag">{w.tag ?? w.kind}</span>
               </div>
@@ -238,11 +253,32 @@ const groups: { kind: Avail['kind']; title: string; line: string }[] = [
   @media (min-width: 760px) { .av-card--wide { grid-column: span 2; } }
   .av-card__frame :is(img, video) { width: 100%; height: 100%; object-fit: cover; display: block; }
   .av-card__tag {
-    position: absolute; top: 0.75rem; left: 0.75rem; padding: 0.3rem 0.65rem; border-radius: 999px;
+    position: absolute; top: 0.75rem; left: 0.75rem; z-index: 4; padding: 0.3rem 0.65rem; border-radius: 999px;
     font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
     background: rgb(0 0 0 / 0.65); color: #f3f1ec; backdrop-filter: blur(6px);
   }
   .av-card__swap { position: absolute; inset: 0; }
+
+  /* Interactive: the live iframe loads underneath the poster; starting it fades the
+     poster and button away and hands the pointer to the artwork. */
+  .av-card__frame .av-live__iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; opacity: 0; pointer-events: none; }
+  .av-card__frame:has(.av-live__iframe) > img { position: relative; z-index: 1; transition: opacity 0.5s; }
+  .av-live__start {
+    position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; align-content: center; gap: 0.9rem;
+    padding: 0; border: 0; cursor: pointer; color: #fff; font: inherit;
+    background: linear-gradient(to top, rgb(0 0 0 / 0.6), rgb(0 0 0 / 0.1) 55%);
+    transition: opacity 0.5s;
+  }
+  .av-live__play {
+    width: 74px; height: 74px; border-radius: 50%; display: grid; place-items: center; padding-left: 4px;
+    background: #f3f1ec; color: #141414; font-size: 1.5rem; box-shadow: 0 6px 24px rgb(0 0 0 / 0.45);
+    transition: transform 0.25s ease;
+  }
+  .av-live__start:is(:hover, :focus-visible) .av-live__play { transform: scale(1.08); }
+  .av-live__label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; text-shadow: 0 1px 6px rgb(0 0 0 / 0.6); }
+  .av-card__frame[data-live] .av-live__iframe { opacity: 1; pointer-events: auto; z-index: 3; }
+  .av-card__frame[data-live] > img, .av-card__frame[data-live] .av-live__start { opacity: 0; pointer-events: none; }
+  .av-card__frame[data-live] .av-card__tag { display: none; }
   .av-card__frame .av-card__swap[hidden] { display: none; } /* outranks the frame rule above, whose display would override [hidden] */
   .av-card__body { display: flex; flex-direction: column; gap: 0.5rem; padding: clamp(1rem, 2vw, 1.4rem); flex: 1; }
   .av-card__title { margin: 0; font-size: 1.25rem; line-height: 1.2; }
@@ -273,6 +309,28 @@ const groups: { kind: Avail['kind']; title: string; line: string }[] = [
 </style>
 
 <script>
+  // Interactive works: start loading the live artwork once the page itself has loaded,
+  // so it's ready by the time someone clicks. Clicking before it's ready shows a
+  // loading label and reveals the artwork the moment it finishes.
+  document.querySelectorAll<HTMLIFrameElement>('iframe[data-av-live]').forEach((frame) => {
+    const box = frame.closest<HTMLElement>('.av-card__frame');
+    const start = box?.querySelector<HTMLButtonElement>('[data-av-start]');
+    const label = box?.querySelector<HTMLElement>('[data-av-label]');
+    if (!box || !start) return;
+    let ready = false, wanted = false;
+    const reveal = () => { box.setAttribute('data-live', ''); frame.tabIndex = 0; frame.focus({ preventScroll: true }); };
+    frame.addEventListener('load', () => { if (!frame.src) return; ready = true; if (wanted) reveal(); });
+    const load = () => { if (!frame.src) frame.src = frame.dataset.src ?? ''; };
+    const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(load, { timeout: 2000 }) : setTimeout(load, 300));
+    if (document.readyState === 'complete') idle(); else addEventListener('load', idle, { once: true });
+    start.addEventListener('click', () => {
+      wanted = true;
+      load();
+      if (ready) reveal();
+      else if (label) label.textContent = 'Loading…';
+    });
+  });
+
   // Videos start only when scrolled into view (and pause when out), so a clip far down
   // the page doesn't hold up the images above it. A video showing a swapped-in
   // background (paused by the picker) stays paused.
