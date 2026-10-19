@@ -1,0 +1,312 @@
+---
+// Available Works — new work sold directly by the artist (primary sales), digital and
+// physical. Distinct from the archive's "Available now" filter, which lists collector
+// resales on the secondary market. Linked from the In the studio door (Crossroads).
+//
+// Each work links to where it can be bought (Transient, Eterno Gallery) or opens an
+// email inquiry. A work with `customize` shows a picker that swaps alternate
+// configurations (e.g. interchangeable backgrounds) into the main frame.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RansomHeading from '../components/RansomHeading.astro';
+import RotatingBillboard from '../components/RotatingBillboard.astro';
+import { site, currentSeriesList } from '../data/site';
+import { personLd, breadcrumbLd } from '../data/jsonld';
+
+const PATH = '/available';
+
+type Avail = {
+  title: string;
+  kind: 'Digital' | 'Physical'; // which group the card sits in
+  tag?: string; // badge on the image; defaults to kind
+  detail: string; // edition / medium line
+  desc: string;
+  image: string;
+  alt: string;
+  video?: string;
+  cta: { label: string; href: string; external?: boolean };
+  where?: string; // e.g. "Eterno Gallery, Lisbon"
+  note?: string;
+  wide?: boolean; // landscape media: 16:9 frame, spans two columns on wide screens
+  customize?: { title: string; line: string; options: { label: string; src: string; alt: string }[] };
+  layouts?: { title: string; line: string; slides: { src: string; alt: string }[] }; // slideshow of alternate arrangements
+  provenance?: string[];
+};
+
+const inquire = (title: string) =>
+  `mailto:${site.inquiryEmail}?subject=${encodeURIComponent(`Inquiry: ${title}`)}`;
+
+const eterno = currentSeriesList[0]?.eternoItems ?? [];
+const eternoImg = (i: (typeof eterno)[number]) => i.image ?? i.prints?.[0]?.src ?? '';
+// Per-work overrides for the Eterno listings (keyed by title), for details this page adds.
+const eternoExtra: Record<string, Partial<Avail>> = {
+  '32" Touchscreen Interactive Piece': {
+    tag: 'Digital + Physical',
+    detail: '2026 · Digital 1/1 + 32" touchscreen',
+    desc: 'The artwork is a digital 1/1, Elon Musk · Tech Epochalypse · Euro Variant, and it comes with the 32" touchscreen it lives on: one screen with an integrated computer, so the collector gets both the token and the physical interface.',
+  },
+};
+
+const works: Avail[] = [
+  {
+    title: 'Michael Saylor',
+    kind: 'Digital',
+    detail: '1/1 · Decentral Eyes · Not One Satoshi',
+    desc: 'The one-of-one animated Michael Saylor portrait from Decentral Eyes, in stereoscopic depth.',
+    image: '/works/digital/saylor-1of1.webp',
+    video: '/works/digital/saylor-1of1.mp4',
+    alt: 'Michael Saylor 1/1, an animated stereoscopic 3D portrait by Coldie',
+    cta: { label: 'Collect on Transient', href: 'https://www.transient.xyz/nfts/ethereum/0x383788c0a5a6f4cc8f1bcd3993742db6b3332850/211', external: true },
+  },
+  {
+    title: 'En Marcha',
+    kind: 'Digital',
+    detail: '2026 · Edition of 5 · Kinetic 3D collage',
+    desc: 'An interactive kinetic 3D mural inspired by Diego Rivera and Museo Anahuacalli, made during the 8NAP Digital Encounters residency. Touch it, move the pieces, step inside the collage.',
+    image: '/works/digital/en-marcha.webp',
+    alt: 'En Marcha, an interactive kinetic 3D mural by Coldie',
+    cta: { label: 'Collect on Transient', href: 'https://www.transient.xyz/nfts/ethereum/0x034220c41322ff03db1c643da2ce991440a29bdd/2', external: true },
+  },
+  ...eterno.map<Avail>((i) => ({
+    title: i.title,
+    kind: 'Physical',
+    detail: i.prints ? `Signed 1/1 giclée prints · ${i.prints.length} works` : '2026',
+    desc: i.desc,
+    image: eternoImg(i),
+    alt: i.alt ?? i.prints?.[0]?.alt ?? i.title,
+    cta: { label: 'View at Eterno Gallery', href: i.href, external: true },
+    where: 'Eterno Gallery, Lisbon',
+    ...eternoExtra[i.title],
+  })),
+  {
+    title: 'The Day We’ve All Been Waiting For',
+    kind: 'Physical',
+    detail: '2025 · 1/1 · 10" × 20" · Kinetic magnetic 3D',
+    desc: 'A physical magnetic 3D work on a steel backboard. The astronaut, the moon, the HODL billboard and every piece of the skyline is its own magnet, and 3D magnetic spacers hold each one off the board at a different depth. Every element can be moved anywhere on the board and set at any depth, so the scene is never fixed.',
+    image: '/works/the-day-magnet/the-day-magnet.jpg',
+    video: '/works/the-day-magnet/the-day-magnet.mp4',
+    alt: 'The Day We’ve All Been Waiting For as a physical magnetic piece on a wall: an astronaut, the moon and a HODL billboard over a city skyline, the pieces standing off the board in 3D',
+    cta: { label: 'Inquire', href: inquire('The Day We’ve All Been Waiting For (magnet)') },
+    wide: true,
+    customize: {
+      title: 'Customize your background',
+      line: 'The background is interchangeable too. Each half of the board swaps out, so the same magnets can float over sky, city or grid. Pick a combination:',
+      options: [
+        { label: 'Sky over grid', src: '/works/the-day-magnet/bg-36.jpg', alt: 'Background option: contrail sky over a white perspective grid, on a wall' },
+        { label: 'Sky over city', src: '/works/the-day-magnet/bg-37.jpg', alt: 'Background option: contrail sky over a black-and-white city, on a wall' },
+        { label: 'Grid over city', src: '/works/the-day-magnet/bg-38.jpg', alt: 'Background option: perspective grid ceiling over a black-and-white city, on a wall' },
+      ],
+    },
+    layouts: {
+      title: 'Unique layouts',
+      line: 'A few of the arrangements the piece has taken so far. Stack spacers to push an element forward, take them away to sink it back, and move anything anywhere.',
+      slides: [
+        { src: '/works/the-day-magnet/layout-1.jpg', alt: 'Layout: grid sky, moons at both corners, the HODL billboard off the left edge and the skyline breaking the bottom of the board' },
+        { src: '/works/the-day-magnet/layout-2.jpg', alt: 'Layout: a large moon over a grid ceiling, the HODL billboard pushed far forward at bottom left and the astronaut raised on a long spacer at right' },
+        { src: '/works/the-day-magnet/layout-3.jpg', alt: 'Layout: sky over a grid floor, the astronaut at far left, a big moon breaking the top right corner and the HODL billboard hanging off the right edge' },
+        { src: '/works/the-day-magnet/layout-4.jpg', alt: 'Layout seen from the side: the astronaut, moon and HODL billboard standing off a sky-and-grid board on black magnetic spacers of different lengths' },
+        { src: '/works/the-day-magnet/layout-5.jpg', alt: 'Layout seen at an angle: sky over a city, the astronaut breaking the top edge and the HODL billboard tucked at the left behind the moon' },
+        { src: '/works/the-day-magnet/layout-6.jpg', alt: 'Layout seen straight on: a full grid room, moons at both sides, the astronaut at left and the HODL billboard high on the right' },
+      ],
+    },
+    provenance: [
+      'Created for Christie’s “History of Bitcoin” curated exhibition, 2025',
+      'References Coldie’s first physical stereoscopic 3D anaglyph work of the same name, released as a print in 2017',
+      'The 2017 work became Coldie’s first tokenized artwork, on R.A.R.E. Art Labs in 2018',
+    ],
+  },
+];
+
+const groups: { kind: Avail['kind']; title: string; line: string }[] = [
+  { kind: 'Digital', title: 'Digital', line: 'On-chain works, collected directly from the artist.' },
+  { kind: 'Physical', title: 'Physical', line: 'Kinetic, magnetic and printed work you can hold, hang and rearrange.' },
+];
+---
+<BaseLayout
+  title="Available works — new art direct from Coldie"
+  description="New digital and physical works by Coldie, available directly from the artist and Eterno Gallery, Lisbon: the Michael Saylor 1/1, En Marcha, kinetic magnetic portraits and signed prints."
+  path={PATH}
+  jsonld={[personLd(), breadcrumbLd([{ name: 'Home', path: '/' }, { name: 'Available works', path: PATH }])]}
+>
+  <header class="av-head">
+    <div class="wrap av-head__in">
+      <p class="eyebrow">In the studio · Direct from the artist</p>
+      <RansomHeading as="h1" text="Available works" />
+      <p class="av-head__sub">New digital and physical work, available now from me and my gallery.</p>
+      <p class="av-head__alt">
+        Looking for earlier pieces? <a href="/archive?filter=sale">See collector resales in the archive →</a>
+      </p>
+    </div>
+  </header>
+
+  {groups.map((g) => (
+    <section class="av-group" aria-labelledby={`av-${g.kind}`}>
+      <div class="wrap">
+        <header class="av-group__head">
+          <h2 class="av-group__h" id={`av-${g.kind}`}>{g.title}</h2>
+          <p class="av-group__line">{g.line}</p>
+        </header>
+        <ul class="av-grid">
+          {works.filter((w) => w.kind === g.kind).map((w) => (
+            <li class={w.wide ? 'av-card av-card--wide' : 'av-card'}>
+              <div class="av-card__frame" data-av-frame>
+                {w.video
+                  ? <video src={w.video} poster={w.image} muted loop playsinline preload="none" data-av-autoplay aria-label={w.alt}></video>
+                  : <img src={w.image} alt={w.alt} loading="lazy" decoding="async" />}
+                {w.customize && <img class="av-card__swap" alt="" hidden data-av-swap />}
+                <span class="av-card__tag">{w.tag ?? w.kind}</span>
+              </div>
+              <div class="av-card__body">
+                <h3 class="av-card__title">{w.title}</h3>
+                <p class="av-card__detail">{w.detail}{w.where && <> · {w.where}</>}</p>
+                <p class="av-card__desc">{w.desc}</p>
+                {w.note && <p class="av-card__note">{w.note}</p>}
+                {w.layouts && (
+                  <div class="av-custom">
+                    <h4 class="av-custom__h">{w.layouts.title}</h4>
+                    <p class="av-custom__line">{w.layouts.line}</p>
+                    <RotatingBillboard images={w.layouts.slides} ratio="4/3" interval={3500} />
+                  </div>
+                )}
+                {w.customize && (
+                  <div class="av-custom" data-av-custom>
+                    <h4 class="av-custom__h">{w.customize.title}</h4>
+                    <p class="av-custom__line">{w.customize.line}</p>
+                    <div class="av-custom__opts" role="group" aria-label={w.customize.title}>
+                      {w.video && (
+                        <button type="button" class="av-custom__opt" aria-pressed="true" data-src="">
+                          <img src={w.image} alt="" loading="lazy" decoding="async" />
+                          <span>As shown (video)</span>
+                        </button>
+                      )}
+                      {w.customize.options.map((o) => (
+                        <button type="button" class="av-custom__opt" aria-pressed="false" data-src={o.src} data-alt={o.alt}>
+                          <img src={o.src} alt="" loading="lazy" decoding="async" />
+                          <span>{o.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {w.provenance && (
+                  <div class="av-custom">
+                    <h4 class="av-custom__h">Provenance</h4>
+                    <ul class="av-prov">{w.provenance.map((line) => <li>{line}</li>)}</ul>
+                  </div>
+                )}
+                <a class="btn btn--solid av-card__cta" href={w.cta.href} {...(w.cta.external ? { target: '_blank', rel: 'noopener' } : {})}>
+                  {w.cta.label}{w.cta.external ? ' ↗' : ' →'}
+                </a>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  ))}
+
+  <div class="wrap av-foot">
+    <p>Interested in a commission or something not listed?</p>
+    <a class="btn btn--solid" href={inquire('Available works')}>Get in touch →</a>
+  </div>
+</BaseLayout>
+
+<style>
+  .av-head { padding-block: clamp(3.5rem, 9vw, 7rem) clamp(2rem, 5vw, 3.5rem); }
+  .av-head__in { text-align: center; }
+  .av-head__sub {
+    font-family: var(--serif); font-size: clamp(1.1rem, 2.2vw, 1.6rem); color: var(--ink-soft);
+    margin: 0.2em auto 0.8em; max-width: 44ch;
+  }
+  .av-head__alt { margin: 0; font-size: 0.9rem; color: var(--ink-mute); }
+  .av-head__alt a { color: var(--ink); }
+
+  .av-group { padding-block: clamp(2.5rem, 6vw, 4.5rem); border-top: 1px solid var(--line-soft); }
+  .av-group__head { margin-bottom: clamp(1.5rem, 4vw, 2.5rem); }
+  .av-group__h {
+    margin: 0 0 0.2em; font-family: var(--display); font-weight: 400; text-transform: uppercase;
+    letter-spacing: 0.01em; line-height: 1; font-size: clamp(2rem, 5vw, 3.5rem);
+  }
+  .av-group__line { margin: 0; color: var(--ink-soft); max-width: 52ch; }
+
+  .av-grid {
+    list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(1.25rem, 3vw, 2.5rem);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  }
+  .av-card { display: flex; flex-direction: column; background: var(--bg-raise); border-radius: var(--radius); overflow: hidden; }
+  .av-card__frame { position: relative; aspect-ratio: 1; background: #0a0a0a; }
+  .av-card--wide .av-card__frame { aspect-ratio: 16 / 9; }
+  @media (min-width: 760px) { .av-card--wide { grid-column: span 2; } }
+  .av-card__frame :is(img, video) { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .av-card__tag {
+    position: absolute; top: 0.75rem; left: 0.75rem; padding: 0.3rem 0.65rem; border-radius: 999px;
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    background: rgb(0 0 0 / 0.65); color: #f3f1ec; backdrop-filter: blur(6px);
+  }
+  .av-card__swap { position: absolute; inset: 0; }
+  .av-card__frame .av-card__swap[hidden] { display: none; } /* outranks the frame rule above, whose display would override [hidden] */
+  .av-card__body { display: flex; flex-direction: column; gap: 0.5rem; padding: clamp(1rem, 2vw, 1.4rem); flex: 1; }
+  .av-card__title { margin: 0; font-size: 1.25rem; line-height: 1.2; }
+  .av-card__detail { margin: 0; font-size: 0.8rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-mute); }
+  .av-card__desc { margin: 0; color: var(--ink-soft); line-height: 1.5; }
+  .av-card__note { margin: 0; font-size: 0.85rem; font-style: italic; color: var(--ink-mute); }
+  .av-card__cta { margin-top: auto; align-self: flex-start; }
+
+  .av-custom { margin: 0.5rem 0 0.75rem; padding-top: 1rem; border-top: 1px solid var(--line-soft); }
+  .av-custom__h { margin: 0 0 0.3rem; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  .av-custom__line { margin: 0 0 0.85rem; color: var(--ink-soft); line-height: 1.5; max-width: 60ch; }
+  .av-custom__opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.6rem; }
+  .av-custom__opt {
+    display: flex; flex-direction: column; gap: 0.35rem; padding: 0; border: 0; background: none;
+    color: var(--ink); font: inherit; font-size: 0.78rem; font-weight: 500; text-align: left; cursor: pointer;
+  }
+  .av-custom__opt img {
+    width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; border-radius: var(--radius);
+    outline: 2px solid transparent; outline-offset: 2px; transition: outline-color 0.2s, opacity 0.2s; opacity: 0.75;
+  }
+  .av-custom__opt:hover img, .av-custom__opt:focus-visible img { opacity: 1; }
+  .av-custom__opt[aria-pressed='true'] img { outline-color: var(--ink); opacity: 1; }
+  .av-prov { margin: 0; padding-left: 1.1em; color: var(--ink-soft); line-height: 1.5; }
+  .av-prov li + li { margin-top: 0.25em; }
+
+  .av-foot { text-align: center; padding-block: clamp(3rem, 7vw, 5rem); border-top: 1px solid var(--line-soft); }
+  .av-foot p { margin: 0 0 1rem; color: var(--ink-soft); }
+</style>
+
+<script>
+  // Videos start only when scrolled into view (and pause when out), so a clip far down
+  // the page doesn't hold up the images above it. A video showing a swapped-in
+  // background (paused by the picker) stays paused.
+  const vio = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      const v = e.target as HTMLVideoElement;
+      if (e.isIntersecting && !v.dataset.held) v.play().catch(() => {});
+      else v.pause();
+    }
+  }, { rootMargin: '200px 0px' });
+  document.querySelectorAll<HTMLVideoElement>('video[data-av-autoplay]').forEach((v) => vio.observe(v));
+
+  // Customize picker: swap the chosen configuration into the card's main frame; the
+  // first ("As shown") option clears the swap and resumes the video.
+  document.querySelectorAll<HTMLElement>('[data-av-custom]').forEach((picker) => {
+    const card = picker.closest('.av-card');
+    const swap = card?.querySelector<HTMLImageElement>('[data-av-swap]');
+    const video = card?.querySelector('video');
+    if (!swap) return;
+    const buttons = picker.querySelectorAll<HTMLButtonElement>('button[data-src]');
+    buttons.forEach((b) => b.addEventListener('click', () => {
+      buttons.forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+      const src = b.dataset.src;
+      if (src) {
+        swap.src = src;
+        swap.alt = b.dataset.alt ?? '';
+        swap.hidden = false;
+        if (video) video.dataset.held = '';
+        video?.pause();
+      } else {
+        swap.hidden = true;
+        if (video) delete video.dataset.held;
+        video?.play().catch(() => {});
+      }
+    }));
+  });
+</script>
