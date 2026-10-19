@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-12",
+  "fetchedAt": "2026-10-19",
   "releases": {
     "vitalik-variant-03": {
       "owner": {
@@ -25,7 +25,7 @@
         "kind": "floor",
         "amount": 0.5,
         "symbol": "ETH",
-        "usd": 1244
+        "usd": 1200
       }
     },
     "gandinsky-3d-1": {
@@ -158,7 +158,7 @@
         "kind": "floor",
         "amount": 0.1,
         "symbol": "ETH",
-        "usd": 249
+        "usd": 240
       }
     },
     "decentral-eyes-vr-og-collage": {
@@ -201,9 +201,9 @@
       },
       "listing": {
         "kind": "floor",
-        "amount": 0.098924,
+        "amount": 0.0969979,
         "symbol": "ETH",
-        "usd": 246
+        "usd": 233
       }
     },
     "filthy-fiat": {
@@ -219,16 +219,16 @@
     "ash2-life": {
       "description": null,
       "lastSale": {
-        "amount": 0.0202,
+        "amount": 0.0331,
         "symbol": "ETH",
-        "usd": 51,
-        "date": "2026-09-03"
+        "usd": 83,
+        "date": "2026-10-13"
       },
       "listing": {
         "kind": "floor",
         "amount": 0.0244,
         "symbol": "ETH",
-        "usd": 61
+        "usd": 59
       }
     },
     "swaps": {
@@ -253,7 +253,7 @@
         "kind": "floor",
         "amount": 0.5,
         "symbol": "ETH",
-        "usd": 1243
+        "usd": 1200
       }
     },
     "trompepe": {
@@ -288,7 +288,7 @@
         "kind": "floor",
         "amount": 0.99,
         "symbol": "ETH",
-        "usd": 2464
+        "usd": 2377
       }
     },
     "chronicles-2019": {
@@ -306,9 +306,9 @@
       },
       "listing": {
         "kind": "floor",
-        "amount": 0.015719,
+        "amount": 0.015609,
         "symbol": "ETH",
-        "usd": 39
+        "usd": 37
       }
     },
     "alotta-money": {
@@ -323,7 +323,7 @@
         "kind": "floor",
         "amount": 0.05884,
         "symbol": "ETH",
-        "usd": 146
+        "usd": 141
       }
     },
     "deyes-assembled": {
@@ -334,12 +334,7 @@
         "usd": 1659,
         "date": "2023-08-28"
       },
-      "listing": {
-        "kind": "floor",
-        "amount": 6,
-        "symbol": "ETH",
-        "usd": 14934
-      }
+      "listing": null
     },
     "talking-heads": {
       "description": "Ever since the television was released to the public, it has captured the attention of billions of people. The nightly news has long been the way many get their daily dose of current event information. Over the decades many talking heads have delivered stories that will never be forgotten, but who are these people? Do they really even care what they are reading or how the information is going to be digested by the viewers? This series takes a look at the many faces of many newscasters. Throw away your television. EBS backgrounds by Lion.",
@@ -353,7 +348,7 @@
         "kind": "floor",
         "amount": 0.199,
         "symbol": "ETH",
-        "usd": 495
+        "usd": 478
       }
     },
     "uae-first-immersion": {
@@ -378,7 +373,7 @@
         "kind": "floor",
         "amount": 0.0666,
         "symbol": "ETH",
-        "usd": 166
+        "usd": 160
       }
     },
     "async-energetic-body": {
@@ -440,7 +435,7 @@
         "kind": "floor",
         "amount": 0.04195,
         "symbol": "ETH",
-        "usd": 104
+        "usd": 101
       }
     },
     "fake-rares-filthy-pepe": {
@@ -453,24 +448,24 @@
       },
       "listing": {
         "kind": "buy",
-        "amount": 0.25,
+        "amount": 10,
         "symbol": "ETH",
-        "usd": 622
+        "usd": 24005
       }
     },
     "sin-king-ship": {
       "description": "Fiat currency is a sinking ship. Be free to transact without the shackles of a central bank controlled debt note.\n\nThis early release of the Filthy Fiat series encodes multiple narratives and vibes (left up to your interpretation) wrapped inside the story of Titanic. At face value it illustrates how the fiat-based currency system is a sinking ship. The ship is taken down by the memes of decentralization. \n\nThe dark tale of the sinking ship we all know about is juxtaposed by a inset scene of two Pepe’s on the bow of the ship, basking in the glory of the open water and glory of sailing. A nod to the movie and just as historically accurate as the film itself. Don’t worry, the Pepe lovers survived. They are frogs.\n\nHistorical context for the piece:  \nApril 15, 1912 – The Titanic disaster claimed over 1,500 lives, including three of the world's richest men: John Jacob Astor IV, Benjamin Guggenheim, and Isidor Straus, all of whom opposed a central bank in the U.S. Meanwhile, financier J.P. Morgan, a key figure in the Federal Reserve’s creation, canceled his trip last minute, sparking speculation that he intentionally avoided the doomed voyage.\n\nDownload VR Stereoscopic 3D Version:  \nhttps://app.ardrive.io/#/file/0362318a-1325-43bd-bb09-b8aacc62ec71/view\n\nMeme: 7  \nSeason: 10  \nCard: 7",
       "lastSale": {
-        "amount": 0.04,
+        "amount": 0.037,
         "symbol": "ETH",
-        "usd": 108,
+        "usd": 86,
         "date": null
       },
       "listing": {
         "kind": "buy",
-        "amount": 0.0599999,
+        "amount": 0.0599998,
         "symbol": "ETH",
-        "usd": 149
+        "usd": 144
       }
     },
     "tech-epochalypse": {
@@ -480,7 +475,7 @@
         "kind": "floor",
         "amount": 5,
         "symbol": "ETH",
-        "usd": 12445
+        "usd": 12003
       }
     },
     "tech-epochalypse-moments": {
@@ -495,7 +490,7 @@
         "kind": "floor",
         "amount": 0.0998999,
         "symbol": "ETH",
-        "usd": 249
+        "usd": 240
       }
     },
     "not-one-satoshi": {
@@ -510,7 +505,7 @@
         "kind": "floor",
         "amount": 0.059,
         "symbol": "ETH",
-        "usd": 147
+        "usd": 142
       }
     },
     "sr-41a322-501": {
