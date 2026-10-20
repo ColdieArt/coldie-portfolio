@@ -218,6 +218,7 @@ const groups: { kind: Avail['kind']; title: string; line: string }[] = [
                   {w.cta.label}{w.cta.external ? ' ↗' : ' →'}
                 </a>
                 <button type="button" class="av-card__share" data-av-share={w.id ?? slug(w.title)}>Copy link</button>
+                <button type="button" class="av-card__share" data-av-native={w.id ?? slug(w.title)} hidden>Share</button>
                 </div>
               </div>
             </li>
@@ -340,50 +341,60 @@ const groups: { kind: Avail['kind']; title: string; line: string }[] = [
     if (document.readyState === 'complete') snap(); else addEventListener('load', snap, { once: true });
   }
 
-  // Copy link: share the card's direct URL. Phones get the native share sheet; elsewhere
-  // the link is copied. The async clipboard API is often refused (permissions, in-app
-  // browsers), so fall back to the older copy command, and failing that show the link
-  // in a selected field under the button for a manual copy.
-  const copyText = async (text: string) => {
-    try { await navigator.clipboard.writeText(text); return true; } catch {}
+  // Copy link: copy the card's direct URL. The clipboard call is made straight from the
+  // tap (Safari refuses it once anything has been awaited first). If the browser
+  // refuses, fall back to the older copy command, and failing that show the link in a
+  // selected field under the button. Phones also get a separate Share button for the
+  // native share sheet.
+  const cardUrl = (id = '') => `${location.origin}${location.pathname}#${id}`;
+  const legacyCopy = (text: string) => {
     const ta = document.createElement('textarea');
     ta.value = text;
-    ta.setAttribute('readonly', '');
-    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none';
+    ta.contentEditable = 'true'; // iOS only selects editable fields
+    ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;font-size:16px';
     document.body.append(ta);
+    ta.focus({ preventScroll: true });
     ta.select();
     ta.setSelectionRange(0, text.length);
     let ok = false;
-    try { ok = document.execCommand('copy'); } catch {}
+    try { ok = document.execCommand('copy') && ta.selectionEnd - ta.selectionStart === text.length; } catch {}
     ta.remove();
     return ok;
   };
+  const showField = (b: HTMLButtonElement, url: string) => {
+    let field = b.parentElement?.querySelector<HTMLInputElement>('.av-card__link');
+    if (!field) {
+      field = document.createElement('input');
+      field.className = 'av-card__link';
+      field.readOnly = true;
+      field.setAttribute('aria-label', 'Link to this work');
+      b.parentElement?.append(field);
+    }
+    field.value = url;
+    field.focus();
+    field.select();
+  };
+  const copied = (b: HTMLButtonElement) => {
+    b.textContent = 'Link copied ✓';
+    setTimeout(() => { b.textContent = 'Copy link'; }, 2000);
+  };
   document.querySelectorAll<HTMLButtonElement>('[data-av-share]').forEach((b) => {
-    b.addEventListener('click', async () => {
-      const url = `${location.origin}${location.pathname}#${b.dataset.avShare}`;
-      const title = b.closest('.av-card')?.querySelector('.av-card__title')?.textContent ?? document.title;
-      if (navigator.share && matchMedia('(pointer: coarse)').matches) {
-        try { await navigator.share({ title, url }); return; }
-        catch (err) { if ((err as Error)?.name === 'AbortError') return; } // dismissed; otherwise fall through to copy
-      }
-      if (await copyText(url)) {
-        b.textContent = 'Link copied ✓';
-        setTimeout(() => { b.textContent = 'Copy link'; }, 2000);
-        return;
-      }
-      let field = b.parentElement?.querySelector<HTMLInputElement>('.av-card__link');
-      if (!field) {
-        field = document.createElement('input');
-        field.className = 'av-card__link';
-        field.readOnly = true;
-        field.setAttribute('aria-label', 'Link to this work');
-        b.parentElement?.append(field);
-      }
-      field.value = url;
-      field.focus();
-      field.select();
+    b.addEventListener('click', () => {
+      const url = cardUrl(b.dataset.avShare);
+      const viaApi = navigator.clipboard?.writeText(url); // called synchronously inside the tap
+      if (!viaApi) { legacyCopy(url) ? copied(b) : showField(b, url); return; }
+      viaApi.then(() => copied(b), () => (legacyCopy(url) ? copied(b) : showField(b, url)));
     });
   });
+  if (navigator.share && matchMedia('(pointer: coarse)').matches) {
+    document.querySelectorAll<HTMLButtonElement>('[data-av-native]').forEach((b) => {
+      b.hidden = false;
+      b.addEventListener('click', () => {
+        const title = b.closest('.av-card')?.querySelector('.av-card__title')?.textContent ?? document.title;
+        navigator.share({ title, url: cardUrl(b.dataset.avNative) }).catch(() => {});
+      });
+    });
+  }
 
   // Interactive works: start loading the live artwork once the page itself has loaded,
   // so it's ready by the time someone clicks. Clicking before it's ready shows a
