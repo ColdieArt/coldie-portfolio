@@ -16,6 +16,7 @@ const PATH = '/available';
 
 type Avail = {
   title: string;
+  id?: string; // anchor for direct links (/available#id); defaults to a slug of the title
   kind: 'Digital' | 'Physical'; // which group the card sits in
   tag?: string; // badge on the image; defaults to kind
   detail: string; // edition / medium line
@@ -32,6 +33,9 @@ type Avail = {
   layouts?: { title: string; line: string; slides: { src: string; alt: string }[] }; // slideshow of alternate arrangements
   provenance?: string[];
 };
+
+const slug = (t: string) =>
+  t.toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 const inquire = (title: string) =>
   `mailto:${site.inquiryEmail}?subject=${encodeURIComponent(`Inquiry: ${title}`)}`;
@@ -85,6 +89,7 @@ const works: Avail[] = [
   })),
   {
     title: 'The Day We’ve All Been Waiting For',
+    id: 'the-day-magnet',
     kind: 'Physical',
     detail: '2025 · 1/1 · 10" × 20" · Kinetic magnetic 3D',
     desc: 'A physical magnetic 3D work on a steel backboard. The astronaut, the moon, the HODL billboard and every piece of the skyline is its own magnet, and 3D magnetic spacers hold each one off the board at a different depth. Every element can be moved anywhere on the board and set at any depth, so the scene is never fixed.',
@@ -153,7 +158,7 @@ const groups: { kind: Avail['kind']; title: string; line: string }[] = [
         </header>
         <ul class="av-grid">
           {works.filter((w) => w.kind === g.kind).map((w) => (
-            <li class={w.wide ? 'av-card av-card--wide' : 'av-card'}>
+            <li class={w.wide ? 'av-card av-card--wide' : 'av-card'} id={w.id ?? slug(w.title)}>
               <div class="av-card__frame" data-av-frame>
                 {w.interactive && (
                   <iframe class="av-live__iframe" title={w.interactive.title} data-src={w.interactive.src} allow="accelerometer; gyroscope; fullscreen" allowfullscreen tabindex="-1" data-av-live></iframe>
@@ -208,9 +213,12 @@ const groups: { kind: Avail['kind']; title: string; line: string }[] = [
                     <ul class="av-prov">{w.provenance.map((line) => <li>{line}</li>)}</ul>
                   </div>
                 )}
+                <div class="av-card__actions">
                 <a class="btn btn--solid av-card__cta" href={w.cta.href} {...(w.cta.external ? { target: '_blank', rel: 'noopener' } : {})}>
                   {w.cta.label}{w.cta.external ? ' ↗' : ' →'}
                 </a>
+                <button type="button" class="av-card__share" data-av-share={w.id ?? slug(w.title)}>Copy link</button>
+                </div>
               </div>
             </li>
           ))}
@@ -285,7 +293,14 @@ const groups: { kind: Avail['kind']; title: string; line: string }[] = [
   .av-card__detail { margin: 0; font-size: 0.8rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-mute); }
   .av-card__desc { margin: 0; color: var(--ink-soft); line-height: 1.5; }
   .av-card__note { margin: 0; font-size: 0.85rem; font-style: italic; color: var(--ink-mute); }
-  .av-card__cta { margin-top: auto; align-self: flex-start; }
+  .av-card { scroll-margin-top: 112px; } /* clears the fixed nav and the logo that hangs below it, for direct links */
+  .av-card:target { outline: 2px solid var(--ink); outline-offset: 4px; }
+  .av-card__actions { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1rem; }
+  .av-card__share {
+    padding: 0.4rem 0; border: 0; background: none; cursor: pointer; font: inherit; font-size: 0.8rem;
+    color: var(--ink-soft); text-decoration: underline; text-underline-offset: 3px;
+  }
+  .av-card__share:hover { color: var(--ink); }
 
   .av-custom { margin: 0.5rem 0 0.75rem; padding-top: 1rem; border-top: 1px solid var(--line-soft); }
   .av-custom__h { margin: 0 0 0.3rem; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; }
@@ -309,6 +324,34 @@ const groups: { kind: Avail['kind']; title: string; line: string }[] = [
 </style>
 
 <script>
+  // Direct links (/available#id): once everything above has loaded, snap the card into
+  // place so late-loading media can't leave the visitor short of it. Skipped if the
+  // visitor has already started scrolling on their own.
+  const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (target?.classList.contains('av-card')) {
+    let moved = false;
+    for (const ev of ['wheel', 'touchstart', 'keydown']) addEventListener(ev, () => { moved = true; }, { once: true, passive: true });
+    const snap = () => { if (!moved) target.scrollIntoView({ behavior: 'instant', block: 'start' }); };
+    if (document.readyState === 'complete') snap(); else addEventListener('load', snap, { once: true });
+  }
+
+  // Copy link: share the card's direct URL (native share sheet on phones, clipboard elsewhere).
+  document.querySelectorAll<HTMLButtonElement>('[data-av-share]').forEach((b) => {
+    b.addEventListener('click', async () => {
+      const url = `${location.origin}${location.pathname}#${b.dataset.avShare}`;
+      const title = b.closest('.av-card')?.querySelector('.av-card__title')?.textContent ?? document.title;
+      try {
+        if (navigator.share && matchMedia('(pointer: coarse)').matches) { await navigator.share({ title, url }); return; }
+        await navigator.clipboard.writeText(url);
+        b.textContent = 'Link copied';
+      } catch (err) {
+        if ((err as Error)?.name === 'AbortError') return; // share sheet dismissed
+        prompt('Copy this link:', url);
+      }
+      setTimeout(() => { b.textContent = 'Copy link'; }, 2000);
+    });
+  });
+
   // Interactive works: start loading the live artwork once the page itself has loaded,
   // so it's ready by the time someone clicks. Clicking before it's ready shows a
   // loading label and reveals the artwork the moment it finishes.
