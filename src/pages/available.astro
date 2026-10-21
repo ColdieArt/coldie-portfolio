@@ -333,7 +333,9 @@ const groups: { kind: Avail['kind']; title: string; line: string }[] = [
   // Direct links (/available#id): once everything above has loaded, snap the card into
   // place so late-loading media can't leave the visitor short of it. Skipped if the
   // visitor has already started scrolling on their own.
-  const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  // (Wrapped so a bad hash can never stop the handlers below from being attached.)
+  let target: HTMLElement | null = null;
+  try { target = location.hash ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null; } catch {}
   if (target?.classList.contains('av-card')) {
     let moved = false;
     for (const ev of ['wheel', 'touchstart', 'keydown']) addEventListener(ev, () => { moved = true; }, { once: true, passive: true });
