@@ -2,11 +2,15 @@
 import { site } from '../data/site';
 import { provenance } from '../data/site';
 const year = 2026; // build year; static by design
+const commissionMailto = `mailto:${site.inquiryEmail}?subject=${encodeURIComponent('Commission inquiry')}`;
 ---
 <footer class="foot section--flat">
   <div class="wrap foot__commission">
-    <p class="foot__commission-copy">Interested in a custom piece from your home, office, or public space? Let’s talk.</p>
-    <a class="btn btn--solid foot__commission-btn" href="/#acquire">Commissions →</a>
+    <div class="foot__commission-copy">
+      <p class="foot__commission-h">Commissions</p>
+      <p class="foot__commission-text">Interested in a custom piece from your home, office, or public space? Let’s talk.</p>
+    </div>
+    <a class="btn btn--solid foot__commission-btn" href={commissionMailto}>Let’s talk →</a>
   </div>
   <div class="wrap foot__signup">
     <div class="foot__signup-copy">
@@ -61,11 +65,12 @@ const year = 2026; // build year; static by design
   .foot { padding-block: clamp(3rem, 7vw, 5rem) 2rem; border-top: 1px solid var(--line-soft); }
   .foot__commission {
     display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-    gap: 0.5rem 1.5rem; margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
-    padding: clamp(0.85rem, 2vw, 1.2rem) clamp(1rem, 2.5vw, 1.5rem);
-    border: 1px solid var(--line); border-radius: var(--radius);
+    gap: 0.5rem 1.5rem; margin-bottom: clamp(2rem, 4vw, 3rem);
+    padding-bottom: clamp(1.5rem, 3vw, 2.25rem); border-bottom: 1px solid var(--line-soft);
   }
-  .foot__commission-copy { margin: 0; font-family: var(--serif); font-size: clamp(1rem, 1.6vw, 1.2rem); color: var(--ink); max-width: 58ch; }
+  .foot__commission-copy { max-width: 58ch; }
+  .foot__commission-h { font-family: var(--serif); font-size: clamp(1.1rem, 1.8vw, 1.35rem); font-weight: 700; margin: 0; color: var(--ink); line-height: 1.1; }
+  .foot__commission-text { margin: 0.25em 0 0; color: var(--ink-soft); }
   .foot__commission-btn { white-space: nowrap; flex: none; }
   @media (max-width: 460px) { .foot__commission-btn { width: 100%; text-align: center; } }
   .foot__signup {
