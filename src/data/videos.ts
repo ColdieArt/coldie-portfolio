@@ -14,6 +14,8 @@ export type Video = {
   start?: number;
   /** Watch page at /interviews/{slug}; needs a transcript in data/transcripts/{slug}.md. */
   slug?: string;
+  /** Watch-page <title> when "{title}: interview with {host}" doesn't fit. */
+  pageTitle?: string;
 };
 
 export const videos = {
@@ -36,6 +38,8 @@ export const videos = {
   },
   originStories: {
     id: 'q0f95uetlxw',
+    slug: 'origin-stories-59',
+    pageTitle: 'NFT Origin Stories #59: 24 Hours of Art',
     title: 'Origin Stories #59',
     source: 'NFT Origin Stories',
     desc: 'Coldie traces his obsession with depth: his first stereoscopic gel transfer, early on-chain experiments, the Genesis piece, and the light-painting and portrait series that followed.',
