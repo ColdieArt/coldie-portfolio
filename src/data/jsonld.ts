@@ -1,5 +1,6 @@
 import { site } from './site';
 import type { Work } from './works';
+import type { Video } from './videos';
 
 // schema.org generators. These hand engines the facts in machine-readable form.
 
@@ -38,6 +39,30 @@ export function websiteLd(): Record<string, unknown> {
     description: site.subhead,
     inLanguage: 'en',
     publisher: { '@id': `${site.url}/#person` },
+  };
+}
+
+/** Seconds → ISO 8601 duration, e.g. 4231 → "PT1H10M31S". */
+const isoDuration = (sec: number) => {
+  const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+  return `PT${h ? `${h}H` : ''}${m ? `${m}M` : ''}${s || (!h && !m) ? `${s}S` : ''}`;
+};
+
+// A YouTube embed as a VideoObject — the fields Google requires for video
+// (name, thumbnail, upload date) plus length, embed URL and the artist it's about.
+export function videoLd(v: Video): Record<string, unknown> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: v.title,
+    description: v.desc,
+    thumbnailUrl: [`https://i.ytimg.com/vi/${v.id}/maxresdefault.jpg`, `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`],
+    uploadDate: v.uploadDate,
+    duration: isoDuration(v.durationSec),
+    embedUrl: `https://www.youtube.com/embed/${v.id}`,
+    url: `https://www.youtube.com/watch?v=${v.id}`,
+    about: { '@id': `${site.url}/#person` },
+    creditText: v.source,
   };
 }
 

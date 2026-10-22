@@ -7,6 +7,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import RansomHeading from '../components/RansomHeading.astro';
 import FrontRow3DSlider from '../components/FrontRow3DSlider.astro';
 import YouTubeLite from '../components/YouTubeLite.astro';
+import { videos } from '../data/videos';
 import MediaGrid, { type MediaItem } from '../components/MediaGrid.astro';
 import { site, provenance } from '../data/site';
 import { personLd, breadcrumbLd } from '../data/jsonld';
@@ -386,7 +387,7 @@ const imagesLd = {
       <MediaGrid items={[...artWorks, ...artInstalled]} label="Stereoscopic fine art — anaglyph, lenticular and lit works on canvas and light box" cols={3} />
 
       <figure class="fa__interview">
-        <YouTubeLite id="kMIMr8Ro9So" title="Coldie — first interview (2011)" />
+        <YouTubeLite video={videos.firstInterview} />
         <figcaption class="fa__cap">
           <span class="fa__kicker">The first interview (2011)</span>
           <p class="muted">

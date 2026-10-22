@@ -1,36 +1,10 @@
 ---
 // "In his own words" — interviews across his career in a spacious two-column index
 // (the 2011 first interview lives on /where-ive-been, under Stereoscopic Fine Art). Facade embeds (YouTubeLite) keep it
-// clean and gallery-grade. Titles/descriptions pulled from the YouTube pages.
+// clean and gallery-grade. The interviews themselves live in data/videos.ts.
 import YouTubeLite from './YouTubeLite.astro';
 import RansomHeading from './RansomHeading.astro';
-
-const interviews = [
-  {
-    id: 'Q8cO3HhYGr4',
-    title: 'Digital Art’s Next Frontier',
-    source: 'Raoul Pal · The Journey Man',
-    desc: 'A deep dive into the evolution of digital art: from early stereoscopic experiments and the birth of on-chain art to work blending AI, physical installations, touchscreens, and blockchain-native ownership.',
-  },
-  {
-    id: 'WRO4jSxHdOA',
-    title: 'Coldie and the NFT Gold Rush',
-    source: 'Studio visit · Northern California',
-    desc: 'Coldie minted his first work on-chain via SuperRare in 2018 and became one of the most prolific digital artists in the space, with mixed-media portraits of figures including Edward Snowden, Vitalik Buterin, and John McAfee.',
-  },
-  {
-    id: 'q0f95uetlxw',
-    title: 'Origin Stories #59',
-    source: 'NFT Origin Stories',
-    desc: 'Coldie traces his obsession with depth: his first stereoscopic gel transfer, early on-chain experiments, the Genesis piece, and the light-painting and portrait series that followed.',
-  },
-  {
-    id: 'yVyx-bMoBJQ',
-    title: 'Tech Epochalypse',
-    source: 'NFT Drop Spotlight',
-    desc: 'A close look at Coldie’s Tech Epochalypse collection and the ideas behind it.',
-  },
-];
+import { interviews } from '../data/videos';
 ---
 <section id="story" class="story" aria-labelledby="story-h">
   <div class="wrap">
@@ -44,7 +18,7 @@ const interviews = [
     <ol class="story__index" aria-label="More interviews">
       {interviews.map((iv, i) => (
         <li class="iv">
-          <YouTubeLite id={iv.id} title={`${iv.title} — ${iv.source}`} start={iv.start} />
+          <YouTubeLite video={iv} title={`${iv.title} — ${iv.source}`} />
           <div class="iv__meta">
             <p class="iv__line">
               <span class="iv__num">{String(i + 1).padStart(2, '0')}</span>

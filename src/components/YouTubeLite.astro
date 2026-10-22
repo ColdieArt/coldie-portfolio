@@ -2,8 +2,18 @@
 // Lightweight YouTube facade — shows the poster with a minimal play button and
 // loads the iframe only on click. Cleaner (no YouTube chrome at rest) and faster
 // than embedding every video. 16:9, lazy poster, keyboard accessible.
-export interface Props { id: string; title: string; start?: number; class?: string; }
-const { id, title, start, class: className = '' } = Astro.props;
+// Each embed also carries its VideoObject JSON-LD, so engines know what the video is.
+import { videoLd } from '../data/jsonld';
+import type { Video } from '../data/videos';
+
+export interface Props {
+  video: Video;
+  /** Accessible / iframe title. Defaults to the video's title. */
+  title?: string;
+  class?: string;
+}
+const { video, title = video.title, class: className = '' } = Astro.props;
+const { id, start } = video;
 const poster = `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
 const src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0${start ? `&start=${start}` : ''}`;
 ---
@@ -23,6 +33,7 @@ const src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0${star
       <svg viewBox="0 0 24 24" width="26" height="26"><path d="M8 5v14l11-7z" fill="currentColor" /></svg>
     </span>
   </button>
+  <script type="application/ld+json" set:html={JSON.stringify(videoLd(video))} />
 </div>
 
 <style>
