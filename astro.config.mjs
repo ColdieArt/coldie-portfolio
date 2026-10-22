@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import imgDimensions from './src/integrations/img-dimensions.mjs';
@@ -8,7 +9,13 @@ import market from './src/data/market.json' with { type: 'json' };
 export const SITE = 'https://coldie3d.com';
 
 // Pages built but still awaiting copy — also rendered with noindex. Remove once ready.
-const DRAFT_PAGES = ['/404', ...works.filter((w) => w.draft).map((w) => `/work/${w.slug}`)];
+// Interview watch pages count as drafts until their transcript file sets `ready: true`.
+const TRANSCRIPTS = new URL('./src/data/transcripts/', import.meta.url);
+const draftInterviews = fs
+  .readdirSync(TRANSCRIPTS)
+  .filter((f) => f.endsWith('.md') && !/^ready:\s*true\s*$/m.test(fs.readFileSync(new URL(f, TRANSCRIPTS), 'utf8')))
+  .map((f) => `/interviews/${f.replace(/\.md$/, '')}`);
+const DRAFT_PAGES = ['/404', ...works.filter((w) => w.draft).map((w) => `/work/${w.slug}`), ...draftInterviews];
 
 // Image entries for the sitemap (Google Images): each work page's hero.
 const abs = (p) => new URL(p, SITE).href;

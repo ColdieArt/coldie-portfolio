@@ -1,0 +1,185 @@
+---
+// Interview watch page: the video as the main content (so search engines treat
+// the page as a video page), then summary, chapters, quotes and the full
+// transcript. Built for every video in data/videos.ts that has a `slug` and a
+// transcript file; stays noindex until that file sets `ready: true`.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { site } from '../../data/site';
+import { videos, type Video } from '../../data/videos';
+import { transcripts, toSeconds } from '../../data/transcripts';
+import { personLd, breadcrumbLd, watchVideoLd } from '../../data/jsonld';
+
+export function getStaticPaths() {
+  return Object.values(videos as Record<string, Video>)
+    .filter((v) => v.slug && transcripts[v.slug])
+    .map((v) => ({ params: { slug: v.slug! }, props: { video: v } }));
+}
+
+const { video } = Astro.props as { video: Video };
+const t = transcripts[video.slug!];
+const { ready, summary, chapters = [], quotes = [] } = t.frontmatter;
+
+const path = `/interviews/${video.slug}`;
+const pageUrl = `${site.url}${path}`;
+const chapterList = chapters.map((c) => ({ ...c, start: toSeconds(c.t) }));
+
+// Timestamps written as [12:40] in the transcript become links that jump the player
+// (and work as plain ?t= links without JavaScript).
+const tsLink = (stamp: string) => `<a class="ts" href="?t=${toSeconds(stamp)}" data-t="${toSeconds(stamp)}">${stamp}</a>`;
+const transcriptHtml = (await t.compiledContent()).replace(/\[(\d{1,2}:\d{2}(?::\d{2})?)\]/g, (_, s) => tsLink(s));
+// Plain text for the VideoObject transcript field.
+const transcriptText = t
+  .rawContent()
+  .replace(/\[(\d{1,2}:\d{2}(?::\d{2})?)\]\s*/g, '')
+  .replace(/\*\*/g, '')
+  .replace(/^#+\s*/gm, '')
+  .replace(/\s+\n/g, '\n')
+  .trim();
+
+const date = new Date(video.uploadDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const mins = Math.round(video.durationSec / 60);
+const length = mins >= 60 ? `${Math.floor(mins / 60)} hr ${mins % 60} min` : `${mins} min`;
+const src = `https://www.youtube-nocookie.com/embed/${video.id}?rel=0&enablejsapi=1`;
+---
+<BaseLayout
+  title={`${video.title}: interview with ${video.source.split(' · ')[0]}`}
+  description={summary}
+  path={path}
+  ogType="article"
+  ogImage={`https://i.ytimg.com/vi/${video.id}/maxresdefault.jpg`}
+  ogImageAlt={`${video.title} — ${video.source}`}
+  noindex={!ready}
+  jsonld={[
+    watchVideoLd(video, pageUrl, chapterList, transcriptText),
+    personLd(),
+    breadcrumbLd([
+      { name: 'Home', path: '/' },
+      { name: 'Interviews', path: '/#story' },
+      { name: video.title, path },
+    ]),
+  ]}
+>
+  <article class="watch">
+    <div class="wrap">
+      <nav class="small muted watch__crumb" aria-label="Breadcrumb">
+        <a href="/">Home</a> · <a href="/#story">Interviews</a> · <span>{video.title}</span>
+      </nav>
+
+      <figure class="watch__video">
+        <div class="watch__frame">
+          <iframe
+            id="watch-player"
+            src={src}
+            title={`${video.title} — ${video.source}`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </figure>
+
+      <header class="watch__head">
+        <p class="eyebrow">{video.source}</p>
+        <h1>{video.title}</h1>
+        <p class="small muted watch__meta">
+          <time datetime={video.uploadDate}>{date}</time> · {length} ·
+          <a href={`https://www.youtube.com/watch?v=${video.id}`} target="_blank" rel="noopener">Watch on YouTube</a>
+        </p>
+        <p class="lede">{summary}</p>
+      </header>
+
+      <div class="watch__body">
+        {chapterList.length > 0 && (
+          <section class="watch__chapters" aria-labelledby="watch-ch">
+            <h2 id="watch-ch">Chapters</h2>
+            <ol>
+              {chapterList.map((c) => (
+                <li><a class="ts" href={`?t=${c.start}`} data-t={c.start}>{c.t}</a> {c.title}</li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {quotes.length > 0 && (
+          <section class="watch__quotes" aria-labelledby="watch-q">
+            <h2 id="watch-q">In his words</h2>
+            {quotes.map((q) => (
+              <blockquote>
+                <p>“{q.text}”</p>
+                <footer class="small muted">Coldie · <a class="ts" href={`?t=${toSeconds(q.t)}`} data-t={toSeconds(q.t)}>{q.t}</a></footer>
+              </blockquote>
+            ))}
+          </section>
+        )}
+      </div>
+
+      <section class="watch__transcript" aria-labelledby="watch-tr">
+        <details>
+          <summary><h2 id="watch-tr">Full transcript</h2></summary>
+          <p class="small muted">Lightly edited from the video’s captions for readability.</p>
+          <div class="watch__text" set:html={transcriptHtml} />
+        </details>
+      </section>
+
+      <p class="watch__back"><a class="link-arrow" href="/#story">More interviews</a></p>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .watch { padding-block: clamp(2.5rem, 6vw, 4.5rem) var(--section-y); }
+  .watch__crumb { margin-bottom: 2rem; }
+  .watch__crumb a { text-decoration: none; }
+  .watch__video { margin: 0 0 clamp(1.5rem, 4vw, 2.5rem); }
+  .watch__frame {
+    position: relative; aspect-ratio: 16/9; width: 100%;
+    border-radius: var(--radius); overflow: hidden;
+    border: 1px solid var(--line); background: #000;
+  }
+  .watch__frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .watch__head { max-width: 70ch; margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+  .watch__head h1 { margin: 0.2em 0 0.3em; }
+  .watch__meta { margin: 0 0 1.2em; }
+  .watch__body {
+    display: grid; grid-template-columns: 0.9fr 1.1fr;
+    gap: clamp(2rem, 6vw, 5rem); align-items: start;
+    margin-bottom: clamp(2.5rem, 6vw, 4rem);
+  }
+  .watch__body h2 { margin-top: 0; }
+  .watch__chapters ol { list-style: none; padding: 0; margin: 0; }
+  .watch__chapters li { padding: 0.45em 0; border-top: 1px solid var(--line-soft); }
+  .watch__quotes blockquote { margin: 0 0 1.6em; padding-left: 1em; border-left: 2px solid var(--ink); }
+  .watch__quotes blockquote p { margin: 0 0 0.4em; font-size: 1.1em; }
+  .ts { font-variant-numeric: tabular-nums; margin-right: 0.5em; }
+  .watch__transcript { max-width: var(--measure); }
+  .watch__transcript summary { cursor: pointer; list-style: none; }
+  .watch__transcript summary::-webkit-details-marker { display: none; }
+  .watch__transcript summary h2 { display: inline; }
+  .watch__transcript summary::after { content: ' +'; font-size: 1.4em; }
+  .watch__transcript details[open] summary::after { content: ' −'; }
+  .watch__text :global(p) { margin: 0 0 1em; }
+  .watch__back { margin-top: clamp(2rem, 5vw, 3rem); }
+  @media (max-width: 760px) { .watch__body { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  // Timestamp links seek the embedded player instead of reloading the page.
+  // A ?t= in the URL (from search "key moments") starts the video there.
+  const player = document.getElementById('watch-player') as HTMLIFrameElement | null;
+  const command = (func: string, args: unknown[] = []) =>
+    player?.contentWindow?.postMessage(JSON.stringify({ event: 'command', func, args }), '*');
+  const seek = (sec: number) => {
+    command('seekTo', [sec, true]);
+    command('playVideo');
+    player?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+  document.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a.ts');
+    if (!a || !player) return;
+    e.preventDefault();
+    seek(Number(a.dataset.t));
+    history.replaceState(null, '', `?t=${a.dataset.t}`);
+  });
+  const start = Number(new URLSearchParams(location.search).get('t'));
+  if (start && player) player.src = player.src.replace('enablejsapi=1', `enablejsapi=1&start=${start}`);
+</script>

@@ -66,6 +66,29 @@ export function videoLd(v: Video): Record<string, unknown> {
   };
 }
 
+// The watch-page version: chapters become Clips (Google "key moments") that link
+// to the page at that time, and the transcript text rides along.
+export function watchVideoLd(
+  v: Video,
+  pageUrl: string,
+  chapters: { title: string; start: number }[],
+  transcript?: string
+): Record<string, unknown> {
+  const ld = videoLd(v);
+  ld.mainEntityOfPage = pageUrl;
+  if (chapters.length) {
+    ld.hasPart = chapters.map((c, i) => ({
+      '@type': 'Clip',
+      name: c.title,
+      startOffset: c.start,
+      endOffset: chapters[i + 1]?.start ?? v.durationSec,
+      url: `${pageUrl}?t=${c.start}`,
+    }));
+  }
+  if (transcript) ld.transcript = transcript;
+  return ld;
+}
+
 export function breadcrumbLd(trail: { name: string; path: string }[]): Record<string, unknown> {
   return {
     '@context': 'https://schema.org',

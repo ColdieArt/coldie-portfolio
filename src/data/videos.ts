@@ -12,11 +12,14 @@ export type Video = {
   uploadDate: string;
   durationSec: number;
   start?: number;
+  /** Watch page at /interviews/{slug}; needs a transcript in data/transcripts/{slug}.md. */
+  slug?: string;
 };
 
 export const videos = {
   raoulPal: {
     id: 'Q8cO3HhYGr4',
+    slug: 'raoul-pal',
     title: 'Digital Art’s Next Frontier',
     source: 'Raoul Pal · The Journey Man',
     desc: 'A deep dive into the evolution of digital art: from early stereoscopic experiments and the birth of on-chain art to work blending AI, physical installations, touchscreens, and blockchain-native ownership.',

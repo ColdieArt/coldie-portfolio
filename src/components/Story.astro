@@ -5,6 +5,10 @@
 import YouTubeLite from './YouTubeLite.astro';
 import RansomHeading from './RansomHeading.astro';
 import { interviews } from '../data/videos';
+import { transcripts } from '../data/transcripts';
+
+// An interview links to its watch page once its reviewed transcript is live.
+const watchUrl = (slug?: string) => (slug && transcripts[slug]?.frontmatter.ready ? `/interviews/${slug}` : null);
 ---
 <section id="story" class="story" aria-labelledby="story-h">
   <div class="wrap">
@@ -26,6 +30,7 @@ import { interviews } from '../data/videos';
             </p>
             <h3 class="iv__title">{iv.title}</h3>
             <p class="iv__desc">{iv.desc}</p>
+            {watchUrl(iv.slug) && <a class="link-arrow iv__watch" href={watchUrl(iv.slug)}>Watch with transcript</a>}
           </div>
         </li>
       ))}
