@@ -23,6 +23,8 @@ export const site = {
     instagram: 'https://instagram.com/coldie3dart',
     x: 'https://x.com/Coldie',
   },
+  // X handle for twitter:site / twitter:creator.
+  xHandle: '@Coldie',
   // Artist profiles on the platforms where the work was minted and is collected.
   // Listed as sameAs so search and AI engines connect them to the same artist.
   profiles: {

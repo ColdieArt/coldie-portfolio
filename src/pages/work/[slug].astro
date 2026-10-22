@@ -40,6 +40,7 @@ const desc = work.caption.split('. ')[0].replace(/\.?$/, '.');
   path={`/work/${work.slug}`}
   ogType="article"
   ogImage={ogImage}
+  ogImageAlt={ogImage ? (work.imageAlt ?? work.title) : undefined}
   noindex={work.draft}
   jsonld={ld}
 >
@@ -138,7 +139,11 @@ const desc = work.caption.split('. ')[0].replace(/\.?$/, '.');
         <div class="work__cta">
           {work.ownership !== 'edition' && <a href="#inquire" class="btn btn--solid">Inquire</a>}
           {work.ownership !== 'physical' && (
-            <a href={work.marketplaceUrl || '/collection'} class="btn">View edition</a>
+            <a
+              href={work.marketplaceUrl || '/collection'}
+              class="btn"
+              {...(work.marketplaceUrl?.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}
+            >View edition{work.marketplaceUrl?.startsWith('http') ? ' ↗' : ''}</a>
           )}
         </div>
       </div>

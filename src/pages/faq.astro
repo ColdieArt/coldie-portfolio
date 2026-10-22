@@ -131,6 +131,10 @@ const glossary: { term: string; def: string }[] = [
 const description =
   'Answers about Coldie, the stereoscopic-3D and kinetic artist who minted the first 3D artwork on a blockchain in 2018 — the Decentral Eyes series, auctions at Christie’s, Sotheby’s and Bonhams, Front Row 3D, where to collect — plus a glossary of 3D terms: anaglyph, lenticular, parallax, wigglegram and more.';
 
+// Search snippets cut off near 160 characters; the full lede stays on the page.
+const metaDescription =
+  'Answers about Coldie, who minted the first stereoscopic 3D artwork on a blockchain in 2018: Decentral Eyes, his auctions, where to collect, and a 3D glossary.';
+
 const faqLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -174,8 +178,8 @@ const explore = [
 ];
 ---
 <BaseLayout
-  title="Coldie FAQ — Stereoscopic 3D & Crypto Art, Answered"
-  description={description}
+  title="FAQ — Stereoscopic 3D & Crypto Art, Answered"
+  description={metaDescription}
   path={PATH}
   jsonld={[personLd(), faqLd, glossaryLd, breadcrumbLd([{ name: 'Home', path: '/' }, { name: 'FAQ', path: PATH }])]}
 >

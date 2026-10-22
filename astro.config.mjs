@@ -28,7 +28,11 @@ export default defineConfig({
     imgDimensions(),
     sitemap({
       // Draft pages (copy not written yet) stay out until their copy file sets ready: true.
-      filter: (page) => !DRAFT_PAGES.includes(pathOf(page)),
+      // Internal reports (noindex) and non-page endpoints like /llms.txt stay out too.
+      filter: (page) => {
+        const path = pathOf(page);
+        return !DRAFT_PAGES.includes(path) && !path.startsWith('/internal') && !path.endsWith('.txt');
+      },
       // Editorial site — weekly is honest for a portfolio.
       changefreq: 'weekly',
       priority: 0.7,

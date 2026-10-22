@@ -163,6 +163,8 @@ const hero = works.find((r) => /\bdogg\b/i.test(r.title)) ?? topSale ?? works[0]
 const description =
   copy.lead ??
   `Decentral Eyes is Coldie’s stereoscopic 3D portrait series of crypto and tech figures, ${firstYear}–${lastYear}: ${works.length} releases across SuperRare, Nifty Gateway and OpenSea.`;
+// Search-snippet length (~160 chars); the full lead from the copy doc is used on the page and in JSON-LD.
+const metaDescription = `Decentral Eyes is Coldie’s stereoscopic 3D portrait series of the people who shaped crypto and tech, ${firstYear}–${lastYear}: ${works.length} releases.`;
 const absolute = (p: string) => new URL(p, site.url).href;
 
 // Everyone the series portrays — named entities for search and AI answer engines.
@@ -247,8 +249,8 @@ const faqLd = answered.length
 const FILE = 'src/data/copy/decentral-eyes.ts';
 ---
 <BaseLayout
-  title={`Decentral Eyes — Stereoscopic 3D Crypto Portrait Series (${firstYear}–${lastYear})`}
-  description={description}
+  title={`Decentral Eyes — 3D Crypto Portraits, ${firstYear}–${lastYear}`}
+  description={metaDescription}
   path={PATH}
   ogImage="/og/decentral-eyes.png"
   noindex={!copy.ready}

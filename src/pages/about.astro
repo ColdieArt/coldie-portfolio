@@ -5,9 +5,8 @@ import { site } from '../data/site';
 import { personLd, breadcrumbLd } from '../data/jsonld';
 import headshot from '../assets/coldie-headshot.jpg';
 
-// Person JSON-LD with the headshot attached (helps answer engines + rich results).
+// Person JSON-LD (its image is the headshot; see personLd).
 const person = personLd();
-person.image = new URL(headshot.src, site.url).href;
 ---
 <BaseLayout
   title="About"

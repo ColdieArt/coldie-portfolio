@@ -11,6 +11,7 @@ export function personLd(): Record<string, unknown> {
     name: site.name,
     description: site.oneLineBio,
     url: site.url,
+    image: `${site.url}/images/coldie-headshot.jpg`,
     jobTitle: 'Stereoscopic-3D and kinetic artist',
     homeLocation: { '@type': 'Place', name: site.location },
     knowsAbout: [
