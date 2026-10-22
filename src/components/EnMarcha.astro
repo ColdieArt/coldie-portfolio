@@ -1,7 +1,7 @@
 ---
-// En Marcha — interactive kinetic 3D mural (Digital Encounters), embedded live like
-// the Tech Epochalypse overlord: no button. The iframe is lazy, so the browser loads
-// it as a visitor scrolls near; the still poster shows until it's ready. The IPFS
+// En Marcha — interactive kinetic 3D mural (Digital Encounters). Click-to-start, the
+// same pattern as the Available works page: the still poster shows with a play button;
+// the live artwork preloads quietly after the page loads and reveals on click. The IPFS
 // gateway serves the HTML with no framing restriction, so it embeds directly.
 import RansomHeading from './RansomHeading.astro';
 const ART = 'https://ipfs2.seadn.io/ipfs/bafybeihz2miflux2g7uobrgobrqnzz74cllitoew57njalwqraudriqpra/media';
@@ -22,18 +22,22 @@ const TRANSIENT = 'https://www.transient.xyz/nfts/ethereum/0x034220c41322ff03db1
     </header>
 
     <figure class="enm__stage">
-      <div class="enm__player" data-enm-player>
-        <!-- poster shows until the live mural has loaded, then fades away -->
-        <img class="enm__poster" src="/works/digital/en-marcha.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+      <div class="enm__player" data-enm-frame>
         <iframe
           class="enm__iframe"
-          src={ART}
+          data-src={ART}
           title="En Marcha — interactive kinetic 3D mural by Coldie"
-          loading="lazy"
           allow="accelerometer; gyroscope; fullscreen"
           allowfullscreen
-          onload="this.parentElement.setAttribute('data-loaded', '')"
+          tabindex="-1"
+          data-enm-live
         ></iframe>
+        <!-- poster shows until the visitor starts the live mural -->
+        <img class="enm__poster" src="/works/digital/en-marcha.webp" alt="En Marcha — interactive kinetic 3D mural by Coldie" loading="lazy" decoding="async" />
+        <button type="button" class="enm__start" data-enm-start aria-label="Start En Marcha, interactive artwork">
+          <span class="enm__play" aria-hidden="true">▶</span>
+          <span class="enm__label" data-enm-label>Click to start · touch the art</span>
+        </button>
       </div>
       <figcaption class="enm__cap">
         En Marcha #2 — Digital Encounters.
@@ -63,47 +67,28 @@ const TRANSIENT = 'https://www.transient.xyz/nfts/ethereum/0x034220c41322ff03db1
     overflow: hidden; background: var(--bg-raise);
     box-shadow: 6px 6px 0 color-mix(in srgb, var(--cyan) 24%, transparent);
   }
-  .enm__launch {
-    position: absolute; inset: 0; width: 100%; height: 100%;
-    display: block; padding: 0; border: 0; cursor: pointer;
-    background: none; color: var(--ink); text-align: left;
-  }
   .enm__poster {
-    position: absolute; inset: 0; width: 100%; height: 100%;
-    object-fit: cover; display: block;
-    transition: transform 0.6s cubic-bezier(0.22,0.61,0.36,1);
+    position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1;
+    object-fit: cover; display: block; transition: opacity 0.5s;
   }
-  .enm__launch:hover .enm__poster,
-  .enm__launch:focus-visible .enm__poster { transform: scale(1.03); }
-  .enm__scrim {
-    position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.12) 42%, rgba(0,0,0,0.22) 100%);
+  .enm__iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; opacity: 0; pointer-events: none; }
+  /* Click-to-start overlay — matches the Available works page. */
+  .enm__start {
+    position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; align-content: center; gap: 0.9rem;
+    padding: 0; border: 0; cursor: pointer; color: #fff; font: inherit;
+    background: linear-gradient(to top, rgb(0 0 0 / 0.6), rgb(0 0 0 / 0.1) 55%);
+    transition: opacity 0.5s;
   }
   .enm__play {
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: 78px; height: 78px; border-radius: 50%;
-    display: grid; place-items: center;
-    background: var(--red); color: #141414;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.45);
+    width: 78px; height: 78px; border-radius: 50%; display: grid; place-items: center; padding-left: 4px;
+    background: #f3f1ec; color: #141414; font-size: 1.6rem; box-shadow: 0 6px 24px rgb(0 0 0 / 0.45);
     transition: transform 0.25s ease;
   }
-  .enm__play svg { margin-left: 3px; }
-  .enm__launch:hover .enm__play,
-  .enm__launch:focus-visible .enm__play { transform: translate(-50%, -50%) scale(1.08); }
-  .enm__launch-label {
-    position: absolute; left: 0; right: 0; bottom: 0;
-    padding: clamp(1rem, 2.5vw, 1.6rem);
-    font-family: var(--display); text-transform: uppercase; letter-spacing: 0.02em;
-    font-size: clamp(1.05rem, 2vw, 1.5rem); line-height: 1.1; color: #fff;
-  }
-  .enm__launch-label small {
-    display: block; margin-top: 0.5em;
-    font-family: var(--type); text-transform: uppercase; letter-spacing: 0.08em;
-    font-size: 0.72rem; color: rgba(255,255,255,0.74);
-  }
-  .enm__iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; opacity: 0; transition: opacity 0.6s; }
-  .enm__player[data-loaded] .enm__iframe { opacity: 1; }
-  .enm__player[data-loaded] { box-shadow: 6px 6px 0 color-mix(in srgb, var(--red) 26%, transparent); }
+  .enm__start:is(:hover, :focus-visible) .enm__play { transform: scale(1.08); }
+  .enm__label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; text-shadow: 0 1px 6px rgb(0 0 0 / 0.6); }
+  .enm__player[data-live] .enm__iframe { opacity: 1; pointer-events: auto; z-index: 3; }
+  .enm__player[data-live] .enm__poster, .enm__player[data-live] .enm__start { opacity: 0; pointer-events: none; }
+  .enm__player[data-live] { box-shadow: 6px 6px 0 color-mix(in srgb, var(--red) 26%, transparent); }
   .enm__cap {
     margin: 0.9em 0 0; font-family: var(--type); font-size: 0.8rem;
     letter-spacing: 0.04em; color: var(--ink-mute);
@@ -115,3 +100,27 @@ const TRANSIENT = 'https://www.transient.xyz/nfts/ethereum/0x034220c41322ff03db1
   @media (prefers-reduced-motion: reduce) { .enm__poster, .enm__play { transition: none; } }
 </style>
 
+
+<script>
+  // Click-to-start, matching the Available works page: preload the live artwork quietly
+  // once the page has loaded so it's ready by the time someone clicks; clicking before
+  // it's ready shows a loading label and reveals it the moment it finishes.
+  document.querySelectorAll<HTMLIFrameElement>('iframe[data-enm-live]').forEach((frame) => {
+    const box = frame.closest<HTMLElement>('.enm__player');
+    const start = box?.querySelector<HTMLButtonElement>('[data-enm-start]');
+    const label = box?.querySelector<HTMLElement>('[data-enm-label]');
+    if (!box || !start) return;
+    let ready = false, wanted = false;
+    const reveal = () => { box.setAttribute('data-live', ''); frame.tabIndex = 0; frame.focus({ preventScroll: true }); };
+    frame.addEventListener('load', () => { if (!frame.src) return; ready = true; if (wanted) reveal(); });
+    const load = () => { if (!frame.src) frame.src = frame.dataset.src ?? ''; };
+    const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(load, { timeout: 2000 }) : setTimeout(load, 300));
+    if (document.readyState === 'complete') idle(); else addEventListener('load', idle, { once: true });
+    start.addEventListener('click', () => {
+      wanted = true;
+      load();
+      if (ready) reveal();
+      else if (label) label.textContent = 'Loading…';
+    });
+  });
+</script>
