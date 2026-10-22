@@ -277,6 +277,22 @@ export const works: Work[] = [
     imageAlt: 'Coldie — Jack Dorsey magnetic rearrangeable portrait at Eterno Gallery',
     interaction: 'drag',
     ownership: 'physical',
+    curated: true,
+  },
+  {
+    slug: 'the-day-magnet',
+    title: "The Day We've All Been Waiting For — Magnetic",
+    year: 2026, // [CONFIRM] year & details
+    pillar: 'kinetic',
+    medium: 'Magnetic, rearrangeable 3D-collage pieces on magnetic depth spacers; mixed media',
+    artform: 'Kinetic magnetic portrait',
+    caption:
+      'The 2018 genesis artwork reimagined as a kinetic magnetic 3D collage: the astronaut, the HODL billboard and the moon lift off the city skyline on magnetic depth spacers, and the collector can rearrange the composition.',
+    image: '/works/the-day-magnet/the-day-magnet.jpg',
+    imageAlt: "The Day We've All Been Waiting For — Coldie's kinetic magnetic 3D collage: an astronaut and HODL billboard floating off a city skyline on magnetic spacers",
+    interaction: 'drag',
+    ownership: 'physical',
+    curated: true,
   },
   {
     slug: '32-touchscreen-interactive',
