@@ -1,5 +1,7 @@
 # Review: NFT Origin Stories #59 transcript
 
+**Status (2026-10-22):** published. Markers resolved the same way as the Raoul Pal transcript: unrecoverable words → [inaudible] (5), best-guess words kept without [?], muted profanity shown as —, the 1:34:25 line assigned to Coldie. The "Ryan" mention at 15:46 is kept as said. Bucket T alt text fixed in site.ts and works.ts (Roger May collaboration, Bucket T is the car).
+
 Transcript file: `src/data/transcripts/origin-stories-59.md` (draft page at `/interviews/origin-stories-59`, noindex until `ready: true`).
 
 It was cleaned from YouTube's auto-captions, which had no punctuation or capitals. Punctuation was added, fillers, stutters and false starts were removed, and names were fixed. Nothing was reworded or added. It's about 16,300 words. The chapters are the official ones from the video's YouTube description.

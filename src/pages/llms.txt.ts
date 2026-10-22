@@ -49,6 +49,7 @@ const body = `# Coldie
 - Archive — every digital release since 2018, as a browsable grid or a searchable database with dates, collectors and prices: ${site.url}/archive
 - Where I've been — the formative years, 2005–2018 (design work, LA Weekly, Coachella 3D photography): ${site.url}/where-ive-been
 - Where I'm going — kinetic 3D and what comes next: ${site.url}/where-im-going
+- Interview: *NFT Origin Stories #59* (2022) — his origin story, early on-chain experiments, the Genesis variants, light paintings and Trust Your Intuition, with chapters and full transcript: ${site.url}/interviews/origin-stories-59
 - Interview: *Digital Art's Next Frontier* with Raoul Pal (The Journey Man, 2026) — video with chapters and full transcript: ${site.url}/interviews/raoul-pal
 
 ## Key works

@@ -150,7 +150,7 @@ export const works: Work[] = [
       },
     ],
     image: '/works/3d-light-painting-03/hero.jpg',
-    imageAlt: '3D Light Painting 03 — stereoscopic 3D light painting by Coldie with Bucket T (2018)',
+    imageAlt: '3D Light Painting 03 — stereoscopic 3D light painting of a vintage Bucket T car by Coldie and Roger May (2018)',
     interaction: 'none',
     curated: true,
     ownership: 'edition',

@@ -79,7 +79,7 @@ export const provenance: {
     note: '3D Light Painting 03',
     type: 'Digital',
     image: '/works/3d-light-painting-03/hero.jpg',
-    imageAlt: "3D Light Painting 03 (2018) by Coldie with Bucket T, sold at Sotheby's",
+    imageAlt: "3D Light Painting 03 (2018) by Coldie and Roger May, a stereoscopic light painting of a vintage Bucket T car, sold at Sotheby's",
     event: 'Inside the World of MaxStealth · Sept 14, 2022',
     desc: "Included in the first single-owner NFT auction held live in Sotheby's salesroom, alongside Beeple, XCOPY and Pak. UAP, Coldie's 3D collaboration with Hackatao, was in the same sale.",
   },
