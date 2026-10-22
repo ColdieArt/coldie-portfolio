@@ -116,7 +116,10 @@ const src = `https://www.youtube-nocookie.com/embed/${video.id}?rel=0&enablejsap
       <section class="watch__transcript" aria-labelledby="watch-tr">
         <details>
           <summary><h2 id="watch-tr">Full transcript</h2></summary>
-          <p class="small muted">Lightly edited from the video’s captions for readability.</p>
+          <p class="small muted">
+            Lightly edited from the video’s captions for readability. A dash (—) marks a word the captions muted;
+            [inaudible] marks a word they couldn’t make out.
+          </p>
           <div class="watch__text" set:html={transcriptHtml} />
         </details>
       </section>

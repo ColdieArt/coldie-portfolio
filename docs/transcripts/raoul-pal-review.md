@@ -1,5 +1,7 @@
 # Review: Raoul Pal interview transcript
 
+**Status (2026-10-22):** approved and published. Remaining markers were resolved as follows: garbled names → [inaudible], best-guess words kept without [?], muted profanity shown as —, the 53:05 line assigned to Coldie, and both ad reads cut.
+
 Transcript file: `src/data/transcripts/raoul-pal.md` (draft page at `/interviews/raoul-pal`, noindex until `ready: true`).
 
 It was cleaned from YouTube's auto-captions: fillers, stutters and false starts were removed, and punctuation and names were fixed. Nothing was reworded or added. Search the file for each marker below, fix it or delete it, then set `ready: true`.

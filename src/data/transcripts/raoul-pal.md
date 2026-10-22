@@ -1,7 +1,7 @@
 ---
 # Reviewed by Coldie? Flip to true to publish: removes noindex, adds the page to the
 # sitemap and links it from the homepage interviews.
-ready: false
+ready: true
 summary: "Coldie talks with Raoul Pal about stereoscopic 3D from View-Masters to the blockchain, Filthy Fiat's buried bills, and why his new work asks you to touch the art."
 chapters:
   - { t: "0:00", title: "Intro" }
@@ -33,9 +33,9 @@ quotes:
 
 [0:00] **COLDIE:** "Don't touch the art." Right? How many times have we said that? And it made this negative spin in my head. It was like, why am I telling my kid not to experience something in the way that he wants to? This mantra drove me to look at my own practice in a way that invites people to experience art.
 
-[0:00] **RAOUL:** I don't know what you're talking about, but it sounds cool as [—] and I trust you. But I've just seen it grow over time. It's like, wow, this is incredible.
+[0:00] **RAOUL:** I don't know what you're talking about, but it sounds cool as — and I trust you. But I've just seen it grow over time. It's like, wow, this is incredible.
 
-[0:00] **COLDIE:** And it truly was magic. A lot of times in the creative process, I try to get out of my own way. And it's almost like a movie where you just have to keep playing the scene and you don't know what's going to happen next, but if you allow yourself to detach from expectations and anything like that, that's where the real cool [—] happens.
+[0:00] **COLDIE:** And it truly was magic. A lot of times in the creative process, I try to get out of my own way. And it's almost like a movie where you just have to keep playing the scene and you don't know what's going to happen next, but if you allow yourself to detach from expectations and anything like that, that's where the real cool — happens.
 
 [0:32] **RAOUL:** Even the story of you have the piece of paper issued by the US government, you go into the bank and try and exchange it for a fungible and you're told it's non-fungible. I mean, that's wild.
 
@@ -71,19 +71,19 @@ quotes:
 
 [3:16] After that, I don't know how we got these. It was my grandparents. This is from like the 1910s. Same technology: two images create a stereoscopic picture. This is a Wild West, with a lasso guy. I had that around. Instead of watching a movie, I'd look at 3D cards. It was very odd, but it was there and I liked it.
 
-[3:49] So time goes on, I'm not even thinking about stereoscopic, but then I go to high school and I have this amazing video production and graphic design class. I was surrounded by guys who later went on to be, like, early Uber [?] DP for, like, the "I'm on a Boat" music video — really, really high-end guys. And we're just these nerdy mountain kids, right? If you looked at us, they're like, this is a ragtag group of kids. I don't know, the cosmos aligned and we were doing cool [—] with each other, and then we all went off into the world.
+[3:49] So time goes on, I'm not even thinking about stereoscopic, but then I go to high school and I have this amazing video production and graphic design class. I was surrounded by guys who later went on to be, like, early [inaudible] DP for, like, the "I'm on a Boat" music video — really, really high-end guys. And we're just these nerdy mountain kids, right? If you looked at us, they're like, this is a ragtag group of kids. I don't know, the cosmos aligned and we were doing cool — with each other, and then we all went off into the world.
 
 [4:54] And through that I went to get my art degree. And all of these things that I had been planting seeds in my mind, I knew I was like, I want to go after that stuff, because I connected with it. It was a weird mix of science and math and art in these weird ways. And I guess, long story short, that's what kind of wove me into what I'm doing now.
 
-[5:25] **RAOUL:** So where did technology, blockchain, all of these things start layering into this? 'Cause you come out of art school, all of that stuff, great. But dot dot dot, Coldie becomes one of the best collectors in the space, one of the pioneers of the space, somebody representing the culture of the space and building all on blockchain. I mean, that's quite a big leap from "Yeah, we were doing cool [—] at university."
+[5:25] **RAOUL:** So where did technology, blockchain, all of these things start layering into this? 'Cause you come out of art school, all of that stuff, great. But dot dot dot, Coldie becomes one of the best collectors in the space, one of the pioneers of the space, somebody representing the culture of the space and building all on blockchain. I mean, that's quite a big leap from "Yeah, we were doing cool — at university."
 
 [5:25] **COLDIE:** Yeah, yeah, sure. So I'm getting my art degree and I'm living in LA. And one of the biggest paths that opened up for me was one of my professors at school set me up with an interview to work for LA Weekly, which is the biggest alternative paper. It's kind of like the Village Voice — it's the same company as the Village Voice in New York. Every week we had 100,000 readers. I was designing the covers for those right out of school.
 
 [5:58] **RAOUL:** Wow.
 
-[5:58] **COLDIE:** And jumping into the fire, right? Like, if you [—] up on that cover and it goes to print with a typo, 100,000 people are going to dog on you, right? It was no joke. And I remember it went to press on Tuesday night. I'd stay late till like 2:00 a.m. doing covers. Sometimes the cover would change if there's a news story at like 11:00 p.m. Editor comes down and says, "Cool job on that one, but that's out. Here's your new cover. I need it in half an hour. Let's go." So I got used to designing extremely quickly and efficiently.
+[5:58] **COLDIE:** And jumping into the fire, right? Like, if you — up on that cover and it goes to print with a typo, 100,000 people are going to dog on you, right? It was no joke. And I remember it went to press on Tuesday night. I'd stay late till like 2:00 a.m. doing covers. Sometimes the cover would change if there's a news story at like 11:00 p.m. Editor comes down and says, "Cool job on that one, but that's out. Here's your new cover. I need it in half an hour. Let's go." So I got used to designing extremely quickly and efficiently.
 
-[6:31] But every morning when it would hit the newsstands — I had a stand near my house — I would anxiously speed-walk to that stand and pull it out and make sure I didn't [—] up. 'Cause even though I looked at it a thousand times, it's like, "Did I spell the headline wrong?" I don't even know, you know?
+[6:31] But every morning when it would hit the newsstands — I had a stand near my house — I would anxiously speed-walk to that stand and pull it out and make sure I didn't — up. 'Cause even though I looked at it a thousand times, it's like, "Did I spell the headline wrong?" I don't even know, you know?
 
 [7:06] So LA Weekly opened up everything. I got access to art show openings. I was doing concert reviews that they were publishing. I just got to fit in where I wanted. I was like, "Hey, I want to go see Tool." They're like, "Oh, I can get you a photo pass or review pass for that." I was like, "Oh, okay." And the same night that I did Tool, I also did a review for Obama. He was doing a — I had to leave Obama's talk halfway through and then go to Tool. That was LA Weekly, right?
 
@@ -91,7 +91,7 @@ quotes:
 
 [8:12] **RAOUL:** Yeah, 'cause Banksy did that famous exhibition early on in LA, didn't they? It was the painted elephant.
 
-[8:12] **COLDIE:** That's right. Yeah. So my boss comes up to me randomly on a Tuesday. She's like, "Okay, so you're done for today. Here's an address. Just go and pretend like you're supposed to be there." That's all she said. I was like, maybe this is some scouting trip for a cover, I have no idea. I walk in there like I'm the boss, right? People are working, shuffling around, and I walk into the Banksy exhibit as they're setting it up. And I'm like, "Holy shit." I was not prepared for that. So I'm playing it cool, just kind of walking around, meandering. And then, like, Macaulay Culkin is next to me buying art. You know, it's just some weird LA [—].
+[8:12] **COLDIE:** That's right. Yeah. So my boss comes up to me randomly on a Tuesday. She's like, "Okay, so you're done for today. Here's an address. Just go and pretend like you're supposed to be there." That's all she said. I was like, maybe this is some scouting trip for a cover, I have no idea. I walk in there like I'm the boss, right? People are working, shuffling around, and I walk into the Banksy exhibit as they're setting it up. And I'm like, "Holy shit." I was not prepared for that. So I'm playing it cool, just kind of walking around, meandering. And then, like, Macaulay Culkin is next to me buying art. You know, it's just some weird LA —.
 
 [8:45] And my whole mantra, still to this day — I never had money to buy art. I'm an artist, right? But I would go into every single show with the vision that I want to pick my two favorite pieces from this show. And if I was a collector, I would buy those, right? So every show I would study everything, and at the end of the night I'd kind of be like, yeah, I'd get that one and that one, right?
 
@@ -101,13 +101,13 @@ quotes:
 
 [10:24] **COLDIE:** Yeah. So while I was at LA Weekly, I got my first stereoscopic job, doing a 3D glasses campaign for a concert. And through that, I started making lenticulars. So I was developing my art repertoire of what I wanted to create.
 
-[10:55] And then in 2017, I was watching a podcast about gold and silver and "what the [—] is money," right? I went to art school. I literally didn't know about finance. I was like, I got to learn something. Inevitably, somebody came on talking about crypto and Bitcoin, and it clicked. I was like, ooh, okay. It just registered. And I quickly saw this emerging — you know, it'd been around for what, 6 years, but it was still very early.
+[10:55] And then in 2017, I was watching a podcast about gold and silver and "what the — is money," right? I went to art school. I literally didn't know about finance. I was like, I got to learn something. Inevitably, somebody came on talking about crypto and Bitcoin, and it clicked. I was like, ooh, okay. It just registered. And I quickly saw this emerging — you know, it'd been around for what, 6 years, but it was still very early.
 
 [11:30] **RAOUL:** What year are we talking?
 
 [11:30] **COLDIE:** 2016–17. Yeah. And I was like, how do I help promote this new thing? And my tangible skill on this earth is art. So I typed in "blockchain" —
 
-[11:30] **RAOUL:** … selling up to this point? [?]
+[11:30] **RAOUL:** … selling up to this point?
 
 [11:30] **COLDIE:** Yeah, I'd started getting into gallery shows. So I'd been getting stuff going, but art is a really arduous, long task. So I was doing it, people were responding to it, and I was creating a body of work, right? Which is the hardest part for an artist: to get together a group of things that are cohesive. That's when you can then take it to a gallery and say, "Hey, here's what I do."
 
@@ -125,7 +125,7 @@ quotes:
 
 [13:41] **RAOUL:** Had you sold anything?
 
-[13:41] **COLDIE:** No. Mostly to either the platform owners, or if I hustled at an event and found one person. And everything was 10, 15 bucks. My first Vitalik portrait was on there and no one ever bought one. So I ended up burning all 25 tokens and then re-minting it years later as The Lost Vitalik, and then sold. So it was a crazy time. There was, like I said, zero expectations. Nobody gave a [—]. It was weird.
+[13:41] **COLDIE:** No. Mostly to either the platform owners, or if I hustled at an event and found one person. And everything was 10, 15 bucks. My first Vitalik portrait was on there and no one ever bought one. So I ended up burning all 25 tokens and then re-minting it years later as The Lost Vitalik, and then sold. So it was a crazy time. There was, like I said, zero expectations. Nobody gave a —. It was weird.
 
 [14:46] **RAOUL:** And then you kind of started coalescing around a couple of cultural ideas that you wanted to explore. One being, obviously, Filthy Fiat and the idea behind money itself, and the other about technology and what's happening. Talk us through, because I've always thought of your work as very prescient about what is really happening to culture, to society, expressed through this medium. That's why I've collected your work, 'cause it's super appealing to me, 'cause it's the language I speak and how I think.
 
@@ -137,11 +137,11 @@ quotes:
 
 [16:22] **RAOUL:** Because it's the recorded storytelling of what it meant to be alive today.
 
-[16:22] **COLDIE:** Yeah. Yeah. And, you know, John McAfee — if you were around in 2017, you would definitely remember him saying he would eat his blank on national television if Bitcoin was not a million dollars, right? That was well-known information, that John was going to do that. So I put that in the portraits of him. That has to be recorded, and it was funny as [—] to put that in there, right? But I'm like, he said it. I'm just the recorder here.
+[16:22] **COLDIE:** Yeah. Yeah. And, you know, John McAfee — if you were around in 2017, you would definitely remember him saying he would eat his blank on national television if Bitcoin was not a million dollars, right? That was well-known information, that John was going to do that. So I put that in the portraits of him. That has to be recorded, and it was funny as — to put that in there, right? But I'm like, he said it. I'm just the recorder here.
 
 [16:56] So it became really important to me to have these times and places. And like you're talking about, the latest portrait series is called Tech Epochalypse, which you have collected — thank you for supporting that. It's meant to be an educational study, right? Where you see these faces of people and you can be like, "Oh my god, is that Elon Musk?" Right? If I have that conversation at the gallery, I've already won, right? Because they're looking at the art and they've connected to a face. Then the next question is, "Why did you do a portrait of Elon Musk?" Or, "Why Jeff Bezos?" And that's perfect, right? That's the exact reason that this is here: to teach people about what is happening, what they're doing to help us, and control us, right?
 
-[17:29] **RAOUL:** Yeah. I mean, what I loved about this series was — and you've been kind of working towards it anyway — but even the name, Tech Epochalypse, is both things. It's the epoch of today that's all technology. Technology is culture, is everything right now. In fact, it's going to be everything. And yeah, sure, we'll have a counterbalance of nature and stuff, but really it is the main focus of humanity. And is it good or bad? Well, that's the "-lypse" at the end of it [?].
+[17:29] **RAOUL:** Yeah. I mean, what I loved about this series was — and you've been kind of working towards it anyway — but even the name, Tech Epochalypse, is both things. It's the epoch of today that's all technology. Technology is culture, is everything right now. In fact, it's going to be everything. And yeah, sure, we'll have a counterbalance of nature and stuff, but really it is the main focus of humanity. And is it good or bad? Well, that's the "-lypse" at the end of it.
 
 [18:02] And then having those key characters, because these people are probably the most important people in all of humanity, because they're going to shepherd us from being apex intelligence to sub-apex intelligence, and we'll have birthed a new super creature. And our entire existence is in their hands. I mean, it's wild.
 
@@ -151,7 +151,7 @@ quotes:
 
 [19:07] **COLDIE:** Exactly. Yeah, so it became educational for me as well, right? 'Cause I'm making this series and then I'm digging more into what these people are doing, and I'm —
 
-[19:07] **RAOUL:** But why did you feel like you had to comment? It's not that you did comment, but what made you as an artist think, this is really important, I need to do this? 'Cause, you know, as far as I can see, there's only two people doing commenting on this specific thing right now: you and Mike Beeple [?]. You guys are both coming at from similar but different angles, but you're both trying to say the same thing. What made you really want to say it?
+[19:07] **RAOUL:** But why did you feel like you had to comment? It's not that you did comment, but what made you as an artist think, this is really important, I need to do this? 'Cause, you know, as far as I can see, there's only two people doing commenting on this specific thing right now: you and Beeple. You guys are both coming at from similar but different angles, but you're both trying to say the same thing. What made you really want to say it?
 
 [19:39] **COLDIE:** You know, I think it started — everything is a rabbit hole, right? So I was wanting to do this Elon portrait for a while. I'd been working on it, working on it. And then I started looking at it. I was like, well, if Elon's doing this, what about Jensen Huang? Like I said, everyone starts raising their hands, and we have a group. It's hard to explain it other than, I think, in my own art making, storytelling is taking a front seat.
 
@@ -175,19 +175,19 @@ quotes:
 
 [22:55] **COLDIE:** Yeah, and this is the fun part, 'cause I'm creating this series in real time. And I told you this going in. I'm like, I've got this token and I can update it as we go, but I just got to start making now.
 
-[22:55] **RAOUL:** I'm like, I don't know what you're talking about, but it sounds cool as [—] and I trust you. It's hilarious, 'cause I've no idea what you're talking about. But I've just seen it grow over time. It's like, "Wow, this is incredible."
+[22:55] **RAOUL:** I'm like, I don't know what you're talking about, but it sounds cool as — and I trust you. It's hilarious, 'cause I've no idea what you're talking about. But I've just seen it grow over time. It's like, "Wow, this is incredible."
 
 [22:55] **COLDIE:** Yeah, and it's fun because I was like, "Fuck around and find out." I have all these plans in my head and I'm going to execute them, but if I waited till I executed all those things, it'd be freaking years. I just got to start now. Like, hop on. If you want to be on the train, it's leaving, and let's go. Okay, let me hop over.
 
-[23:28] **RAOUL:** You know, just talking about it while you're doing that — Saurez [?]. I don't know if you know Saurez [?] yet. He's a generative artist from Argentina who uses emotion by putting it through a machine and then turning it into stuff. He hit me up and said, "Oh, I'm just developing the pieces that I've done for you further now. Now you can plug in a brain sensor and have your own emotions on the artwork." I'm like —
+[23:28] **RAOUL:** You know, just talking about it while you're doing that — Suarez. I don't know if you know Suarez yet. He's a generative artist from Argentina who uses emotion by putting it through a machine and then turning it into stuff. He hit me up and said, "Oh, I'm just developing the pieces that I've done for you further now. Now you can plug in a brain sensor and have your own emotions on the artwork." I'm like —
 
-[23:59] And also the other person who just hit me up today was Carbone [?]. He's like, "Oh, by the way, in the background I'm going to change all your GIFs. I'm going to turn them into some cataloging, via AI, of all important news flow." I'm like, "Why are you doing this? I bought your piece of art a year ago." He's like, "Because I just want to evolve it. It's cool." And you're doing the same thing. You're like, even though I've got your art, this is not the final state of where this is going. And I love that.
+[23:59] And also the other person who just hit me up today was Carbone. He's like, "Oh, by the way, in the background I'm going to change all your GIFs. I'm going to turn them into some cataloging, via AI, of all important news flow." I'm like, "Why are you doing this? I bought your piece of art a year ago." He's like, "Because I just want to evolve it. It's cool." And you're doing the same thing. You're like, even though I've got your art, this is not the final state of where this is going. And I love that.
 
 [24:30] **COLDIE:** Yeah. So can you see this?
 
 [24:30] **RAOUL:** Yeah.
 
-[24:30] **COLDIE:** Okay. So this is the Elon Musk European variant. This is going to be in a Vils [?] gallery in June. And what I've made is —
+[24:30] **COLDIE:** Okay. So this is the Elon Musk European variant. This is going to be in a Vhils gallery in June. And what I've made is —
 
 [24:30] **RAOUL:** Wow.
 
@@ -201,11 +201,9 @@ quotes:
 
 [25:40] **COLDIE:** Yeah, it's becoming this internal dialogue back and forth, and I'm kind of the middleman. The very first piece I made was a physical portrait that uses magnets. And each of the pieces is made of Dibond sheet metal. And the magnets hold it onto the backboard at different levels — the magnets are different lengths, right? So you can move the portrait all around and choose how much depth it has. And that was very satisfying. It checked the boxes of, like, if I'm not amused, or if I'm not kind of scared, or, you know, there's not this —
 
-[26:46] Here's a wonderful analogy, and I tapped back into this feeling again just over the weekend. I grew up listening to a lot of music. I was a kid of the '90s, so I was a grunge baby, but I went deep back into the '70s, '60s. I know a lot of [—]. And there's a certain essence when you hear music at a very high level of orchestration and proficiency, where it's just that "it" factor, right? When you can't describe it until your body is taken over by it, and you feel it right there. There's a visceral feeling.
+[26:46] Here's a wonderful analogy, and I tapped back into this feeling again just over the weekend. I grew up listening to a lot of music. I was a kid of the '90s, so I was a grunge baby, but I went deep back into the '70s, '60s. I know a lot of —. And there's a certain essence when you hear music at a very high level of orchestration and proficiency, where it's just that "it" factor, right? When you can't describe it until your body is taken over by it, and you feel it right there. There's a visceral feeling.
 
 [27:20] And I felt that driving in the car. I forget — I think it might have been ELO. Just some of these orchestrations just hit me hard. And throughout my life I would make art to music, and only when the stuff I was making personally felt right, in my own vibe — that I was hitting what I could execute at a level that I could hear sonically, if that makes sense. I see and feel art the same way as I see and feel music.
-
-[27:55] **RAOUL:** *(Sponsor break)* So, a quick break in your regular programming. If you're serious about your future, grab my free report called Prepare for 2030. I think you've got 5 years to make as much money as possible, and this guide will help you navigate what's coming. The link is in the description. Download it now.
 
 [28:28] **RAOUL:** Exactly the same thing. For me, it's always the — I grew up in the late, kind of, this awful stage in the UK, where there was race riots and there was recessions and everything was changing and everybody was angry, and music was angry. And we had from punk to things like The Specials, all of these commenting on the decline of British society, and it became the cultural flag. And then somewhere in the '80s it switched to Wham!, "Club Tropicana," and Duran Duran, "Rio," and it was like, we can be happy again and get a suntan and drink cocktails.
 
@@ -221,7 +219,7 @@ quotes:
 
 [30:40] It wasn't about, well, I'm going to cut this eye out and then place it over here. I'm sick of things being stuck in place. As a collage artist, you know how hard it is to pick a spot? That's very hard. What scale, what size? And now with this new method, it throws it out of the window. I could put the eye wherever I want, and you could put the eye wherever you want.
 
-[31:12] **RAOUL:** But the weird thing is, the very people you're commenting about in this Chuck Horror Delight [?] are the exact same people who've allowed you to make art in this way. There's a nice little subplot within that: you've now become a technologist because you had to, because that's the medium that you have to use to express it in the way that you want to express it.
+[31:12] **RAOUL:** But the weird thing is, the very people you're commenting about in this [inaudible] are the exact same people who've allowed you to make art in this way. There's a nice little subplot within that: you've now become a technologist because you had to, because that's the medium that you have to use to express it in the way that you want to express it.
 
 [31:45] **COLDIE:** Yep. Absolutely, yeah. And there's little nods inside of that, because, like I said, it's form and function.
 
@@ -241,7 +239,7 @@ quotes:
 
 [32:50] **COLDIE:** I'm in the flow. I can tell you I have a hit list of — even after now, I already have one massive update that's going to take some R&D. That might take a year. Once I do it, it'll blow my mind, and then that's when I can release it. But things are happening so incredibly fast that I don't want to have a strict road map, because that's not creation. I might as well have a dumb job.
 
-[33:25] So there's that flow that's open, with the North Star of a couple things that I will get to. Because, you know, when I started this, there wasn't even Claude Code. I had ChatGPT light [?] when this started. So doing this whole touchscreen thing? No way. That would have been way more difficult than —
+[33:25] So there's that flow that's open, with the North Star of a couple things that I will get to. Because, you know, when I started this, there wasn't even Claude Code. I had ChatGPT light when this started. So doing this whole touchscreen thing? No way. That would have been way more difficult than —
 
 [33:58] **RAOUL:** I've been speaking to Kim Asendorf about this, and also people as well, and I know where this is going. It's so obvious. It's going to hologram.
 
@@ -265,7 +263,7 @@ quotes:
 
 [35:33] **RAOUL:** The flip side of this is we're at Marfa together, and you kindly offered, because we had that great party where we had a lot of people doing some really cool… And you kindly offered to come along and make a Filthy Fiat stall where you… This is the opposite end of the spectrum. We're now really physical, because you've got shitty notes and painting them with dirt and cocaine dust, which it wasn't, but just the whole… What's the whole idea behind Filthy Fiat as well? 'Cause I think it's also another really good project that you've been working on.
 
-[36:06] **COLDIE:** It was… First of all, doing this project was like coming home in a lot of ways, because for the last six or seven years, I've just been pushing pixels, and it's great. I love digital art, but it hits different than physical art, and really narrative-based, again, educational art. I can give you a quick story. Do you want to hear the story of the fiat [?]?
+[36:06] **COLDIE:** It was… First of all, doing this project was like coming home in a lot of ways, because for the last six or seven years, I've just been pushing pixels, and it's great. I love digital art, but it hits different than physical art, and really narrative-based, again, educational art. I can give you a quick story. Do you want to hear the story of the fiat?
 
 [36:38] **RAOUL:** Always.
 
@@ -277,7 +275,7 @@ So, we had all that stuff, but then I was also thinking, well, instead of having
 
 [38:15] So, I pulled out this brick. It was like this thick, of solid white mold that had money inside of it. And I was like, "Oh gosh, this ain't good." So, I went down to my local bank in my tiny town and just walked in there like any other normal customer. And I walked to the desk, I was like, "Hey, I'd like to get a fresh set of money for this thing." The manager is sprinting over to me. He's like, "You have to get out of here. That's an active, live biohazard. You have to get out of this building."
 
-[38:48] And I was like, "Oh." I was wishing I had cameras on at this moment. I was like, "Wow, this is really juicy." Okay. And they said the Treasury Department will send you a bag, and you could put your money in there, and they'll send you fresh money. And I was like, "Okay, cool." At that point, this was not an art project. I just wanted to get my money back. I was like, "Okay, fine." Months go by. Treasury never sent me money. It's been years. Treasury's never sent me a bag. So, I'm looking at this chunk of moldy [—]… And I was like…
+[38:48] And I was like, "Oh." I was wishing I had cameras on at this moment. I was like, "Wow, this is really juicy." Okay. And they said the Treasury Department will send you a bag, and you could put your money in there, and they'll send you fresh money. And I was like, "Okay, cool." At that point, this was not an art project. I just wanted to get my money back. I was like, "Okay, fine." Months go by. Treasury never sent me money. It's been years. Treasury's never sent me a bag. So, I'm looking at this chunk of moldy —… And I was like…
 
 [39:20] **RAOUL:** It's unbelievable, because you suddenly realize it's not your money.
 
@@ -301,13 +299,13 @@ So, we had all that stuff, but then I was also thinking, well, instead of having
 
 [43:12] So, I have 50 bills that have been certified by PMG, and I'm creating this body of work that, again, it's for education. You know, it's art. But I want this to be in a museum or an exhibition space where people can come in and they can see these bills and they can understand and have that conversation of what is fiat currency, and why are these bills here. And then inevitably, Bitcoin fixes that, right? There's a tie-in that I don't even have to say. It's just like, do you trust this piece of paper, or do you want to find something else that might be better for it?
 
-[44:19] **RAOUL:** But even the story of, you have the piece of paper issued by the US government, you go into the bank and try and exchange it for a fungible [?], 'cause this is a fungible thing, and you're told it's non-fungible. I mean, that's wild, really.
+[44:19] **RAOUL:** But even the story of, you have the piece of paper issued by the US government, you go into the bank and try and exchange it for a fungible, 'cause this is a fungible thing, and you're told it's non-fungible. I mean, that's wild, really.
 
 [44:19] **COLDIE:** Yeah. Yeah. And my only…
 
 [44:19] **RAOUL:** You couldn't have invented the story better.
 
-[44:19] **COLDIE:** No. And that's the magic of it, 'cause I've even thought, do I bury more money? 'Cause I got this cool thing going, and I may or may not do that to keep telling the story. But the core magic of this whole thing was it was not an art project [?], right? It happened to me, and I happened to think about it, right? All these different things lined up, and I want to honor art in that respect too, as, it came to me. I had the foreknowledge to look at this moldy chunk of bills instead of throw it away and just move on.
+[44:19] **COLDIE:** No. And that's the magic of it, 'cause I've even thought, do I bury more money? 'Cause I got this cool thing going, and I may or may not do that to keep telling the story. But the core magic of this whole thing was it was not an art project, right? It happened to me, and I happened to think about it, right? All these different things lined up, and I want to honor art in that respect too, as, it came to me. I had the foreknowledge to look at this moldy chunk of bills instead of throw it away and just move on.
 
 [44:53] And I told my mom, I was like, well, I'm going to make art with it and get my 200 bucks back. I got to get my money back somehow, so I'll make some collage art and try to recoup the 200 bucks. And yeah, now I'm doing AI, and it's all these… You know, Raoul, it's just all these things, I got to get out of the way and just allow the process to happen at the right time, right? And I know fiat's always dying, right? So it's not like it's going to become out of vogue.
 
@@ -315,11 +313,11 @@ So, we had all that stuff, but then I was also thinking, well, instead of having
 
 [45:56] **COLDIE:** I've always had a sense, a perceptive sense in my life, in many very weird ways. It's like reading billboards, or seeing things… God. Wish we had three hours. I'd tell you a thousand stories. One story that ties to a piece of art is called *Trust Your Intuition*.
 
-[46:30] It was New Year's Eve up where I live, and we're going to go out to the bar and do the bar thing. And I'm just watching people, waiting for my friends, and it's a public setting, and this couple walks by me and goes downstairs and gets a tattoo. I'm just taking all this stuff in, right? Just enjoying the moment. And then all of a sudden I hear, like someone was hitting a street sign or something, and I was like, oh, what's that? That was a loud sound. I see mothers dragging their children like a war zone. I was like, holy [—], that must have been gunshots.
+[46:30] It was New Year's Eve up where I live, and we're going to go out to the bar and do the bar thing. And I'm just watching people, waiting for my friends, and it's a public setting, and this couple walks by me and goes downstairs and gets a tattoo. I'm just taking all this stuff in, right? Just enjoying the moment. And then all of a sudden I hear, like someone was hitting a street sign or something, and I was like, oh, what's that? That was a loud sound. I see mothers dragging their children like a war zone. I was like, holy —, that must have been gunshots.
 
 [47:03] So all of a sudden I'm into survival mode. And all these things that I was paying attention to earlier, right, these little billboards, I call them, ended up saving my life. I crouched down behind a trash can, and this literal voice in my head, like, I'm not schizophrenic, but there's a guy in there. He's like, you got to run downstairs right now. Right? And I was like, I got to go downstairs right now, because I was told I have to do that.
 
-[47:36] So, I told my roommate, I was like, "Dude, I'm going. We have an active shooter. I'm running downstairs right now." He's like, "Fuck, okay." We took the stairs from the tattoo parlor, okay? So, I pay attention to weird things. It turns out… I still get chills. Cops show up, safe to leave. As I walk out of there, this girl runs out and she's like, "We need a paramedic. This guy has been shot in the face." He was standing right next to me, the guy who got shot in the face. Right? As the money falls over [?].
+[47:36] So, I told my roommate, I was like, "Dude, I'm going. We have an active shooter. I'm running downstairs right now." He's like, "Fuck, okay." We took the stairs from the tattoo parlor, okay? So, I pay attention to weird things. It turns out… I still get chills. Cops show up, safe to leave. As I walk out of there, this girl runs out and she's like, "We need a paramedic. This guy has been shot in the face." He was standing right next to me, the guy who got shot in the face. Right? As the money falls over.
 
 [48:10] So, my life is very intuitive. And I bring that up because the more I can pay attention to those weird little things, I believe that they're opportunities, right? Just the same as this money in the ground. Why did I bury money? Why was I acting super paranoid to bury a box? Don't worry about it. Do it, because there's something, right? Just go with the flow.
 
@@ -333,9 +331,9 @@ So, we had all that stuff, but then I was also thinking, well, instead of having
 
 [49:16] So, we're selling stuff for 50 or 100 dollars. If something pops, you might get 150 bucks. I'm just making art. It's not my job to say, "Hey, this should be worth more." It's not. So, as I'm selling these things, and I'm looking around to other people too, all the people in the space, I innately know also that this stuff is worth more than 100 dollars, right? And I'm like, "Oh, these collectors are going to really come out good." Like, thank you for collecting my art, but wow, dude, kind of congratulations. You got a really nice piece of art for 100 bucks.
 
-[50:22] And it kind of dawned on me that I want to participate in my friends' art, and I want to buy cool [—], 'cause I'm on SuperRare all the time, and I see this thing that's 50 bucks. I'm like, "I want that." And I just sold something for 150 bucks. I made this rule where I would take 30% of my earnings and reinvest in my friends and crypto art. And again, I didn't have any money aside from what I earned selling art to reinvest. And I'm like, "Well, I believe in my friend more than I believe in most other people." So, that's what I started doing.
+[50:22] And it kind of dawned on me that I want to participate in my friends' art, and I want to buy cool —, 'cause I'm on SuperRare all the time, and I see this thing that's 50 bucks. I'm like, "I want that." And I just sold something for 150 bucks. I made this rule where I would take 30% of my earnings and reinvest in my friends and crypto art. And again, I didn't have any money aside from what I earned selling art to reinvest. And I'm like, "Well, I believe in my friend more than I believe in most other people." So, that's what I started doing.
 
-[50:55] And I had a savvy eye. I really loved early AI art, and nobody gave a [—] about it. It was ugly, and you couldn't even tell they were images, but I just liked the tech and the art thing. It was hitting for me early on. So, I was buying a lot of pieces for $5.
+[50:55] And I had a savvy eye. I really loved early AI art, and nobody gave a — about it. It was ugly, and you couldn't even tell they were images, but I just liked the tech and the art thing. It was hitting for me early on. So, I was buying a lot of pieces for $5.
 
 [51:28] I met a guy in the Cryptovoxels metaverse. Cryptovoxels, well… I'm building my virtual gallery in a metaverse. Super nerdy. Super nerdy, okay? My avatar is building block by block. Another avatar walks up to me in the metaverse. Extremely nerdy. And he's got a little dialogue box that says, "Hello. Do you want to check out my art?" I'm like, "Wow, this is wild shit." I'm like, "Hey, dude. What's going on?" You know, when I'm having this real…
 
@@ -349,11 +347,11 @@ So, we had all that stuff, but then I was also thinking, well, instead of having
 
 [52:33] And I was like, "Whoa." I was like, "Dude, I'll help a homie out." They were five bucks each. Bought four of them. 20 bucks. I didn't really know what they were, but he told me they're AI and they're abstracts. For years, I looked at these things in my wallet. And I was like, is this going to be the best decision of my life? Or I just threw 20 bucks away. Either way, it's fine. But for a long time, I was like, "I don't know how I feel about these things. They're kind of weird."
 
-[53:05] Well, they're weirdly awesome now. And they're one of the early… you know, Jedi [?] who does the history of AI…
+[53:05] Well, they're weirdly awesome now. And they're one of the early… you know, [inaudible], who does the history of AI…
 
-[53:05] **[SPEAKER?]:** Under the GAN collection, he's gotten stuff.
+[53:05] **COLDIE:** Under the GAN collection, he's gotten stuff.
 
-[53:05] **COLDIE:** …in that. So, my life and collecting has had these weird narrative circumstances. You know, like this piece up here, Pindar Van Arman wrote [?]…
+[53:05] **COLDIE:** …in that. So, my life and collecting has had these weird narrative circumstances. You know, like this piece up here, Pindar Van Arman [inaudible]…
 
 [53:40] **RAOUL:** About to say, Pindar is another person that… it took me a while before I realized how important Pindar was. And he's such a sweet guy that I just bought a ton of Pindar as well, 'cause it's so important, 'cause he tells his story all the way through.
 
@@ -371,9 +369,9 @@ So, we had all that stuff, but then I was also thinking, well, instead of having
 
 [55:53] **RAOUL:** Yeah. It's so obvious to me.
 
-[55:53] **COLDIE:** Yeah. So I knew Big Comic Art [?], who is an OG on SuperRare. He was living over in China at the time when it started, right out of the lab, and they were getting messed up over there. We were just chatting, and he was living all alone. It was like a friend who needed to vent. He's like, "Dude, it's scary over here." There was some wild stuff, and we didn't know about it yet.
+[55:53] **COLDIE:** Yeah. So I knew [inaudible], who is an OG on SuperRare. He was living over in China at the time when it started, right out of the lab, and they were getting messed up over there. We were just chatting, and he was living all alone. It was like a friend who needed to vent. He's like, "Dude, it's scary over here." There was some wild stuff, and we didn't know about it yet.
 
-[56:26] And I'm listening to this like, is this… I just thought it was their problem. He's like, "No, dude. I think it's going to be a problem problem." I was like, "Okay." And he minted this piece called *Masks One* [?], and I collected that to, first of all, help a friend, but I was also like, this is some crazy… I'm pretty sure that's the first tokenized COVID piece. And then from there, the sub-genre of COVID art… I have a pretty nice COVID art collection.
+[56:26] And I'm listening to this like, is this… I just thought it was their problem. He's like, "No, dude. I think it's going to be a problem problem." I was like, "Okay." And he minted this piece called *Masks One*, and I collected that to, first of all, help a friend, but I was also like, this is some crazy… I'm pretty sure that's the first tokenized COVID piece. And then from there, the sub-genre of COVID art… I have a pretty nice COVID art collection.
 
 [56:58] **RAOUL:** You know, when I look at this, again, I know people want to kind of get that period out of their heads because of all of the complications around it.
 
@@ -383,13 +381,13 @@ So, we had all that stuff, but then I was also thinking, well, instead of having
 
 [57:31] **COLDIE:** Yeah. Yeah. Oh, yeah. Yeah, the whole timeline shifted after that, for sure.
 
-[58:03] **RAOUL:** How do you discover… because this is the thing that artists really struggle with. As a collector, it's the same. I end up using a bit of social consensus and an occasional piece of luck. You just randomly find some piece of art, you're like, "Oh, wow, I love that." Happens rarely, but it occasionally happens. I found the Argentinian artist Suarez [?], just randomly saw it and thought, "Okay, this is cool." And then I went down the rabbit hole and thought, "Oh, okay, this is wildly cool." But how do you discover stuff, and how should artists get discovered?
+[58:03] **RAOUL:** How do you discover… because this is the thing that artists really struggle with. As a collector, it's the same. I end up using a bit of social consensus and an occasional piece of luck. You just randomly find some piece of art, you're like, "Oh, wow, I love that." Happens rarely, but it occasionally happens. I found the Argentinian artist Suarez, just randomly saw it and thought, "Okay, this is cool." And then I went down the rabbit hole and thought, "Oh, okay, this is wildly cool." But how do you discover stuff, and how should artists get discovered?
 
 [58:35] **COLDIE:** Two wildly different questions, but I'll…
 
 [58:35] **RAOUL:** I know, because I know both sides of the equation here, 'cause artists themselves really struggle with this.
 
-[58:35] **COLDIE:** See where you're going. And I do have to say, I would call myself a creator and not as much of a consumer. And for that reason, I find myself more often segmented into what I'm working on, which is good in some ways, but not good in other ways. I think a lot of ways I find art personally is through culture. I mean, more so back when I went to record shops, and you flip through album covers. There's a lot of great artists that got their [?] commercial work that way, and that trained also my own design sense.
+[58:35] **COLDIE:** See where you're going. And I do have to say, I would call myself a creator and not as much of a consumer. And for that reason, I find myself more often segmented into what I'm working on, which is good in some ways, but not good in other ways. I think a lot of ways I find art personally is through culture. I mean, more so back when I went to record shops, and you flip through album covers. There's a lot of great artists that got their commercial work that way, and that trained also my own design sense.
 
 [59:41] **RAOUL:** Have you got the Taschen coffee table book, album cover art?
 
@@ -431,7 +429,7 @@ So, we had all that stuff, but then I was also thinking, well, instead of having
 
 [1:05:51] I'm upset. I take the canvas, and I'll never forget it. I put it into the trash can in my parents' basement. And I'm looking at it like, I failed. I freaking failed. I just put 40 hours in, lost 20. I got to start over. And then I looked at that canvas and was like, is it over? I'm also a problem-solver. I don't want to waste 40 hours. What do I do?
 
-[1:05:51] And I don't know, again, voice in the head, the little guy. Thank you again. "You need to blowtorch that canvas. You need to burn away the problem. Burn it away." And I was like, all right. So, I found a little blowtorch. I burned the [—] out of that. It sold in my local art town, in the gallery. They sent me a check for $420.
+[1:05:51] And I don't know, again, voice in the head, the little guy. Thank you again. "You need to blowtorch that canvas. You need to burn away the problem. Burn it away." And I was like, all right. So, I found a little blowtorch. I burned the — out of that. It sold in my local art town, in the gallery. They sent me a check for $420.
 
 [1:06:24] **RAOUL:** No way.
 
@@ -451,17 +449,17 @@ So, we had all that stuff, but then I was also thinking, well, instead of having
 
 [1:07:31] **RAOUL:** So, what's next for you? You're going to exhibit some of the stuff, the 3D, so people can touch it.
 
-[1:08:02] **COLDIE:** Yeah, so I got invited to show… Truly [?], who's a wonderful curator, part of the punks community, is doing a show during NFC Lisbon. And it's at Vhils's gallery. Do you know who Vhils is? He's a street artist who does explosion art.
+[1:08:02] **COLDIE:** Yeah, so I got invited to show… [inaudible], who's a wonderful curator, part of the punks community, is doing a show during NFC Lisbon. And it's at Vhils's gallery. Do you know who Vhils is? He's a street artist who does explosion art.
 
 [1:08:02] **RAOUL:** No, I'm not sure.
 
-[1:08:02] **COLDIE:** I'll send you his stuff. He's great. Checks all the boxes. I'm going to be at his gallery, and I'll be doing this Touch the Art exhibit. Again, scared as [—], but super excited. This is it. I'm going to watch a performance of art that I made that I don't know how it's going to turn out. Let's go.
+[1:08:02] **COLDIE:** I'll send you his stuff. He's great. Checks all the boxes. I'm going to be at his gallery, and I'll be doing this Touch the Art exhibit. Again, scared as —, but super excited. This is it. I'm going to watch a performance of art that I made that I don't know how it's going to turn out. Let's go.
 
-[1:08:35] And that night, there's a customizable option where people can move it all around and make their own thing, print a button [?], and we can have little mini prints that people can take home, and I'll sign them. So, if you're in Lisbon in the beginning of June, come check it out, dude. I'm seeing it for the first time with you. So, let's have fun. That's that, and then back to wherever it leads to next.
+[1:08:35] And that night, there's a customizable option where people can move it all around and make their own thing, press a button, and we can have little mini prints that people can take home, and I'll sign them. So, if you're in Lisbon in the beginning of June, come check it out, dude. I'm seeing it for the first time with you. So, let's have fun. That's that, and then back to wherever it leads to next.
 
 [1:09:07] **RAOUL:** Yeah.
 
-[1:09:07] **COLDIE:** Yeah, more of Filthy Fiat [?] is waiting for me. It's aging like a fine wine. The debasement [?] is happening, right? I just look at these bills, like, I don't even know what they're going to look like in 10 years. And that's wonderful. I love it.
+[1:09:07] **COLDIE:** Yeah, more of Filthy Fiat is waiting for me. It's aging like a fine wine. The debasement is happening, right? I just look at these bills, like, I don't even know what they're going to look like in 10 years. And that's wonderful. I love it.
 
 [1:09:38] **RAOUL:** Listen, my friend, fabulous conversation. Really enjoyed it. You've got a million stories. I think we should have done Drinks with Raoul and Coldie. We would have had a lot of fun.
 
@@ -471,4 +469,3 @@ So, we had all that stuff, but then I was also thinking, well, instead of having
 
 [1:09:38] **COLDIE:** Well, you too. Take care.
 
-[1:09:38] **RAOUL:** So, you obviously like this video enough that you've got to the end. That's quite a big task. But listen, do me a favor: hit the like and subscribe button, and also check out what video's next, 'cause I think you'll love it. But if you want even more, and when I'm talking more, I'm talking about member-generated ideas, incredible alpha research, everything there to help you in your journey, just head to realvision.com/join for the best financial intelligence out there and the pure alpha that's within the platform.
