@@ -50,6 +50,9 @@ const body = `# Coldie
 - Where I've been — the formative years, 2005–2018 (design work, LA Weekly, Coachella 3D photography): ${site.url}/where-ive-been
 - Where I'm going — kinetic 3D and what comes next: ${site.url}/where-im-going
 - Interview: *NFT Origin Stories #59* (2022) — his origin story, early on-chain experiments, the Genesis variants, light paintings and Trust Your Intuition, with chapters and full transcript: ${site.url}/interviews/origin-stories-59
+- Interview: *Coldie and the NFT Gold Rush* (SuperRare studio visit, 2021) — video with transcript: ${site.url}/interviews/gold-rush
+- Interview: *Tech Epochalypse* (NFT Drop Spotlight, 2026) — the Tech Epochalypse collection, Touch the Art and evolving ERC-7160 tokens, with transcript: ${site.url}/interviews/tech-epochalypse
+- Interview: first interview (RAW Sacramento "Unearthed", 2011) — Coachella 3D photography and the anaglyph Music Apocalypse series, with transcript: ${site.url}/interviews/first-interview-2011
 - Interview: *Digital Art's Next Frontier* with Raoul Pal (The Journey Man, 2026) — video with chapters and full transcript: ${site.url}/interviews/raoul-pal
 
 ## Key works

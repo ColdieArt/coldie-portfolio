@@ -8,6 +8,7 @@ import RansomHeading from '../components/RansomHeading.astro';
 import FrontRow3DSlider from '../components/FrontRow3DSlider.astro';
 import YouTubeLite from '../components/YouTubeLite.astro';
 import { videos } from '../data/videos';
+import { transcripts } from '../data/transcripts';
 import MediaGrid, { type MediaItem } from '../components/MediaGrid.astro';
 import { site, provenance } from '../data/site';
 import { personLd, breadcrumbLd } from '../data/jsonld';
@@ -394,6 +395,9 @@ const imagesLd = {
             Featuring stereoscopic 3D artwork including <em>Front Row 3D: Photography from the Coachella Music
             Festival</em>, and works that would later be tokenized as digital works.
           </p>
+          {transcripts['first-interview-2011']?.frontmatter.ready && (
+            <a class="link-arrow" href="/interviews/first-interview-2011">Watch with transcript</a>
+          )}
         </figcaption>
       </figure>
     </div>

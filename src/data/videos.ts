@@ -30,8 +30,10 @@ export const videos = {
   },
   goldRush: {
     id: 'WRO4jSxHdOA',
+    slug: 'gold-rush',
+    pageTitle: 'The NFT Gold Rush: a SuperRare studio visit',
     title: 'Coldie and the NFT Gold Rush',
-    source: 'Studio visit · Northern California',
+    source: 'SuperRare · Studio visit, Northern California',
     desc: 'Coldie minted his first work on-chain via SuperRare in 2018 and became one of the most prolific digital artists in the space, with mixed-media portraits of figures including Edward Snowden, Vitalik Buterin, and John McAfee.',
     uploadDate: '2021-08-09T08:31:30-07:00',
     durationSec: 307,
@@ -48,6 +50,8 @@ export const videos = {
   },
   techEpochalypse: {
     id: 'yVyx-bMoBJQ',
+    slug: 'tech-epochalypse',
+    pageTitle: 'Tech Epochalypse: an NFT Drop Spotlight interview',
     title: 'Tech Epochalypse',
     source: 'NFT Drop Spotlight',
     desc: 'A close look at Coldie’s Tech Epochalypse collection and the ideas behind it.',
@@ -56,6 +60,8 @@ export const videos = {
   },
   firstInterview: {
     id: 'kMIMr8Ro9So',
+    slug: 'first-interview-2011',
+    pageTitle: 'First interview (2011): RAW Sacramento “Unearthed”',
     title: 'Coldie — first interview (2011)',
     source: 'RAW: Sacramento “Unearthed”',
     desc: 'The 3D concert photographer and stereoscopic fine artist is interviewed about his surreal anaglyph art series, featuring Front Row 3D: Photography from the Coachella Music Festival and works later tokenized as digital works.',
