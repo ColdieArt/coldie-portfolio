@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-19",
+  "fetchedAt": "2026-10-26",
   "releases": {
     "vitalik-variant-03": {
       "owner": {
@@ -1967,10 +1967,10 @@
     },
     "sr-b932a7-7168": {
       "owner": {
-        "address": "0x762da606029d3120735aa1eec15464e265db7a3c",
-        "name": "Basileus",
-        "username": "basileus",
-        "ens": "basileus.eth",
+        "address": "0xf41b389e0c1950dc0b16c9498eae77131cc08a56",
+        "name": null,
+        "username": null,
+        "ens": null,
         "artist": false
       },
       "description": "A collaboration between XCOPY and Coldie features a decentralized 3D collage of XCOPY artworks and new elements developed together to create this fractured, crazed, VR punk.",
