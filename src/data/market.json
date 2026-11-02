@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-26",
+  "fetchedAt": "2026-11-02",
   "releases": {
     "vitalik-variant-03": {
       "owner": {
@@ -580,7 +580,7 @@
         "kind": "buy",
         "amount": 1337,
         "symbol": "ETH",
-        "usd": 3283351
+        "usd": 3139276
       },
       "heldSince": "2019-05-17",
       "heldVia": "TAKE_OFFER"
@@ -621,7 +621,7 @@
         "kind": "buy",
         "amount": 50,
         "symbol": "ETH",
-        "usd": 122788
+        "usd": 117400
       },
       "heldSince": "2018-11-13",
       "heldVia": "TAKE_LISTING"
@@ -1094,7 +1094,7 @@
         "kind": "buy",
         "amount": 500,
         "symbol": "ETH",
-        "usd": 1227880
+        "usd": 1174000
       },
       "heldSince": "2019-09-07",
       "heldVia": "TAKE_OFFER"
@@ -1135,7 +1135,7 @@
         "kind": "buy",
         "amount": 66.666,
         "symbol": "ETH",
-        "usd": 163716
+        "usd": 156532
       },
       "heldSince": "2021-03-24",
       "heldVia": "TAKE_LISTING"
@@ -1194,7 +1194,7 @@
         "kind": "buy",
         "amount": 550,
         "symbol": "ETH",
-        "usd": 1350668
+        "usd": 1291400
       },
       "heldSince": "2021-02-14",
       "heldVia": "TAKE_LISTING"
@@ -1249,7 +1249,7 @@
         "kind": "buy",
         "amount": 50,
         "symbol": "ETH",
-        "usd": 122788
+        "usd": 117400
       },
       "heldSince": "2019-03-17",
       "heldVia": "MINT"
@@ -1268,7 +1268,7 @@
         "kind": "buy",
         "amount": 50,
         "symbol": "ETH",
-        "usd": 122788
+        "usd": 117400
       },
       "heldSince": "2019-03-17",
       "heldVia": "MINT"
@@ -1287,7 +1287,7 @@
         "kind": "buy",
         "amount": 50,
         "symbol": "ETH",
-        "usd": 122788
+        "usd": 117400
       },
       "heldSince": "2019-03-17",
       "heldVia": "MINT"
@@ -1306,7 +1306,7 @@
         "kind": "buy",
         "amount": 200,
         "symbol": "ETH",
-        "usd": 491152
+        "usd": 469600
       },
       "heldSince": "2019-03-20",
       "heldVia": "MINT"
@@ -1505,7 +1505,7 @@
         "kind": "buy",
         "amount": 550,
         "symbol": "ETH",
-        "usd": 1023776
+        "usd": 1291400
       },
       "heldSince": "2019-11-13",
       "heldVia": "TAKE_LISTING"
@@ -1852,7 +1852,7 @@
         "kind": "buy",
         "amount": 404,
         "symbol": "ETH",
-        "usd": 753153
+        "usd": 948592
       },
       "heldSince": "2020-08-27",
       "heldVia": "TAKE_LISTING"
@@ -2199,7 +2199,7 @@
         "kind": "buy",
         "amount": 21,
         "symbol": "ETH",
-        "usd": 58684
+        "usd": 49308
       },
       "heldSince": "2020-07-16",
       "heldVia": "TAKE_OFFER"
@@ -2506,7 +2506,7 @@
         "kind": "reserve",
         "amount": 40,
         "symbol": "ETH",
-        "usd": 98230
+        "usd": 93920
       },
       "heldSince": "2021-02-08",
       "heldVia": "SETTLE_AUCTION"
@@ -2629,7 +2629,7 @@
         "kind": "buy",
         "amount": 194.175,
         "symbol": "ETH",
-        "usd": 476900
+        "usd": 455923
       },
       "heldSince": "2022-03-23",
       "heldVia": "MINT"
@@ -2685,7 +2685,7 @@
         "kind": "buy",
         "amount": 12,
         "symbol": "ETH",
-        "usd": 29469
+        "usd": 28146
       },
       "heldSince": "2022-09-15",
       "heldVia": "MINT"
@@ -2704,7 +2704,7 @@
         "kind": "buy",
         "amount": 12,
         "symbol": "ETH",
-        "usd": 29469
+        "usd": 28146
       },
       "heldSince": "2022-09-15",
       "heldVia": "MINT"
@@ -2723,7 +2723,7 @@
         "kind": "buy",
         "amount": 15,
         "symbol": "ETH",
-        "usd": 36836
+        "usd": 35220
       },
       "heldSince": "2023-02-25",
       "heldVia": "MINT"
