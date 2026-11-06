@@ -67,6 +67,21 @@ const desc = work.caption.split('. ')[0].replace(/\.?$/, '.');
         {work.interaction === 'parallax' && work.layers && (
           <DepthParallax layers={work.layers} ratio="4/5" amplitude={22} />
         )}
+        {work.video && (
+          <video
+            class="work__video"
+            autoplay
+            muted
+            loop
+            playsinline
+            controls
+            preload="auto"
+            poster={work.video.poster ?? undefined}
+            aria-label={`${work.title} — video artwork`}
+          >
+            <source src={work.video.src} type="video/mp4" />
+          </video>
+        )}
         {work.gallery && work.gallery.length > 0 && (
           <RotatingBillboard images={work.gallery} ratio="3/4" fit="contain" />
         )}
@@ -74,18 +89,6 @@ const desc = work.caption.split('. ')[0].replace(/\.?$/, '.');
           <img class="work__img" src={heroImg} alt={work.imageAlt ?? work.title} />
         )}
         {work.interaction === 'collage' && <CollageBuilder ratio="4/5" />}
-        {work.video && (
-          <video
-            class="work__video"
-            controls
-            playsinline
-            preload="metadata"
-            poster={work.video.poster ?? undefined}
-            aria-label={`${work.title} — video artwork`}
-          >
-            <source src={work.video.src} type="video/mp4" />
-          </video>
-        )}
         {(!work.interaction || work.interaction === 'none') && !work.video && heroImg && (
           <img class="work__img" src={heroImg} alt={work.imageAlt ?? work.title} />
         )}
