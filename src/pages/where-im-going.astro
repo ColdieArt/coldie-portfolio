@@ -5,9 +5,12 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import RansomHeading from '../components/RansomHeading.astro';
 import FilthyFiat from '../components/FilthyFiat.astro';
+import WorkCard from '../components/WorkCard.astro';
+import { byPillar } from '../data/works';
 import { personLd, breadcrumbLd } from '../data/jsonld';
 
 const PATH = '/where-im-going';
+const kineticWorks = byPillar('kinetic');
 
 ---
 <BaseLayout
@@ -37,6 +40,15 @@ const PATH = '/where-im-going';
         3D collage.
       </p>
     </div>
+
+    {kineticWorks.length > 0 && (
+      <div class="wrap work__works">
+        <h3 class="work__works-h">Kinetic 3D works</h3>
+        <ul class="work__grid">
+          {kineticWorks.map((w) => <li><WorkCard work={w} /></li>)}
+        </ul>
+      </div>
+    )}
   </div>
 
   <FilthyFiat />
@@ -59,6 +71,17 @@ const PATH = '/where-im-going';
   .work__h { margin: 0 0 0.4em; }
   .work__lede { margin: 0 0 1em; }
   .going-work { padding-bottom: clamp(3rem, 7vw, 5rem); }
+
+  .work__works { margin-top: clamp(2.5rem, 6vw, 4rem); }
+  .work__works-h {
+    font-family: var(--display); text-transform: uppercase; letter-spacing: 0.01em;
+    font-size: clamp(1.4rem, 3vw, 2.2rem); margin: 0 0 clamp(1.25rem, 3vw, 2rem);
+  }
+  .work__grid {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+  }
 
   .going-next { text-align: center; padding-block: clamp(3rem, 7vw, 5rem); border-top: 1px solid var(--line-soft); }
 </style>
