@@ -35,29 +35,31 @@ const enMarcha = {
     </div>
   </header>
 
-  <!-- Touch the Art — the thesis -->
+  <!-- Touch the Art — the thesis (left) + the kinetic works (right) -->
   <div id="work" class="going-work">
-    <div class="wrap work__intro">
-      <p class="eyebrow">The Thesis</p>
-      <RansomHeading as="h2" class="work__h" lines={["Touch the art.", "Feel something."]} />
-      <p class="lede work__lede">
-        For years, I would bring my son to art museums and galleries. After years of continually saying
-        “DON’T TOUCH THE ART,” this phrase stopped me in my tracks while in a gallery. Why am I keeping my
-        child from experiencing art in the way he wants to? At that moment “TOUCH THE ART” was born, and I
-        have been working toward this mantra to create art that can be interacted with in my own style of
-        3D collage.
-      </p>
-    </div>
-
-    {kineticWorks.length > 0 && (
-      <div class="wrap work__works">
-        <h3 class="work__works-h">Kinetic 3D works</h3>
-        <ul class="work__grid">
-          {kineticWorks.map((w) => <li><WorkCard work={w} /></li>)}
-          <li><WorkCard work={enMarcha} href="/#en-marcha-interactive" /></li>
-        </ul>
+    <div class="wrap work__split">
+      <div class="work__intro">
+        <p class="eyebrow">The Thesis</p>
+        <RansomHeading as="h2" class="work__h" lines={["Touch the art.", "Feel something."]} />
+        <p class="lede work__lede">
+          For years, I would bring my son to art museums and galleries. After years of continually saying
+          “DON’T TOUCH THE ART,” this phrase stopped me in my tracks while in a gallery. Why am I keeping my
+          child from experiencing art in the way he wants to? At that moment “TOUCH THE ART” was born, and I
+          have been working toward this mantra to create art that can be interacted with in my own style of
+          3D collage.
+        </p>
       </div>
-    )}
+
+      {kineticWorks.length > 0 && (
+        <div class="work__works">
+          <h3 class="work__works-h">Kinetic 3D works</h3>
+          <ul class="work__grid">
+            {kineticWorks.map((w) => <li><WorkCard work={w} /></li>)}
+            <li><WorkCard work={enMarcha} href="/#en-marcha-interactive" /></li>
+          </ul>
+        </div>
+      )}
+    </div>
   </div>
 
   <FilthyFiat />
@@ -75,24 +77,29 @@ const enMarcha = {
     margin: 0.2em auto 1.2em; max-width: 44ch;
   }
 
-  .going-work { scroll-margin-top: 64px; }
-  .work__intro { padding-top: clamp(3.5rem, 8vw, 6rem); max-width: 66ch; }
+  .going-work { scroll-margin-top: 64px; padding-bottom: clamp(3rem, 7vw, 5rem); }
+  .work__split {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 6vw, 5rem); align-items: start;
+    padding-top: clamp(3.5rem, 8vw, 6rem);
+  }
+  .work__intro { max-width: 52ch; }
   .work__h { margin: 0 0 0.4em; }
   .work__lede { margin: 0 0 1em; }
-  .going-work { padding-bottom: clamp(3rem, 7vw, 5rem); }
 
-  .work__works { margin-top: clamp(2.5rem, 6vw, 4rem); }
   .work__works-h {
     font-family: var(--display); text-transform: uppercase; letter-spacing: 0.01em;
     font-size: clamp(1.4rem, 3vw, 2.2rem); margin: 0 0 clamp(1.25rem, 3vw, 2rem);
-    text-align: center;
   }
   .work__grid {
     list-style: none; margin: 0; padding: 0;
-    display: flex; flex-wrap: wrap; justify-content: center;
-    gap: clamp(1.25rem, 3vw, 2.5rem);
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+    gap: clamp(1.25rem, 2.5vw, 2rem);
   }
-  .work__grid > li { flex: 1 1 200px; max-width: 260px; }
+  @media (max-width: 860px) {
+    .work__split { grid-template-columns: 1fr; gap: clamp(2.5rem, 7vw, 4rem); }
+    .work__intro { max-width: 60ch; }
+  }
 
   .going-next { text-align: center; padding-block: clamp(3rem, 7vw, 5rem); border-top: 1px solid var(--line-soft); }
 </style>
