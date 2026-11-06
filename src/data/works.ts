@@ -301,7 +301,6 @@ export const works: Work[] = [
     galleryRatio: '16/10',
     galleryFit: 'cover',
     gallery: [
-      { src: '/works/the-day-magnet/the-day-magnet.jpg', alt: "The Day We've All Been Waiting For — Magnetic: the astronaut, HODL billboard and moon lifting off a city skyline on magnetic depth spacers" },
       ...[1, 2, 3, 4, 5, 6].map((n) => ({
         src: `/works/the-day-magnet/layout-${n}.jpg`,
         alt: `The Day We've All Been Waiting For — Magnetic, arrangement ${n}: the magnetic pieces rearranged over the printed sky-and-grid board`,
