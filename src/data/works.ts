@@ -53,6 +53,10 @@ export type Work = {
   verticalVideo?: { src?: string; poster?: string; caption?: string };
   /** Image set shown as a billboard slider on the work page (takes precedence over the interaction). */
   gallery?: { src: string; alt: string }[];
+  /** Billboard frame for `gallery` — defaults to a portrait 3/4 letterboxed frame; set a
+   *  landscape ratio + 'cover' for landscape photo sets so they fill edge to edge. */
+  galleryRatio?: string;
+  galleryFit?: 'cover' | 'contain';
   /** Single flat image (galleries, non-layered works). */
   image?: string;
   imageAlt?: string;
@@ -294,6 +298,8 @@ export const works: Work[] = [
       },
     ],
     video: { src: '/works/the-day-magnet/the-day-magnet.mp4', poster: '/works/the-day-magnet/the-day-magnet.jpg' },
+    galleryRatio: '16/10',
+    galleryFit: 'cover',
     gallery: [
       { src: '/works/the-day-magnet/the-day-magnet.jpg', alt: "The Day We've All Been Waiting For — Magnetic: the astronaut, HODL billboard and moon lifting off a city skyline on magnetic depth spacers" },
       ...[1, 2, 3, 4, 5, 6].map((n) => ({

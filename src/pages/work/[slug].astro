@@ -83,7 +83,7 @@ const desc = work.caption.split('. ')[0].replace(/\.?$/, '.');
           </video>
         )}
         {work.gallery && work.gallery.length > 0 && (
-          <RotatingBillboard images={work.gallery} ratio="3/4" fit="contain" />
+          <RotatingBillboard images={work.gallery} ratio={work.galleryRatio ?? '3/4'} fit={work.galleryFit ?? 'contain'} />
         )}
         {work.interaction === 'drag' && !work.gallery && heroImg && (
           <img class="work__img" src={heroImg} alt={work.imageAlt ?? work.title} />
