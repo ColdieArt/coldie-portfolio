@@ -282,12 +282,26 @@ export const works: Work[] = [
   {
     slug: 'the-day-magnet',
     title: "The Day We've All Been Waiting For — Magnetic",
-    year: 2026, // [CONFIRM] year & details
+    year: 2026, // [CONFIRM] year
     pillar: 'kinetic',
-    medium: 'Magnetic, rearrangeable 3D-collage pieces on magnetic depth spacers; mixed media',
+    medium: 'Magnetic, rearrangeable 3D-collage pieces on magnetic depth spacers; mixed media on panel',
     artform: 'Kinetic magnetic portrait',
     caption:
-      'The 2018 genesis artwork reimagined as a kinetic magnetic 3D collage: the astronaut, the HODL billboard and the moon lift off the city skyline on magnetic depth spacers, and the collector can rearrange the composition.',
+      'The 2018 genesis artwork reimagined as a kinetic magnetic 3D collage: the astronaut, the HODL billboard and the moon lift off the printed sky-and-grid board on magnetic depth spacers, and the collector can rearrange every piece into their own composition.',
+    provenance: [
+      {
+        label: "Created for a Christie's auction that did not take place",
+        // [CONFIRM] which Christie's sale, the year, and why it didn't happen
+      },
+    ],
+    video: { src: '/works/the-day-magnet/the-day-magnet.mp4', poster: '/works/the-day-magnet/the-day-magnet.jpg' },
+    gallery: [
+      { src: '/works/the-day-magnet/the-day-magnet.jpg', alt: "The Day We've All Been Waiting For — Magnetic: the astronaut, HODL billboard and moon lifting off a city skyline on magnetic depth spacers" },
+      ...[1, 2, 3, 4, 5, 6].map((n) => ({
+        src: `/works/the-day-magnet/layout-${n}.jpg`,
+        alt: `The Day We've All Been Waiting For — Magnetic, arrangement ${n}: the magnetic pieces rearranged over the printed sky-and-grid board`,
+      })),
+    ],
     image: '/works/the-day-magnet/the-day-magnet.jpg',
     imageAlt: "The Day We've All Been Waiting For — Coldie's kinetic magnetic 3D collage: an astronaut and HODL billboard floating off a city skyline on magnetic spacers",
     interaction: 'drag',
