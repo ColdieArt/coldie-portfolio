@@ -189,8 +189,9 @@ const desc = work.caption.split('. ')[0].replace(/\.?$/, '.');
   }
   /* fill the column, but never taller than the screen (tall portraits on wide monitors) */
   .work__img { width: 100%; max-height: calc(100vh - 12rem); object-fit: contain; object-position: left top; background: none; border-radius: var(--radius); }
-  /* 3:4 gallery billboard: keep the whole frame on screen */
-  .work__grid :global(.bb) { max-width: calc((100vh - 12rem) * 3 / 4); }
+  /* Gallery billboard: cap width so the frame still fits on screen, using the frame's
+     own aspect ratio — a tall portrait frame is capped narrow, a landscape one isn't. */
+  .work__grid :global(.bb) { max-width: calc((100vh - 12rem) * var(--ratio, 3/4)); }
   .work__video { width: 100%; border-radius: var(--radius); background: #000; display: block; aspect-ratio: 16/10; }
   .work__anaglyph { margin: 0; }
   .work__anaglyph img { width: 100%; max-height: calc(100vh - 12rem); object-fit: contain; border-radius: var(--radius); background: #05070a; display: block; }
