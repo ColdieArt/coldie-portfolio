@@ -1,11 +1,13 @@
 ---
 import type { Work } from '../data/works';
-export interface Props { work: Work; }
-const { work } = Astro.props;
+export interface Props { work: Work; href?: string; }
+const { work, href } = Astro.props;
 const img = work.image ?? work.layers?.[work.layers.length - 1]?.src ?? '/works/placeholder/portrait.svg';
 const alt = work.imageAlt ?? `${work.title} (${work.year})`;
+const link = href ?? `/work/${work.slug}`;
+const external = /^https?:/.test(link);
 ---
-<a class="card" href={`/work/${work.slug}`}>
+<a class="card" href={link} {...(external ? { target: '_blank', rel: 'noopener' } : {})}>
   <span class="card__frame">
     <img src={img} alt={alt} loading="lazy" decoding="async" />
   </span>

@@ -11,6 +11,14 @@ import { personLd, breadcrumbLd } from '../data/jsonld';
 
 const PATH = '/where-im-going';
 const kineticWorks = byPillar('kinetic');
+// En Marcha lives as the interactive on the homepage (not a work page), so it links there.
+const enMarcha = {
+  title: 'En Marcha',
+  year: 2026,
+  artform: 'Interactive kinetic 3D mural',
+  image: '/works/digital/en-marcha.webp',
+  imageAlt: 'En Marcha, an interactive kinetic 3D mural by Coldie',
+} as unknown as import('../data/works').Work;
 
 ---
 <BaseLayout
@@ -46,6 +54,7 @@ const kineticWorks = byPillar('kinetic');
         <h3 class="work__works-h">Kinetic 3D works</h3>
         <ul class="work__grid">
           {kineticWorks.map((w) => <li><WorkCard work={w} /></li>)}
+          <li><WorkCard work={enMarcha} href="/#en-marcha-interactive" /></li>
         </ul>
       </div>
     )}
@@ -76,12 +85,14 @@ const kineticWorks = byPillar('kinetic');
   .work__works-h {
     font-family: var(--display); text-transform: uppercase; letter-spacing: 0.01em;
     font-size: clamp(1.4rem, 3vw, 2.2rem); margin: 0 0 clamp(1.25rem, 3vw, 2rem);
+    text-align: center;
   }
   .work__grid {
     list-style: none; margin: 0; padding: 0;
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
+    display: flex; flex-wrap: wrap; justify-content: center;
     gap: clamp(1.25rem, 3vw, 2.5rem);
   }
+  .work__grid > li { flex: 1 1 200px; max-width: 260px; }
 
   .going-next { text-align: center; padding-block: clamp(3rem, 7vw, 5rem); border-top: 1px solid var(--line-soft); }
 </style>
