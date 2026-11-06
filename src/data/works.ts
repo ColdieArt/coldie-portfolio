@@ -282,7 +282,7 @@ export const works: Work[] = [
   {
     slug: 'the-day-magnet',
     title: "The Day We've All Been Waiting For — Magnetic",
-    year: 2026, // [CONFIRM] year
+    year: 2025,
     pillar: 'kinetic',
     medium: 'Magnetic, rearrangeable 3D-collage pieces on magnetic depth spacers; mixed media on panel',
     artform: 'Kinetic magnetic portrait',
@@ -290,8 +290,7 @@ export const works: Work[] = [
       'The 2018 genesis artwork reimagined as a kinetic magnetic 3D collage: the astronaut, the HODL billboard and the moon lift off the printed sky-and-grid board on magnetic depth spacers, and the collector can rearrange every piece into their own composition.',
     provenance: [
       {
-        label: "Created for a Christie's auction that did not take place",
-        // [CONFIRM] which Christie's sale, the year, and why it didn't happen
+        label: "Created for Christie's 2025 'History of Bitcoin' themed art auction, which did not take place",
       },
     ],
     video: { src: '/works/the-day-magnet/the-day-magnet.mp4', poster: '/works/the-day-magnet/the-day-magnet.jpg' },
@@ -300,6 +299,10 @@ export const works: Work[] = [
       ...[1, 2, 3, 4, 5, 6].map((n) => ({
         src: `/works/the-day-magnet/layout-${n}.jpg`,
         alt: `The Day We've All Been Waiting For — Magnetic, arrangement ${n}: the magnetic pieces rearranged over the printed sky-and-grid board`,
+      })),
+      ...[36, 37, 38].map((n) => ({
+        src: `/works/the-day-magnet/bg-${n}.jpg`,
+        alt: "The Day We've All Been Waiting For — Magnetic: the bare printed board (sky and perspective grid) before the magnetic pieces are attached",
       })),
     ],
     image: '/works/the-day-magnet/the-day-magnet.jpg',
